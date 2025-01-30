@@ -8,7 +8,12 @@ from typeguard import typechecked
 
 @dataclass
 class ErrorDocString:
-    """Error docstrings."""
+    """Error docstrings.
+
+    Args:
+            type: The error type. E.g., "ValueError".
+            docstring: The error docstring. E.g., "When arg `a` is less than 0."
+    """
 
     type: Final[str]
     docstring: Final[str]
@@ -24,7 +29,14 @@ class ErrorDocString:
 
 # TODO: Move this to a central utils repo. (And combine with Defaults? Include types?)
 class DocString:
-    """Class to format docstrings for public API `sphinx` docs and CLI `click` help."""
+    """Class to format docstrings for public API `sphinx` docs and CLI `click` help.
+
+    Args:
+            opening: The opening docstring.
+            args: Argument names and their docstrings.
+            raises: Objects holding error types with their docstrings.
+            returns: The returns docstrings.
+    """
 
     opening: str = ""
     args: dict[str, str] = {}
@@ -39,7 +51,7 @@ class DocString:
         raises: list[ErrorDocString],
         returns: list[str],
     ) -> None:
-        """Initialize the docstring parts."""
+        """Initialize the docstring parts"""
         self.opening = opening
         self.args = args
         self.raises = raises
@@ -50,7 +62,7 @@ class DocString:
     @property
     @typechecked
     def api_docstring(self) -> str:
-        """Format the docstring for sphinx API docs."""
+        """Docstring formatted for Sphinx API docs."""
         parts = [self.opening.strip()]
 
         if self.args:
@@ -70,7 +82,7 @@ class DocString:
     @property
     @typechecked
     def cli_docstring(self) -> str:
-        """Format the docstring click CLI help."""
+        """Docstring formatted for Click CLI help."""
         parts = [self.opening.strip()]
 
         if self.raises:
