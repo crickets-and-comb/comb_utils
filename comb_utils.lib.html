@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="prev" title="comb_utils.api package" href="comb_utils.api.html" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="prev" title="comb_utils package" href="comb_utils.html" />
 
     <!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
-        <title>comb_utils.lib package - comb_utils 0.0.2 documentation</title>
+        <title>comb_utils.lib package - comb_utils 0.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=302659d7" />
@@ -166,7 +166,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">comb_utils 0.0.2 documentation</div></a>
+      <a href="index.html"><div class="brand">comb_utils 0.1.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -190,7 +190,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
   
-  <span class="sidebar-brand-text">comb_utils 0.0.2 documentation</span>
+  <span class="sidebar-brand-text">comb_utils 0.1.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -199,9 +199,9 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="docstring.html">DocString: A Class to Format Docstrings for Sphinx and Click</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">comb_utils</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of comb_utils</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2 current has-children"><a class="reference internal" href="comb_utils.html">comb_utils package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of comb_utils package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="comb_utils.api.html">comb_utils.api package</a></li>
 <li class="toctree-l3 current current-page"><a class="current reference internal" href="#">comb_utils.lib package</a></li>
 </ul>
 </li>
@@ -252,25 +252,81 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
 </section>
-<section id="module-comb_utils.lib.example">
-<span id="comb-utils-lib-example-module"></span><h2>comb_utils.lib.example module<a class="headerlink" href="#module-comb_utils.lib.example" title="Link to this heading">¶</a></h2>
-<p>This is an example module.</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="comb_utils.lib.example.wait_a_second">
-<span class="sig-prename descclassname"><span class="pre">comb_utils.lib.example.</span></span><span class="sig-name descname"><span class="pre">wait_a_second</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">secs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_string</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#comb_utils.lib.example.wait_a_second" title="Link to this definition">¶</a></dt>
-<dd><p>Just wait a second, or however many seconds you want.</p>
-<p>Also prints a message with the number you passed, along with any extra message you want.</p>
+<section id="module-comb_utils.lib.docs">
+<span id="comb-utils-lib-docs-module"></span><h2>comb_utils.lib.docs module<a class="headerlink" href="#module-comb_utils.lib.docs" title="Link to this heading">¶</a></h2>
+<p>Docstring formatting for sphinx API docs and click CLI help.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="comb_utils.lib.docs.DocString">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">comb_utils.lib.docs.</span></span><span class="sig-name descname"><span class="pre">DocString</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opening</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raises</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">returns</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#comb_utils.lib.docs.DocString" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class to format docstrings for public API <cite>sphinx</cite> docs and CLI <cite>click</cite> help.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>secs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – How many seconds to wait.</p></li>
-<li><p><strong>extra_string</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Extra message to add on tail of existing message.</p></li>
+<li><p><strong>opening</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The opening docstring.</p></li>
+<li><p><strong>args</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Argument names and their docstrings.</p></li>
+<li><p><strong>raises</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<a class="reference internal" href="#comb_utils.lib.docs.ErrorDocString" title="comb_utils.lib.docs.ErrorDocString"><code class="xref py py-class docutils literal notranslate"><span class="pre">ErrorDocString</span></code></a>]</span>) – Objects holding error types with their docstrings.</p></li>
+<li><p><strong>returns</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – The returns docstrings.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="comb_utils.lib.docs.DocString.api_docstring">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">api_docstring</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#comb_utils.lib.docs.DocString.api_docstring" title="Link to this definition">¶</a></dt>
+<dd><p>Docstring formatted for Sphinx API docs.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="comb_utils.lib.docs.DocString.args">
+<span class="sig-name descname"><span class="pre">args</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">,</span> <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#comb_utils.lib.docs.DocString.args" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="comb_utils.lib.docs.DocString.cli_docstring">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cli_docstring</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#comb_utils.lib.docs.DocString.cli_docstring" title="Link to this definition">¶</a></dt>
+<dd><p>Docstring formatted for Click CLI help.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="comb_utils.lib.docs.DocString.opening">
+<span class="sig-name descname"><span class="pre">opening</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#comb_utils.lib.docs.DocString.opening" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="comb_utils.lib.docs.DocString.raises">
+<span class="sig-name descname"><span class="pre">raises</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code><span class="pre">[</span><a class="reference internal" href="#comb_utils.lib.docs.ErrorDocString" title="comb_utils.lib.docs.ErrorDocString"><code class="xref py py-class docutils literal notranslate"><span class="pre">ErrorDocString</span></code></a><span class="pre">]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#comb_utils.lib.docs.DocString.raises" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="comb_utils.lib.docs.DocString.returns">
+<span class="sig-name descname"><span class="pre">returns</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#comb_utils.lib.docs.DocString.returns" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="comb_utils.lib.docs.ErrorDocString">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">comb_utils.lib.docs.</span></span><span class="sig-name descname"><span class="pre">ErrorDocString</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">docstring</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#comb_utils.lib.docs.ErrorDocString" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Error docstrings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>error_type</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The error type. E.g., “ValueError”.</p></li>
+<li><p><strong>docstring</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The error docstring. E.g., “When arg <cite>a</cite> is less than 0.”</p></li>
+</ul>
 </dd>
 </dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="comb_utils.lib.docs.ErrorDocString.docstring">
+<span class="sig-name descname"><span class="pre">docstring</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">Final</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">]</span></em><a class="headerlink" href="#comb_utils.lib.docs.ErrorDocString.docstring" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="comb_utils.lib.docs.ErrorDocString.error_type">
+<span class="sig-name descname"><span class="pre">error_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">Final</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">]</span></em><a class="headerlink" href="#comb_utils.lib.docs.ErrorDocString.error_type" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </section>
@@ -286,14 +342,14 @@
         
         <div class="related-pages">
           
-          <a class="prev-page" href="comb_utils.api.html">
+          <a class="prev-page" href="comb_utils.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">comb_utils.api package</div>
+                <div class="title">comb_utils package</div>
                 
               </div>
             </a>
@@ -301,7 +357,7 @@
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2024, Kaleb Coberly
+                Copyright &#169; 2025, Kaleb Coberly
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -329,8 +385,21 @@
             <ul>
 <li><a class="reference internal" href="#">comb_utils.lib package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-comb_utils.lib.example">comb_utils.lib.example module</a><ul>
-<li><a class="reference internal" href="#comb_utils.lib.example.wait_a_second"><code class="docutils literal notranslate"><span class="pre">wait_a_second()</span></code></a></li>
+<li><a class="reference internal" href="#module-comb_utils.lib.docs">comb_utils.lib.docs module</a><ul>
+<li><a class="reference internal" href="#comb_utils.lib.docs.DocString"><code class="docutils literal notranslate"><span class="pre">DocString</span></code></a><ul>
+<li><a class="reference internal" href="#comb_utils.lib.docs.DocString.api_docstring"><code class="docutils literal notranslate"><span class="pre">DocString.api_docstring</span></code></a></li>
+<li><a class="reference internal" href="#comb_utils.lib.docs.DocString.args"><code class="docutils literal notranslate"><span class="pre">DocString.args</span></code></a></li>
+<li><a class="reference internal" href="#comb_utils.lib.docs.DocString.cli_docstring"><code class="docutils literal notranslate"><span class="pre">DocString.cli_docstring</span></code></a></li>
+<li><a class="reference internal" href="#comb_utils.lib.docs.DocString.opening"><code class="docutils literal notranslate"><span class="pre">DocString.opening</span></code></a></li>
+<li><a class="reference internal" href="#comb_utils.lib.docs.DocString.raises"><code class="docutils literal notranslate"><span class="pre">DocString.raises</span></code></a></li>
+<li><a class="reference internal" href="#comb_utils.lib.docs.DocString.returns"><code class="docutils literal notranslate"><span class="pre">DocString.returns</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#comb_utils.lib.docs.ErrorDocString"><code class="docutils literal notranslate"><span class="pre">ErrorDocString</span></code></a><ul>
+<li><a class="reference internal" href="#comb_utils.lib.docs.ErrorDocString.docstring"><code class="docutils literal notranslate"><span class="pre">ErrorDocString.docstring</span></code></a></li>
+<li><a class="reference internal" href="#comb_utils.lib.docs.ErrorDocString.error_type"><code class="docutils literal notranslate"><span class="pre">ErrorDocString.error_type</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-comb_utils.lib">Module contents</a></li>
@@ -345,7 +414,7 @@
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=e3a6060d"></script>
+</div><script src="_static/documentation_options.js?v=01f34227"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=5fa4622c"></script>

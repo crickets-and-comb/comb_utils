@@ -7,7 +7,6 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   comb_utils.api
    comb_utils.lib
 
 Module contents

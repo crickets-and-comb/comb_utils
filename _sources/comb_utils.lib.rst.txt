@@ -4,10 +4,10 @@ comb\_utils.lib package
 Submodules
 ----------
 
-comb\_utils.lib.example module
-------------------------------
+comb\_utils.lib.docs module
+---------------------------
 
-.. automodule:: comb_utils.lib.example
+.. automodule:: comb_utils.lib.docs
    :members:
    :undoc-members:
    :show-inheritance:
