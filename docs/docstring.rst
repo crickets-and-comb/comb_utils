@@ -50,7 +50,7 @@ Using :code:`docstring.api_docstring` in a function:
             raise ValueError("b must be less than 100.")
         return a + b
 
-    add.__doc__ = ADD_EM_DOCSTRING.api_docstring
+    add_em.__doc__ = ADD_EM_DOCSTRING.api_docstring
 
 Now your Sphinx API docs will have the correct docstring for :code:`add_em`.
 
