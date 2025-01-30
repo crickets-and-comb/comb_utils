@@ -108,8 +108,8 @@ You can even use the sphinx-click extension's click directive to include the Cli
 
     __doc__ = """
     .. click:: my_package.cli.add_em:main
-    :prog: add_em
-    :nested: full
+        :prog: add_em
+        :nested: full
     """
 
     import click
