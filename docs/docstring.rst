@@ -84,6 +84,12 @@ Then, when you run :code:`add_em --help`, you'll see the correct help doc:
 
     A function to add two numbers.
 
+    Raises:
+
+        ValueError: If `a` is less than 0.
+        
+        ValueError: If `b` is greater than 100.
+
     Returns:
 
         The sum of the two numbers.
