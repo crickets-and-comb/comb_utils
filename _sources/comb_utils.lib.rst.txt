@@ -1,0 +1,21 @@
+comb\_utils.lib package
+=======================
+
+Submodules
+----------
+
+comb\_utils.lib.example module
+------------------------------
+
+.. automodule:: comb_utils.lib.example
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: comb_utils.lib
+   :members:
+   :undoc-members:
+   :show-inheritance:

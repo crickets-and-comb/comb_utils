@@ -1,0 +1,19 @@
+comb\_utils package
+===================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   comb_utils.api
+   comb_utils.lib
+
+Module contents
+---------------
+
+.. automodule:: comb_utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
