@@ -2,7 +2,7 @@
 DocString: A Class to Format Docstrings for Sphinx and Click
 ============================================================
 
-The :py:class:`comb_utils.lib.docs.DocString` class is used to format docstrings for Sphinx API docs and Click CLI help docs. It's useful when you have multiple functions that should have the same docstring, such as when you have a public API function and a CLI function that call the same underlying code.
+The :py:class:`comb_utils.lib.docs.DocString` class is used to format docstrings for `Sphinx <https://www.sphinx-doc.org/en/master/>`_ API docs and `Click <https://click.palletsprojects.com/en/stable/>`_ CLI help docs. It's useful when you have multiple functions that should have the same docstring, such as when you have a public API function and a CLI function that call the same underlying code.
 
 :code:`DocString` takes an opening docstring, an arg dict, a list of returns text, and a list of :py:class:`comb_utils.lib.docs.ErrorDocString` objects. It has three important members that you can use:
 
