@@ -20,7 +20,7 @@ Example usage:
 
     ADD_EM_DOCSTRING = DocString(
         opening_docstring="A function to add two numbers.",
-        arg_dict={
+        args={
             "a": "The first number. Must be greater than 0.",
             "b": "The second number. Must be less than 100."
         },
