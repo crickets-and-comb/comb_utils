@@ -1,10 +1,8 @@
 ===========================================
-Reference Package: A basic package template
+Comb Utils: Handy utils for Python projects
 ===========================================
 
-Includes typical CLI and library setup. To include service app setup at some point.
-
-See also the GitHub repository: https://github.com/crickets-and-comb/reference_package
+Some handy utils for Python projects.
 
 Contents
 --------
@@ -12,7 +10,6 @@ Contents
 .. toctree::
    :maxdepth: 3
 
-   CLI
    modules
 
 Installation
@@ -22,9 +19,9 @@ To install the package, run:
 
 .. code:: bash
 
-    pip install reference_package
+    pip install comb_utils
 
-See https://pypi.org/project/reference-package/.
+See https://pypi.org/project/comb-utils/.
 
 
 Library
@@ -34,7 +31,7 @@ Avoid calling library functions directly and stick to the public API:
 
 .. code:: python
 
-    from reference_package import wait_a_second
+    from comb_utils import wait_a_second
 
     wait_a_second()
 
@@ -42,7 +39,7 @@ If you're a power user, you can use the internal API:
 
 .. code:: python
 
-    from reference_package.api.internal import wait_a_second
+    from comb_utils.api.internal import wait_a_second
 
     wait_a_second()
 
@@ -51,11 +48,13 @@ Nothing is stopping you from importing from lib directly, but you should avoid i
 
 .. code:: python
 
-    from reference_package.lib.example import wait_a_second
+    from comb_utils.lib.example import wait_a_second
 
     wait_a_second()
 
-CLI
----
+See Also
+--------
 
-When this package is installed, it comes with CLI tools. See :doc:`CLI` for more information.
+`Comb Utils GitHub repository <https://github.com/crickets-and-comb/comb_utils/>`_
+
+`comb-utils PyPi distribution <https://pypi.org/project/comb-utils/>`_
