@@ -27,11 +27,11 @@ Example usage:
         returns=["The sum of the two numbers."],
         error_docstrings=[
             ErrorDocString(
-                type="ValueError",
+                error_type="ValueError",
                 docstring="If `a` is less than 0."
             ),
             ErrorDocString(
-                type="ValueError",
+                error_type="ValueError",
                 docstring="If `b` is greater than 100."
             )
         ]

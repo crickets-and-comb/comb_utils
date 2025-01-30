@@ -11,17 +11,17 @@ class ErrorDocString:
     """Error docstrings.
 
     Args:
-            type: The error type. E.g., "ValueError".
+            error_type: The error type. E.g., "ValueError".
             docstring: The error docstring. E.g., "When arg `a` is less than 0."
     """
 
-    type: Final[str]
+    error_type: Final[str]
     docstring: Final[str]
 
     @typechecked
-    def __init__(self, type: str, docstring: str) -> None:
+    def __init__(self, error_type: str, docstring: str) -> None:
         """Initialize the error docstring."""
-        self.type = type
+        self.error_type = error_type
         self.docstring = docstring
 
         return
@@ -51,7 +51,7 @@ class DocString:
         raises: list[ErrorDocString],
         returns: list[str],
     ) -> None:
-        """Initialize the docstring parts"""
+        """Initialize the docstring parts."""
         self.opening = opening
         self.args = args
         self.raises = raises
@@ -71,7 +71,9 @@ class DocString:
 
         if self.raises:
             parts.append("\nRaises:\n")
-            parts.extend([f"  {error.type}: {error.docstring}" for error in self.raises])
+            parts.extend(
+                [f"  {error.error_type}: {error.docstring}" for error in self.raises]
+            )
 
         if self.returns:
             parts.append("\nReturns:\n")
@@ -87,7 +89,9 @@ class DocString:
 
         if self.raises:
             parts.append("\nRaises:\n")
-            parts.extend([f"  {error.type}: {error.docstring}" for error in self.raises])
+            parts.extend(
+                [f"  {error.error_type}: {error.docstring}" for error in self.raises]
+            )
 
         if self.returns:
             parts.append("\nReturns:\n")
