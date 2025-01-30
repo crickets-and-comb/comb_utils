@@ -1,5 +1,5 @@
 ===========================================
-Reference Package: A basic package template
+Comb Utils: Handy utils for Python projects
 ===========================================
 
 Some handy utils for Python projects.
