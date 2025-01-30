@@ -60,6 +60,9 @@ Using :code:`docstring.cli_docstring` and :code:`args` in a Click command:
 
     import click
 
+    from my_package import ADD_EM_DOCSTRING, add_em
+    
+
     @click.command(help=ADD_EM_DOCSTRING.cli_docstring)
     @click.option("--a", type=int, help=ADD_EM_DOCSTRING.args["a"])
     @click.option("--b", type=int, help=ADD_DOADD_EM_DOCSTRINGCSTRING.args["b"])
@@ -110,6 +113,9 @@ You can even use the sphinx-click extension's click directive to include the Cli
     """
 
     import click
+
+    from my_package import ADD_EM_DOCSTRING, add_em
+
 
     @click.command(help=ADD_EM_DOCSTRING.cli_docstring)
     @click.option("--a", type=int, help=ADD_EM_DOCSTRING.args["a"])
