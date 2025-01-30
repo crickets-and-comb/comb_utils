@@ -10,11 +10,11 @@ Just a basic package template. See the docs: https://crickets-and-comb.github.io
     .github/workflows               GitHub Actions CI/CD workflows.
     docs                            RST docs and doc build staging.
     Makefile                        Dev tools and params. (includes shared/Makefile)
-    src/comb_utils/api       Public and internal API.
-    src/comb_utils/cli       Command-line-interface.
+    src/comb_utils/api              Public and internal API.
+    src/comb_utils/cli              Command-line-interface.
     setup.cfg                       Metadata and dependencies.
     shared                          Shared dev tools Git submodule.
-    src/comb_utils/lib       Implementation.
+    src/comb_utils/lib              Implementation.
     tests/e2e                       End-to-end tests.
     test/integration                Integration tests.
     tests/unit                      Unit tests.
@@ -26,7 +26,7 @@ To install the package, run:
 
   $ pip install comb_utils
 
-See https://pypi.org/project/reference-package/.
+See https://pypi.org/project/comb-utils/.
 
 ## Library functions
 

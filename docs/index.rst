@@ -24,7 +24,7 @@ To install the package, run:
 
     pip install comb_utils
 
-See https://pypi.org/project/reference-package/.
+See https://pypi.org/project/comb-utils/.
 
 
 Library
