@@ -2,7 +2,7 @@
 
 ## Summary
 
-Just a basic package template. See the docs: https://crickets-and-comb.github.io/reference_package/.
+Just a basic package template. See the docs: https://crickets-and-comb.github.io/comb_utils/.
 
 ## Structure
 
@@ -10,11 +10,11 @@ Just a basic package template. See the docs: https://crickets-and-comb.github.io
     .github/workflows               GitHub Actions CI/CD workflows.
     docs                            RST docs and doc build staging.
     Makefile                        Dev tools and params. (includes shared/Makefile)
-    src/reference_package/api       Public and internal API.
-    src/reference_package/cli       Command-line-interface.
+    src/comb_utils/api       Public and internal API.
+    src/comb_utils/cli       Command-line-interface.
     setup.cfg                       Metadata and dependencies.
     shared                          Shared dev tools Git submodule.
-    src/reference_package/lib       Implementation.
+    src/comb_utils/lib       Implementation.
     tests/e2e                       End-to-end tests.
     test/integration                Integration tests.
     tests/unit                      Unit tests.
@@ -24,15 +24,15 @@ Just a basic package template. See the docs: https://crickets-and-comb.github.io
 
 To install the package, run:
 
-  $ pip install reference_package
+  $ pip install comb_utils
 
 See https://pypi.org/project/reference-package/.
 
 ## Library functions
 
-`reference_package` is a library from which you can import functions. Import the public example function like this: `from reference_package import wait_a_second`. Or, import the internal version like a power user like this: `from reference_package.api.internal import wait_a_second`.
+`comb_utils` is a library from which you can import functions. Import the public example function like this: `from comb_utils import wait_a_second`. Or, import the internal version like a power user like this: `from comb_utils.api.internal import wait_a_second`.
 
-Unless you're developing, avoid importing directly from library, like `from reference_package.lib.example import wait_a_second`.
+Unless you're developing, avoid importing directly from library, like `from comb_utils.lib.example import wait_a_second`.
 
 ## CLI
 
@@ -102,7 +102,7 @@ $
 
 #### Setting Personal Access Token
 
-The shared workflows rely on a Personal Access Token (PAT) (to checkout the submodule so they can use the make targets). You need to create a PAT with repo access and add it to the consuming repo's (`reference_package` in this case) action secrets as `CHECKOUT_SHARED`. See GitHub for how to set up PATs (hint: check the developer settings on your personal account) and how to add secrets to a repo's actions (hint: check the repo's settings).
+The shared workflows rely on a Personal Access Token (PAT) (to checkout the submodule so they can use the make targets). You need to create a PAT with repo access and add it to the consuming repo's (`comb_utils` in this case) action secrets as `CHECKOUT_SHARED`. See GitHub for how to set up PATs (hint: check the developer settings on your personal account) and how to add secrets to a repo's actions (hint: check the repo's settings).
 
 Note: Using a PAT tied to a single user like this is less than ideal. Figuring out how to get around this is a welcome security upgrade.
 
@@ -113,9 +113,9 @@ You'll want this package's site-package files to be the source files in this rep
 First build and activate the env before installing this package:
 
     $ make build-env
-    $ conda activate reference_package_py3.12
+    $ conda activate comb_utils_py3.12
 
-Note, if you don't have Python installed, you need to pass the package name directly when you build the env: `make build-env PACKAGE_NAME=reference_package`. If you have Python installed (e.g., this conda env already activated), then you don't need to because it uses Python to grab the package name from the `setup.cfg` file.
+Note, if you don't have Python installed, you need to pass the package name directly when you build the env: `make build-env PACKAGE_NAME=comb_utils`. If you have Python installed (e.g., this conda env already activated), then you don't need to because it uses Python to grab the package name from the `setup.cfg` file.
 
 Then, install this package and its dev dependencies:
 

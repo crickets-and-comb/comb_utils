@@ -4,7 +4,7 @@ Reference Package: A basic package template
 
 Includes typical CLI and library setup. To include service app setup at some point.
 
-See also the GitHub repository: https://github.com/crickets-and-comb/reference_package
+See also the GitHub repository: https://github.com/crickets-and-comb/comb_utils
 
 Contents
 --------
@@ -22,7 +22,7 @@ To install the package, run:
 
 .. code:: bash
 
-    pip install reference_package
+    pip install comb_utils
 
 See https://pypi.org/project/reference-package/.
 
@@ -34,7 +34,7 @@ Avoid calling library functions directly and stick to the public API:
 
 .. code:: python
 
-    from reference_package import wait_a_second
+    from comb_utils import wait_a_second
 
     wait_a_second()
 
@@ -42,7 +42,7 @@ If you're a power user, you can use the internal API:
 
 .. code:: python
 
-    from reference_package.api.internal import wait_a_second
+    from comb_utils.api.internal import wait_a_second
 
     wait_a_second()
 
@@ -51,7 +51,7 @@ Nothing is stopping you from importing from lib directly, but you should avoid i
 
 .. code:: python
 
-    from reference_package.lib.example import wait_a_second
+    from comb_utils.lib.example import wait_a_second
 
     wait_a_second()
 
