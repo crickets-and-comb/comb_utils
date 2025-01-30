@@ -87,7 +87,7 @@ Then, when you run :code:`add_em --help`, you'll see the correct help doc:
     Raises:
 
         ValueError: If `a` is less than 0.
-        
+
         ValueError: If `b` is greater than 100.
 
     Returns:
@@ -99,7 +99,7 @@ Then, when you run :code:`add_em --help`, you'll see the correct help doc:
       --b INTEGER  The second number. Must be less than 100.
       --help       Show this message and exit.
 
-You can even use the sphinx-click extension's click directive to include the Click help doc within the CLI module itself. This is useful for keeping the Sphinx' CLI docs in sync with the CLI's help doc:
+You can even use the sphinx-click extension's click directive to include the Click help doc within the CLI module itself, and it's not a problem that it's a circular reference. This is useful for keeping the Sphinx' CLI docs in sync with the CLI's help doc. It's not really a feauture of :code:`DocString`, but it's worth mentioning here:
 
 .. code:: python
 
