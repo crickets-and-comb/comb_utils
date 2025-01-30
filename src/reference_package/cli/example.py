@@ -3,7 +3,7 @@
 import click
 from typeguard import typechecked
 
-from reference_package.lib import example
+from comb_utils.lib import example
 
 
 @click.command()
