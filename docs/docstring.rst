@@ -69,7 +69,7 @@ Using :code:`docstring.cli_docstring` and :code:`args` in a Click command:
 
 Now your CLI command help will have a docstring and args that match the function's docstring. Say you created an entry point named :code:`add_em` in your :code:`setup.cfg` file:
 
-.. code ini::
+.. code:: ini
 
     [options.entry_points]
     console_scripts =
