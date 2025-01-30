@@ -2,7 +2,7 @@
 
 from importlib.metadata import version
 
-from comb_utils.api.public import wait_a_second
+from comb_utils.lib import DocString, ErrorDocString
 
 try:
     __version__: str = version(__name__)

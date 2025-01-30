@@ -1,4 +1,4 @@
-# Basic package template
+# Comb Utils
 
 ## Summary
 
@@ -10,7 +10,6 @@ Some handy utils for Python projects. Repo is made from the `reference_package` 
     .github/workflows               GitHub Actions CI/CD workflows.
     docs                            RST docs and doc build staging.
     Makefile                        Dev tools and params. (includes shared/Makefile)
-    src/comb_utils/api              Public and internal API.
     setup.cfg                       Metadata and dependencies.
     shared                          Shared dev tools Git submodule.
     src/comb_utils/lib              Implementation.
@@ -26,12 +25,6 @@ To install the package, run:
   $ pip install comb_utils
 
 See https://pypi.org/project/comb-utils/.
-
-## Library functions
-
-`comb_utils` is a library from which you can import functions. Import the public example function like this: `from comb_utils import wait_a_second`. Or, import the internal version like a power user like this: `from comb_utils.api.internal import wait_a_second`.
-
-Unless you're developing, avoid importing directly from library, like `from comb_utils.lib.example import wait_a_second`.
 
 ## Dev workflow
 
