@@ -4,8 +4,6 @@ Comb Utils: Handy utils for Python projects
 
 Some handy utils for Python projects.
 
-See also the GitHub repository: https://github.com/crickets-and-comb/comb_utils
-
 Contents
 --------
 
@@ -53,3 +51,10 @@ Nothing is stopping you from importing from lib directly, but you should avoid i
     from comb_utils.lib.example import wait_a_second
 
     wait_a_second()
+
+See Also
+--------
+
+`Comb Utils GitHub repository <https://github.com/crickets-and-comb/comb_utils/>`_
+
+`comb-utils PyPi distribution <https://pypi.org/project/comb-utils/>`_
