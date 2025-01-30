@@ -2,7 +2,7 @@
 Reference Package: A basic package template
 ===========================================
 
-Includes typical CLI and library setup. To include service app setup at some point.
+Some handy utils for Python projects.
 
 See also the GitHub repository: https://github.com/crickets-and-comb/comb_utils
 
@@ -12,7 +12,6 @@ Contents
 .. toctree::
    :maxdepth: 3
 
-   CLI
    modules
 
 Installation
@@ -54,8 +53,3 @@ Nothing is stopping you from importing from lib directly, but you should avoid i
     from comb_utils.lib.example import wait_a_second
 
     wait_a_second()
-
-CLI
----
-
-When this package is installed, it comes with CLI tools. See :doc:`CLI` for more information.

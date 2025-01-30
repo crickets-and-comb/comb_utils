@@ -13,11 +13,6 @@ author = config.get("metadata", "author")
 email = config.get("metadata", "maintainer_email")
 copyright = config.get("metadata", "copyright")
 
-extensions = [
-    "sphinx.ext.autodoc",
-    "sphinx.ext.napoleon",
-    "sphinx_autodoc_typehints",
-    "sphinx_click",
-]
+extensions = ["sphinx.ext.autodoc", "sphinx.ext.napoleon", "sphinx_autodoc_typehints"]
 html_theme = "furo"
 html_context = {"version": version, "display_version": True}

@@ -2,14 +2,23 @@
 
 import time
 
-from click.testing import CliRunner
+import pytest
 
-from comb_utils.cli import example
+from comb_utils.lib.example import wait_a_second
 
 
-def test_example(cli_runner: CliRunner) -> None:
-    """Test that we wait at least as long as we expect to wait, using CLI."""
+@pytest.mark.parametrize("secs", [1, 2, 3])
+def test_example(secs: int) -> None:
+    """Integration tests are usually to test that stuff works together.
+
+    For instance, instead of connecting to a live DB, we might spin up a lightweight test DB
+    in conftest.
+
+    We'll just make a simple unit test here of our example function.
+
+    Test that we wait at least as long as we expect to wait.
+    """
     start_time = time.time()
-    cli_runner.invoke(example.main)
+    wait_a_second(secs=secs)
     end_time = time.time()
-    assert end_time - start_time > 1
+    assert end_time - start_time > secs
