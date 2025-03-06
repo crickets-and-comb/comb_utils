@@ -4,3 +4,6 @@ REPO_ROOT := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
 export
 include shared/Makefile
+
+full-test: # Run all the tests.
+	$(MAKE) unit
