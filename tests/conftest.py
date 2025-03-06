@@ -1,12 +1,11 @@
 """Tests conftest."""
 
 import os
-from typing import Any, List
 
 import pytest
 
 
-def pytest_collection_modifyitems(config: Any, items: List[Any]) -> None:
+def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item]) -> None:
     """Mark test types."""
     unit_tests_dir = os.path.join(config.rootdir, "tests/unit")
     integration_tests_dir = os.path.join(config.rootdir, "tests/integration")
@@ -20,9 +19,3 @@ def pytest_collection_modifyitems(config: Any, items: List[Any]) -> None:
             item.add_marker("integration")
         elif test_path.startswith(e2e_tests_dir):
             item.add_marker("e2e")
-
-
-def pytest_sessionfinish(session: Any, exitstatus: pytest.ExitCode) -> None:
-    """Set as success if no tests are collected."""
-    if exitstatus == pytest.ExitCode.NO_TESTS_COLLECTED:
-        session.exitstatus = pytest.ExitCode.OK

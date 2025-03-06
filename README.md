@@ -13,8 +13,6 @@ Some handy utils for Python projects. Repo is made from the `reference_package` 
     setup.cfg                       Metadata and dependencies.
     shared                          Shared dev tools Git submodule.
     src/comb_utils/lib              Implementation.
-    tests/e2e                       End-to-end tests.
-    test/integration                Integration tests.
     tests/unit                      Unit tests.
 ```
 
