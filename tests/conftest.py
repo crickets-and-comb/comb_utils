@@ -1,10 +1,11 @@
 """Tests conftest."""
 
 import os
-from typing import Any
+
+import pytest
 
 
-def pytest_collection_modifyitems(config: Any, items: list) -> None:
+def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item]) -> None:
     """Mark test types."""
     unit_tests_dir = os.path.join(config.rootdir, "tests/unit")
     integration_tests_dir = os.path.join(config.rootdir, "tests/integration")
