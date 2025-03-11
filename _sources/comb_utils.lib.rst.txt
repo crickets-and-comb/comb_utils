@@ -9,13 +9,13 @@ comb\_utils.lib.docs module
 
 .. automodule:: comb_utils.lib.docs
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Module contents
 ---------------
 
 .. automodule:: comb_utils.lib
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
