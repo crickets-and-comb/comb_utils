@@ -91,4 +91,4 @@ To use this tool, you'll need to have Docker installed and running on your machi
 
   $ brew install act
 
-NOTE: To be more accurate, we've overridden `run-act` to create a local `CI_CD_act.yml` (which we ignore with Git) as a copy of `CI_CD.yml` and replace one of the workflow call URLs with a relative path. We use a relative path because otherwise `act` will not honor the overridden `full-test` make target and will run the shared version. That will fail because the shared `full-test` target includes running integration and e2e tests, which this repo does not include.
+NOTE: To be more accurate, we've overridden `set-CI-CD-file` to create a local `CI_CD_act.yml` (which we ignore with Git) as a copy of `CI_CD.yml` and replace one of the workflow call URLs with a relative path. We use a relative path because otherwise `act` will not honor the overridden `full-test` make target and will run the shared version. That will fail because the shared `full-test` target includes running integration and e2e tests, which this repo does not include.
