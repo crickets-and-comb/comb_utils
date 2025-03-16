@@ -5,5 +5,5 @@ REPO_ROOT := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 export
 include shared/Makefile
 
-full-test: # Run all the tests.
+full-test: # Run all the tests. (NOTE: this means running run-act requires switching the path to the shared CI workflow to a relative path in CI_CD.yml.)
 	$(MAKE) unit
