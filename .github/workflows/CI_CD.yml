@@ -18,6 +18,10 @@ on:
         description: 'Publish to test or prod? Default ("dev") skips publishing except on push to main, which publishes to test.'
         type: string
         default: 'dev'
+      USE_RELATIVE_WORKFLOW_PATH:
+        description: "Use relative path to shared workflow (for act)."
+        required: false
+        default: 'false'
 
   workflow_call:
     inputs:
@@ -70,18 +74,42 @@ jobs:
             echo "TEST_OR_PROD=${{ inputs.TEST_OR_PROD }}" >> $GITHUB_OUTPUT
           fi
 
-  CI:
+  CI-act:
     name: QC and Tests
     needs: set-inputs
-    # NOTE: Switch to relative path when running with `act`.
+    if: ${{ github.event.inputs.USE_RELATIVE_WORKFLOW_PATH == 'true' }}
+    uses: ./shared/.github/workflows/CI.yml
+    secrets:
+      CHECKOUT_SHARED: ${{ secrets.CHECKOUT_SHARED }}
+      SAFETY_API_KEY: ${{ secrets.SAFETY_API_KEY }}
+
+  CI-GitHub:
+    name: QC and Tests
+    needs: set-inputs
+    if: ${{ github.event.inputs.USE_RELATIVE_WORKFLOW_PATH == 'false' }}
     uses: crickets-and-comb/shared/.github/workflows/CI.yml@main
     secrets:
       CHECKOUT_SHARED: ${{ secrets.CHECKOUT_SHARED }}
       SAFETY_API_KEY: ${{ secrets.SAFETY_API_KEY }}
 
-  build-dist:
+  build-dist-act:
     name: Build Dist
-    needs: [CI, set-inputs]
+    needs: [CI-act, set-inputs]
+    if: ${{ github.event.inputs.USE_RELATIVE_WORKFLOW_PATH == 'true' }}
+    uses: ./shared/.github/workflows/build_dist.yml
+    with:
+      DIST_DIR: "dist"
+      PYTHON_BUILD_VERSION: ${{ needs.set-inputs.outputs.PYTHON_BUILD_VERSION }}
+      PYTHON_PACKAGE_DIST_NAME: python-package-distributions
+      # Allows a test build locally without uploading.
+      UPLOAD_DIST: ${{ needs.set-inputs.outputs.TEST_OR_PROD == 'test' || needs.set-inputs.outputs.TEST_OR_PROD == 'prod' }}
+    secrets:
+      CHECKOUT_SHARED: ${{ secrets.CHECKOUT_SHARED }}
+
+  build-dist-GitHub:
+    name: Build Dist
+    needs: [CI-GitHub, set-inputs]
+    if: ${{ github.event.inputs.USE_RELATIVE_WORKFLOW_PATH == 'false' }}
     uses: crickets-and-comb/shared/.github/workflows/build_dist.yml@main
     with:
       DIST_DIR: "dist"
@@ -92,9 +120,9 @@ jobs:
     secrets:
       CHECKOUT_SHARED: ${{ secrets.CHECKOUT_SHARED }}
 
-  publish-to-testpypi:
+  publish-to-testpypi-act:
     name: Publish to TestPyPI
-    needs: build-dist
+    needs: build-dist-act
     if: ${{ needs.set-inputs.outputs.TEST_OR_PROD == 'test' }}
     runs-on: ubuntu-latest
     environment:
@@ -117,9 +145,34 @@ jobs:
           packages-dir: "dist"
           verify-metadata: false
 
-  publish-to-pypi:
+  publish-to-testpypi-GitHub:
+    name: Publish to TestPyPI
+    needs: build-dist-GitHub
+    if: ${{ needs.set-inputs.outputs.TEST_OR_PROD == 'test' }}
+    runs-on: ubuntu-latest
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/p/${{ github.repository }}
+    permissions:
+      id-token: write
+
+    steps:
+      - name: Download Dist
+        uses: actions/download-artifact@v4
+        with:
+          name: python-package-distributions
+          path: "dist"
+
+      - name: Publish to TestPyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+          packages-dir: "dist"
+          verify-metadata: false
+
+  publish-to-pypi-act:
     name: Publish to PyPi
-    needs: build-dist
+    needs: build-dist-act
     if: ${{ needs.set-inputs.outputs.TEST_OR_PROD == 'prod' }}
     runs-on: ubuntu-latest
     environment:
@@ -141,9 +194,49 @@ jobs:
           packages-dir: "dist"
           verify-metadata: false
 
-  github-release:
+  publish-to-pypi-GitHub:
+    name: Publish to PyPi
+    needs: build-dist-GitHub
+    if: ${{ needs.set-inputs.outputs.TEST_OR_PROD == 'prod' }}
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/${{ github.repository }}
+    permissions:
+      id-token: write
+
+    steps:
+      - name: Download Dist
+        uses: actions/download-artifact@v4
+        with:
+          name: python-package-distributions
+          path: "dist"
+
+      - name: Publish to PyPi
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: "dist"
+          verify-metadata: false
+
+  github-release-act:
     name: Sign Sistribution with Sigstore and Upload to GitHub Release
-    needs: [publish-to-pypi, set-inputs]
+    needs: [publish-to-pypi-act, set-inputs]
+    if: ${{ github.event.inputs.USE_RELATIVE_WORKFLOW_PATH == 'true' }}
+    uses: ./shared/.github/workflows/release_to_github.yml
+    permissions:
+      contents: write
+      id-token: write
+    with:
+      DIST_DIR: "dist"
+      PYTHON_BUILD_VERSION: ${{ needs.set-inputs.outputs.PYTHON_BUILD_VERSION }}
+      PYTHON_PACKAGE_DIST_NAME: python-package-distributions
+    secrets:
+      CHECKOUT_SHARED: ${{ secrets.CHECKOUT_SHARED }}
+
+  github-release-GitHub:
+    name: Sign Sistribution with Sigstore and Upload to GitHub Release
+    needs: [publish-to-pypi-GitHub, set-inputs]
+    if: ${{ github.event.inputs.USE_RELATIVE_WORKFLOW_PATH == 'false' }}
     uses: crickets-and-comb/shared/.github/workflows/release_to_github.yml@main
     permissions:
       contents: write
@@ -155,43 +248,96 @@ jobs:
     secrets:
       CHECKOUT_SHARED: ${{ secrets.CHECKOUT_SHARED }}
 
-  wait-to-test-test:
+  wait-to-test-test-act:
     name: Wait for Test Publish to Propagate
-    needs: publish-to-testpypi
-    runs-on: ubuntu-latest
-    steps:
-      - name: Wait
-        run: sleep ${{ env.PACKAGE_TEST_WAIT_TIME }}
-  
-  wait-to-test-prod:
-    name: Wait for Prod Publish to Propagate
-    needs: publish-to-pypi
+    needs: publish-to-testpypi-act
     runs-on: ubuntu-latest
     steps:
       - name: Wait
         run: sleep ${{ env.PACKAGE_TEST_WAIT_TIME }}
 
-  test-install-test:
+  wait-to-test-test-GitHub:
+    name: Wait for Test Publish to Propagate
+    needs: publish-to-testpypi-GitHub
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait
+        run: sleep ${{ env.PACKAGE_TEST_WAIT_TIME }}
+  
+  wait-to-test-prod-act:
+    name: Wait for Prod Publish to Propagate
+    needs: publish-to-pypi-act
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait
+        run: sleep ${{ env.PACKAGE_TEST_WAIT_TIME }}
+
+  wait-to-test-prod-GitHub:
+    name: Wait for Prod Publish to Propagate
+    needs: publish-to-pypi-GitHub
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait
+        run: sleep ${{ env.PACKAGE_TEST_WAIT_TIME }}
+
+  test-install-test-act:
     name: Test Test Install
-    needs: wait-to-test-test
+    needs: wait-to-test-test-act
+    if: ${{ github.event.inputs.USE_RELATIVE_WORKFLOW_PATH == 'true' }}
+    uses: ./shared/.github/workflows/test_install.yml
+    with:
+      TEST_OR_PROD: 'test'
+    secrets:
+      CHECKOUT_SHARED: ${{ secrets.CHECKOUT_SHARED }}
+
+  test-install-test-GitHub:
+    name: Test Test Install
+    needs: wait-to-test-test-GitHub
+    if: ${{ github.event.inputs.USE_RELATIVE_WORKFLOW_PATH == 'false' }}
     uses: crickets-and-comb/shared/.github/workflows/test_install.yml@main
     with:
       TEST_OR_PROD: 'test'
     secrets:
       CHECKOUT_SHARED: ${{ secrets.CHECKOUT_SHARED }}
 
-  test-install-prod:
+  test-install-prod-act:
     name: Test Prod Install
-    needs: wait-to-test-prod
+    needs: wait-to-test-prod-act
+    if: ${{ github.event.inputs.USE_RELATIVE_WORKFLOW_PATH == 'true' }}
+    uses: ./shared/.github/workflows/test_install.yml
+    with:
+      TEST_OR_PROD: 'prod'
+    secrets:
+      CHECKOUT_SHARED: ${{ secrets.CHECKOUT_SHARED }}
+
+  test-install-prod-GitHub:
+    name: Test Prod Install
+    needs: wait-to-test-prod-GitHub
+    if: ${{ github.event.inputs.USE_RELATIVE_WORKFLOW_PATH == 'false' }}
     uses: crickets-and-comb/shared/.github/workflows/test_install.yml@main
     with:
       TEST_OR_PROD: 'prod'
     secrets:
       CHECKOUT_SHARED: ${{ secrets.CHECKOUT_SHARED }}
 
-  deploy-docs:
+  deploy-docs-act:
     name: Deploy Docs
-    needs: [publish-to-pypi, set-inputs]
+    needs: [publish-to-pypi-act, set-inputs]
+    if: ${{ github.event.inputs.USE_RELATIVE_WORKFLOW_PATH == 'true' }}
+    uses: ./shared/.github/workflows/deploy_docs.yml
+    with:
+      PYTHON_BUILD_VERSION: ${{ needs.set-inputs.outputs.PYTHON_BUILD_VERSION }}
+    permissions:
+      id-token: write
+      contents: write
+    secrets:
+      ACTIONS_DEPLOY_KEY: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+      CHECKOUT_SHARED: ${{ secrets.CHECKOUT_SHARED }}
+
+  deploy-docs-GitHub:
+    name: Deploy Docs
+    needs: [publish-to-pypi-GitHub, set-inputs]
+    if: ${{ github.event.inputs.USE_RELATIVE_WORKFLOW_PATH == 'false' }}
     uses: crickets-and-comb/shared/.github/workflows/deploy_docs.yml@main
     with:
       PYTHON_BUILD_VERSION: ${{ needs.set-inputs.outputs.PYTHON_BUILD_VERSION }}
