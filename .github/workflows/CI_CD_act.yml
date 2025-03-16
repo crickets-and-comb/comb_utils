@@ -1,4 +1,4 @@
-# NOTE: Keep this in sync with CI_CD_act.yml.
+# NOTE: Keep this in sync with CI_CD.yml.
 # The only difference should be that CI_CD_act uses relative paths in the shared workflow calls and CI_CD uses GitHub URLs.
 # This allows for local testing of the shared workflows, specifically in case of overriding make targets.
 name: CI-CD
@@ -76,7 +76,7 @@ jobs:
   CI:
     name: QC and Tests
     needs: set-inputs
-    uses: crickets-and-comb/shared/.github/workflows/CI.yml@main
+    uses: ./shared/.github/workflows/CI.yml
     secrets:
       CHECKOUT_SHARED: ${{ secrets.CHECKOUT_SHARED }}
       SAFETY_API_KEY: ${{ secrets.SAFETY_API_KEY }}
@@ -84,7 +84,7 @@ jobs:
   build-dist:
     name: Build Dist
     needs: [CI, set-inputs]
-    uses: crickets-and-comb/shared/.github/workflows/build_dist.yml@main
+    uses: ./shared/.github/workflows/build_dist.yml
     with:
       DIST_DIR: "dist"
       PYTHON_BUILD_VERSION: ${{ needs.set-inputs.outputs.PYTHON_BUILD_VERSION }}
@@ -146,7 +146,7 @@ jobs:
   github-release:
     name: Sign Sistribution with Sigstore and Upload to GitHub Release
     needs: [publish-to-pypi, set-inputs]
-    uses: crickets-and-comb/shared/.github/workflows/release_to_github.yml@main
+    uses: ./shared/.github/workflows/release_to_github.yml
     permissions:
       contents: write
       id-token: write
@@ -176,7 +176,7 @@ jobs:
   test-install-test:
     name: Test Test Install
     needs: wait-to-test-test
-    uses: crickets-and-comb/shared/.github/workflows/test_install.yml@main
+    uses: ./shared/.github/workflows/test_install.yml
     with:
       TEST_OR_PROD: 'test'
     secrets:
@@ -185,7 +185,7 @@ jobs:
   test-install-prod:
     name: Test Prod Install
     needs: wait-to-test-prod
-    uses: crickets-and-comb/shared/.github/workflows/test_install.yml@main
+    uses: ./shared/.github/workflows/test_install.yml
     with:
       TEST_OR_PROD: 'prod'
     secrets:
@@ -194,7 +194,7 @@ jobs:
   deploy-docs:
     name: Deploy Docs
     needs: [publish-to-pypi, set-inputs]
-    uses: crickets-and-comb/shared/.github/workflows/deploy_docs.yml@main
+    uses: ./shared/.github/workflows/deploy_docs.yml
     with:
       PYTHON_BUILD_VERSION: ${{ needs.set-inputs.outputs.PYTHON_BUILD_VERSION }}
     permissions:
