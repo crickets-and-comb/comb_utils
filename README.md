@@ -89,4 +89,20 @@ To use this tool, you'll need to have Docker installed and running on your machi
 
   $ brew install act
 
-NOTE: We ignore `CI_CD_act.yml` with Git because the file uses relative paths for shared workflow calls, which causes GitHub actions to fail at parsing. We use relative paths because otherwise `act` will not honor the overridden `full-test` make target and will run the shared version and fail because the shared `full-test` target includes running integration and e2e tests, which this repo does not include.
+NOTE: You need to create your own local `CI_CD_act.yml`, because we ignore `CI_CD_act.yml` with Git. We do this because the file uses relative paths for shared workflow calls, which causes GitHub actions to fail at parsing. We use relative paths because otherwise `act` will not honor the overridden `full-test` make target and will run the shared version and fail because the shared `full-test` target includes running integration and e2e tests, which this repo does not include. To create your local `CI_CD_act.yml`, simply copy `.github/workflows/CI_CD.yml` and change:
+
+```
+  CI:
+    name: QC and Tests
+    needs: set-inputs
+    uses: crickets-and-comb/shared/.github/workflows/CI.yml@main
+```
+
+to:
+
+```
+  CI:
+    name: QC and Tests
+    needs: set-inputs
+    uses: ./shared/.github/workflows/CI.yml
+```
