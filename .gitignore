@@ -62,3 +62,6 @@ docs/**/*.pickle
 
 # MacOS
 # .DS_Store
+
+# Workflows
+.github/workflows/CI_CD_act.yml
