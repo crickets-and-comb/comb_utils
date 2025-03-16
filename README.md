@@ -83,8 +83,10 @@ As a final step, it's good practice to test run the workflow before opening a PR
 
   $ make run-act
 
-That will run `.github/workflows/CI_CD.yml`. But, you can also run any workflow you'd like by using `act` directly. See https://nektosact.com.
+That will run `.github/workflows/CI_CD_act.yml`. But, you can also run any workflow you'd like by using `act` directly. See https://nektosact.com.
 
 To use this tool, you'll need to have Docker installed and running on your machine: https://www.docker.com/. You'll also need to install `act` in your terminal:
 
   $ brew install act
+
+NOTE: We ignore `CI_CD_act.yml` with Git because the file uses relative paths for shared workflow calls, which causes GitHub actions to fail at parsing. We use relative paths because otherwise `act` will not honor the overridden `full-test` make target and will run the shared version and fail because the shared `full-test` target includes running integration and e2e tests, which this repo does not include.
