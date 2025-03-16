@@ -1,15 +1,11 @@
 # NOTE: Keep this in sync with CI_CD.yml.
-# The only difference should be that CI_CD_act uses relative paths in the shared workflow calls and CI_CD uses GitHub URLs.
+# The only differences should be:
+  # CI_CD_act uses relative paths in the shared workflow calls and CI_CD uses GitHub URLs.
+  # CI_CD_act only has the workflow_dispatch trigger.
 # This allows for local testing of the shared workflows, specifically in case of overriding make targets.
 name: CI-CD
 
 on:
-  schedule:
-    - cron: "0 1 * * 0" # Weekly on Sunday at 1:00 a.m.
-
-  push:
-    branches:
-      - main
 
   workflow_dispatch:
     inputs:
@@ -21,20 +17,6 @@ on:
         description: 'Publish to test or prod? Default ("dev") skips publishing except on push to main, which publishes to test.'
         type: string
         default: 'dev'
-
-  workflow_call:
-    inputs:
-      TEST_OR_PROD:
-        description: 'Publish to test or prod? Default ("dev") skips publishing except on push to main, which publishes to test.'
-        type: string
-        default: 'dev'
-    secrets:
-      ACTIONS_DEPLOY_KEY:
-        required: false
-      CHECKOUT_SHARED:
-        required: true
-      SAFETY_API_KEY:
-        required: true
 
 defaults:
   run:
