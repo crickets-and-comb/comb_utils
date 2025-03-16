@@ -79,6 +79,8 @@ When making smaller commits, you might just want to run some of the smaller comm
 
     $ make clean format full-qc full-test
 
+#### Using act
+
 As a final step, it's good practice to test run the workflow before opening a PR or pushing to an open PR. We don't want to waste GitHub runtime on a glitch that we could have caught before. You can use a make target for that:
 
   $ make run-act
@@ -88,3 +90,5 @@ That will run `.github/workflows/CI_CD.yml`. But, you can also run any workflow 
 To use this tool, you'll need to have Docker installed and running on your machine: https://www.docker.com/. You'll also need to install `act` in your terminal:
 
   $ brew install act
+
+NOTE: To be more accurate, we've overridden `run-act` to create a local `CI_CD_act.yml` (which we ignore with Git) as a copy of `CI_CD.yml` and replace one of the workflow call URLs with a relative path. We use a relative path because otherwise `act` will not honor the overridden `full-test` make target and will run the shared version. That will fail because the shared `full-test` target includes running integration and e2e tests, which this repo does not include.
