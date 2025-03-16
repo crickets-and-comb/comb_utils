@@ -3,7 +3,6 @@
   # CI_CD_act uses relative paths in the shared workflow calls and CI_CD uses GitHub URLs.
   # CI_CD_act only has the workflow_dispatch trigger.
 # This allows for local testing of the shared workflows, specifically in case of overriding make targets.
-# TODO: Consider changing `run-act`, either in shared or locally, to simply copy CI_CD.yml to CI_CD_act.yml and rewrite the paths.
 name: CI-CD
 
 on:
