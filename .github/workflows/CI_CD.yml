@@ -27,7 +27,7 @@ on:
         default: 'dev'
     secrets:
       ACTIONS_DEPLOY_KEY:
-        required: true
+        required: false
       CHECKOUT_SHARED:
         required: true
       SAFETY_API_KEY:
