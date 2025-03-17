@@ -93,7 +93,7 @@ jobs:
 
   publish-to-testpypi:
     name: Publish to TestPyPI
-    needs: build-dist
+    needs: [build-dist, set-inputs]
     if: ${{ needs.set-inputs.outputs.TEST_OR_PROD == 'test' }}
     runs-on: ubuntu-latest
     environment:
@@ -118,7 +118,7 @@ jobs:
 
   publish-to-pypi:
     name: Publish to PyPi
-    needs: build-dist
+    needs: [build-dist, set-inputs]
     if: ${{ needs.set-inputs.outputs.TEST_OR_PROD == 'prod' }}
     runs-on: ubuntu-latest
     environment:
