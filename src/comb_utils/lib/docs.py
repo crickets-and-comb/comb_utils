@@ -27,7 +27,6 @@ class ErrorDocString:
         return
 
 
-# TODO: Move this to a central utils repo. (And combine with Defaults? Include types?)
 class DocString:
     """Class to format docstrings for public API `sphinx` docs and CLI `click` help.
 
