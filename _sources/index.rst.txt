@@ -4,6 +4,8 @@ Comb Utils: Handy utils for Python projects
 
 Some handy utils for Python projects.
 
+This is a `Crickets and Comb <https://cricketsandcomb.org>`_ resource.
+
 Contents
 --------
 
