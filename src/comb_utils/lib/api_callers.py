@@ -280,6 +280,84 @@ class BaseCaller:
         cls._timeout = cls._timeout * self._wait_increase_scalar
 
 
+class BaseGetCaller(BaseCaller):
+    """A base class for making GET API calls.
+
+    Presets the timeout, initial wait time, and requests method.
+    """
+
+    _timeout: float = RateLimits.READ_TIMEOUT_SECONDS
+    _min_wait_seconds: float = RateLimits.READ_SECONDS
+    _wait_seconds: float = _min_wait_seconds
+
+    @typechecked
+    def _set_request_call(self) -> None:
+        """Set the requests call method to `requests.get`."""
+        self._request_call = requests.get
+
+
+class BasePostCaller(BaseCaller):
+    """A base class for making POST API calls.
+
+    Presets the timeout, initial wait time, and requests method.
+    """
+
+    _timeout: float = RateLimits.WRITE_TIMEOUT_SECONDS
+    _min_wait_seconds: float = RateLimits.WRITE_SECONDS
+    _wait_seconds: float = _min_wait_seconds
+
+    @typechecked
+    def _set_request_call(self) -> None:
+        """Set the requests call method to `requests.post`."""
+        self._request_call = requests.post
+
+
+class BaseDeleteCaller(BasePostCaller):
+    """A base class for making DELETE API calls.
+
+    Presets the timeout, initial wait time, and requests method.
+    """
+
+    @typechecked
+    def _set_request_call(self) -> None:
+        """Set the requests call method to `requests.delete`."""
+        self._request_call = requests.delete
+
+
+class BasePagedResponseGetter(BaseGetCaller):
+    """Class for getting paged responses."""
+
+    #: The nextPageToken returned, but called salsa to avoid bandit.
+    next_page_salsa: str | None
+
+    #: The URL for the page.
+    _page_url: str
+
+    @typechecked
+    def __init__(self, page_url: str) -> None:
+        """Initialize the BasePagedResponseGetter object.
+
+        Args:
+            page_url: The URL for the page. (Optionally contains nextPageToken.)
+        """
+        self._page_url = page_url
+        super().__init__()
+
+    @typechecked
+    def _set_url(self) -> None:
+        """Set the URL for the API call to the `page_url`."""
+        self._url = self._page_url
+
+    @typechecked
+    def _handle_200(self) -> None:
+        """Handle a 200 response.
+
+        Sets `next_page_salsa` to the nextPageToken.
+        """
+        super()._handle_200()
+        self.next_page_salsa = self.response_json.get("nextPageToken", None)
+
+
 @typechecked
 def get_response_dict(response: requests.Response) -> dict[str, Any]:
     """Safely handle a response that may not be JSON."""
