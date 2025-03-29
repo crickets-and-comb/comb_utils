@@ -358,7 +358,6 @@ class BasePagedResponseGetter(BaseGetCaller):
         self.next_page_salsa = self.response_json.get("nextPageToken", None)
 
 
-# TODO: Move this up in inits. issue 24
 @typechecked
 def get_response_dict(response: requests.Response) -> dict[str, Any]:
     """Safely handle a response that may not be JSON.
