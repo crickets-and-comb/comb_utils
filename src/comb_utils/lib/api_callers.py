@@ -358,9 +358,17 @@ class BasePagedResponseGetter(BaseGetCaller):
         self.next_page_salsa = self.response_json.get("nextPageToken", None)
 
 
+# TODO: Move this up in inits. issue 24
 @typechecked
 def get_response_dict(response: requests.Response) -> dict[str, Any]:
-    """Safely handle a response that may not be JSON."""
+    """Safely handle a response that may not be JSON.
+
+    Args:
+        response: The response from the API call.
+
+    Returns:
+        A dictionary containing the response data.
+    """
     try:
         response_dict: dict = response.json()
     except Exception as e:
@@ -369,4 +377,25 @@ def get_response_dict(response: requests.Response) -> dict[str, Any]:
             "additional_notes": "No-JSON response.",
             "No-JSON response exception:": str(e),
         }
+
     return response_dict
+
+
+@typechecked
+def concat_response_pages(
+    page_list: list[dict[str, Any]], data_key: str
+) -> list[dict[str, Any]]:
+    """Extract and concatenate the data lists from response pages.
+
+    Args:
+        page_list: A list of response page dictionaries.
+        data_key: The key to extract the data from each page.
+
+    Returns:
+        A list of dictionaries containing the data from each page.
+    """
+    data_list = []
+    for page in page_list:
+        data_list += page[data_key]
+
+    return data_list
