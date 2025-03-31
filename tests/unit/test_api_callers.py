@@ -500,3 +500,88 @@ def test_get_responses_returns(
             assert result == expected_result
 
         assert mock_get.call_count == len(responses)
+
+
+@pytest.mark.parametrize(
+    "params, responses",
+    [
+        (
+            "",
+            [
+                {
+                    "json.return_value": {"data": [1, 2, 3], "nextPageToken": None},
+                    "status_code": 200,
+                }
+            ],
+        ),
+        (
+            "",
+            [
+                {
+                    "json.return_value": {"data": [1], "nextPageToken": "abc"},
+                    "status_code": 200,
+                },
+                {
+                    "json.return_value": {"data": [2], "nextPageToken": None},
+                    "status_code": 200,
+                },
+            ],
+        ),
+        (
+            "",
+            [
+                {"json.return_value": {}, "status_code": 429},
+                {"json.return_value": {}, "status_code": 429},
+                {
+                    "json.return_value": {"data": [3], "nextPageToken": "asfg"},
+                    "status_code": 200,
+                },
+                {"json.return_value": {}, "status_code": 429},
+                {
+                    "json.return_value": {"data": [54], "nextPageToken": None},
+                    "status_code": 200,
+                },
+            ],
+        ),
+        (
+            "?filter.startsGte=2015-12-12&filter.startsLTE=2021-06-25",
+            [
+                {
+                    "json.return_value": {"data": [1], "nextPageToken": "abc"},
+                    "status_code": 200,
+                },
+                {
+                    "json.return_value": {"data": [2], "nextPageToken": None},
+                    "status_code": 200,
+                },
+            ],
+        ),
+    ],
+)
+@typechecked
+def test_get_responses_urls(responses: list[dict[str, Any]], params: str) -> None:
+    """Test get_responses function."""
+    base_url = f"{BASE_URL}{params}"
+    with patch("requests.get") as mock_get:
+        mock_get.side_effect = [Mock(**resp) for resp in responses]
+
+        _ = get_responses(url=base_url, paged_response_class=BasePagedResponseGetter)
+
+        expected_urls = [base_url]
+        last_next_page_token = None
+        for resp in responses:
+            next_page_token = resp["json.return_value"].get("nextPageToken")
+            if next_page_token or (not next_page_token and resp["status_code"] == 429):
+                if resp["status_code"] == 429:
+                    next_page_token = last_next_page_token
+                last_next_page_token = next_page_token
+
+                token_prefix = "?" if "?" not in base_url else "&"
+                token = (
+                    f"{token_prefix}pageToken={next_page_token}" if next_page_token else ""
+                )
+                expected_urls.append(f"{base_url}{token}")
+
+        actual_urls = [call[1]["url"] for call in mock_get.call_args_list]
+
+        assert actual_urls == expected_urls
