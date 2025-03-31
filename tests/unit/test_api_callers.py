@@ -9,11 +9,17 @@ import requests
 from typeguard import typechecked
 
 from comb_utils import BaseCaller, BaseDeleteCaller, BaseGetCaller, BasePostCaller
+from comb_utils.lib.constants import RateLimits
 
 _CALLER_DICT: Final[dict[str, type[BaseCaller]]] = {
     "get": BaseGetCaller,
     "post": BasePostCaller,
     "delete": BaseDeleteCaller,
+}
+_REQUEST_METHOD_DICT: Final[dict[str, str]] = {
+    "get": "get",
+    "post": "post",
+    "delete": "delete",
 }
 
 
@@ -158,3 +164,99 @@ def test_base_caller_response_handling(
                     spy_handle_timeout.assert_called_once()
 
                 assert mock_request.call_count == len(response_sequence)
+
+
+@pytest.mark.parametrize(
+    "request_type, response_sequence, expected_wait_time",
+    [
+        (
+            "get",
+            [{"status_code": 200, "raise_for_status.side_effect": None}],
+            RateLimits.READ_SECONDS,
+        ),
+        (
+            "post",
+            [{"status_code": 200, "raise_for_status.side_effect": None}],
+            RateLimits.WRITE_SECONDS,
+        ),
+        (
+            "delete",
+            [{"status_code": 200, "raise_for_status.side_effect": None}],
+            RateLimits.WRITE_SECONDS,
+        ),
+        (
+            "get",
+            [{"status_code": 204, "raise_for_status.side_effect": None}],
+            RateLimits.READ_SECONDS,
+        ),
+        (
+            "post",
+            [{"status_code": 204, "raise_for_status.side_effect": None}],
+            RateLimits.WRITE_SECONDS,
+        ),
+        (
+            "delete",
+            [{"status_code": 204, "raise_for_status.side_effect": None}],
+            RateLimits.WRITE_SECONDS,
+        ),
+        (
+            "get",
+            [
+                {
+                    "status_code": 429,
+                    "raise_for_status.side_effect": requests.exceptions.HTTPError,
+                },
+                {"status_code": 200, "raise_for_status.side_effect": None},
+            ],
+            RateLimits.READ_SECONDS
+            * RateLimits.WAIT_INCREASE_SCALAR
+            * RateLimits.WAIT_DECREASE_SECONDS,
+        ),
+        (
+            "post",
+            [
+                {
+                    "status_code": 429,
+                    "raise_for_status.side_effect": requests.exceptions.HTTPError,
+                },
+                {"status_code": 200, "raise_for_status.side_effect": None},
+            ],
+            RateLimits.WRITE_SECONDS
+            * RateLimits.WAIT_INCREASE_SCALAR
+            * RateLimits.WAIT_DECREASE_SECONDS,
+        ),
+        (
+            "delete",
+            [
+                {
+                    "status_code": 429,
+                    "raise_for_status.side_effect": requests.exceptions.HTTPError,
+                },
+                {"status_code": 200, "raise_for_status.side_effect": None},
+            ],
+            RateLimits.WRITE_SECONDS
+            * RateLimits.WAIT_INCREASE_SCALAR
+            * RateLimits.WAIT_DECREASE_SECONDS,
+        ),
+    ],
+)
+@typechecked
+def test_base_caller_wait_time_adjusting(
+    request_type: str, response_sequence: list[dict[str, Any]], expected_wait_time: float
+) -> None:
+    """Test request wait time adjustments on rate-limiting."""
+
+    class MockCaller(_CALLER_DICT[request_type]):
+        """Minimal concrete subclass of BaseCaller for testing."""
+
+        def _set_url(self) -> None:
+            """Set a dummy test URL."""
+            self._url = "https://example.com/api/test"
+
+    with patch(f"requests.{_REQUEST_METHOD_DICT[request_type]}") as mock_request:
+        mock_request.side_effect = [Mock(**resp) for resp in response_sequence]
+
+        mock_caller = MockCaller()
+        mock_caller.call_api()
+
+        assert MockCaller._wait_seconds == expected_wait_time
