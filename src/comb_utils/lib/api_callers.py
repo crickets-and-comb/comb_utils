@@ -39,7 +39,6 @@ class BaseCaller:
                 def _set_url(self):
                     self._url = "https://example.com/public/v0.2b/"
 
-                @typechecked
                 def _get_API_key(self) -> str:
                     # Wrap your own API key retrieval function here.
                     return my_custom_key_retrieval_function()
