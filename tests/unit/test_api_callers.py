@@ -14,8 +14,11 @@ from comb_utils import (
     BaseGetCaller,
     BasePagedResponseGetter,
     BasePostCaller,
+    get_responses,
 )
 from comb_utils.lib.constants import RateLimits
+
+BASE_URL: Final[str] = "https://example.com/api/test"
 
 _CALLER_DICT: Final[dict[str, type[BaseCaller]]] = {
     "get": BaseGetCaller,
@@ -39,7 +42,7 @@ def test_key_call(request_type: str) -> None:
 
         def _set_url(self) -> None:
             """Set a dummy test URL."""
-            self._url = "https://example.com/api/test"
+            self._url = BASE_URL
 
     response_sequence: list[dict[str, Any]] = [
         {"json.return_value": {"data": [1, 2, 3]}, "status_code": 200}
@@ -146,7 +149,7 @@ def test_base_caller_response_handling(
 
         def _set_url(self) -> None:
             """Set a dummy test URL."""
-            self._url = "https://example.com/api/test"
+            self._url = BASE_URL
 
     with patch(f"requests.{request_type}") as mock_request:
         mock_request.side_effect = [Mock(**resp) for resp in response_sequence]
@@ -257,7 +260,7 @@ def test_base_caller_wait_time_adjusting(
 
         def _set_url(self) -> None:
             """Set a dummy test URL."""
-            self._url = "https://example.com/api/test"
+            self._url = BASE_URL
 
     with patch(f"requests.{_REQUEST_METHOD_DICT[request_type]}") as mock_request:
         mock_request.side_effect = [Mock(**resp) for resp in response_sequence]
@@ -347,7 +350,7 @@ def test_base_caller_timeout_adjusting(
 
         def _set_url(self) -> None:
             """Set a dummy test URL."""
-            self._url = "https://example.com/api/test"
+            self._url = BASE_URL
 
     with patch(f"requests.{_REQUEST_METHOD_DICT[request_type]}") as mock_request:
         mock_request.side_effect = [Mock(**resp) for resp in response_sequence]
@@ -379,3 +382,121 @@ def test_paged_getter(response_sequence: list[dict[str, Any]]) -> None:
         assert caller.next_page_salsa == response_sequence[-1]["json.return_value"].get(
             "nextPageToken", None
         )
+
+
+@pytest.mark.parametrize(
+    "responses, expected_result, error_context",
+    [
+        (
+            [
+                {
+                    "json.return_value": {"data": [1, 2, 3], "nextPageToken": None},
+                    "status_code": 200,
+                }
+            ],
+            [{"data": [1, 2, 3], "nextPageToken": None}],
+            nullcontext(),
+        ),
+        (
+            [
+                {
+                    "json.return_value": {"data": [1], "nextPageToken": "abc"},
+                    "status_code": 200,
+                },
+                {
+                    "json.return_value": {"data": [2], "nextPageToken": None},
+                    "status_code": 200,
+                },
+            ],
+            [{"data": [1], "nextPageToken": "abc"}, {"data": [2], "nextPageToken": None}],
+            nullcontext(),
+        ),
+        (
+            [
+                {"json.return_value": {}, "status_code": 429},
+                {"json.return_value": {}, "status_code": 429},
+                {
+                    "json.return_value": {"data": [3], "nextPageToken": "asfg"},
+                    "status_code": 200,
+                },
+                {"json.return_value": {}, "status_code": 429},
+                {
+                    "json.return_value": {"data": [54], "nextPageToken": None},
+                    "status_code": 200,
+                },
+            ],
+            [{"data": [3], "nextPageToken": "asfg"}, {"data": [54], "nextPageToken": None}],
+            nullcontext(),
+        ),
+        (
+            [
+                {
+                    "json.return_value": {},
+                    "status_code": 400,
+                    "raise_for_status.side_effect": requests.exceptions.HTTPError(),
+                }
+            ],
+            None,
+            pytest.raises(requests.exceptions.HTTPError),
+        ),
+        (
+            [
+                {
+                    "json.return_value": {},
+                    "status_code": 401,
+                    "raise_for_status.side_effect": requests.exceptions.HTTPError(),
+                }
+            ],
+            None,
+            pytest.raises(requests.exceptions.HTTPError),
+        ),
+        (
+            [
+                {
+                    "json.return_value": {},
+                    "status_code": 403,
+                    "raise_for_status.side_effect": requests.exceptions.HTTPError(),
+                }
+            ],
+            None,
+            pytest.raises(requests.exceptions.HTTPError),
+        ),
+        (
+            [
+                {
+                    "json.return_value": {},
+                    "status_code": 404,
+                    "raise_for_status.side_effect": requests.exceptions.HTTPError(),
+                }
+            ],
+            None,
+            pytest.raises(requests.exceptions.HTTPError),
+        ),
+        (
+            [
+                {
+                    "json.return_value": {},
+                    "status_code": 500,
+                    "raise_for_status.side_effect": requests.exceptions.HTTPError(),
+                }
+            ],
+            None,
+            pytest.raises(requests.exceptions.HTTPError),
+        ),
+    ],
+)
+@typechecked
+def test_get_responses_returns(
+    responses: list[dict[str, Any]],
+    expected_result: list[dict[str, Any]] | None,
+    error_context: AbstractContextManager,
+) -> None:
+    """Test get_responses function."""
+    with patch("requests.get") as mock_get:
+        mock_get.side_effect = [Mock(**resp) for resp in responses]
+
+        with error_context:
+            result = get_responses(url=BASE_URL, paged_response_class=BasePagedResponseGetter)
+            assert result == expected_result
+
+        assert mock_get.call_count == len(responses)
