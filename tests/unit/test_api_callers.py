@@ -18,7 +18,7 @@ _CALLER_DICT: Final[dict[str, type[BaseCaller]]] = {
 @pytest.mark.parametrize("request_type", ["get", "post", "delete"])
 @typechecked
 def test_key_call(request_type: str) -> None:
-    """Test `call_api` handling of different HTTP responses, including retries."""
+    """Test `call_api` calls `_get_API_key`."""
 
     class MockCaller(_CALLER_DICT[request_type]):
         """Minimal concrete subclass of BaseCaller for testing."""
