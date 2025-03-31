@@ -260,3 +260,93 @@ def test_base_caller_wait_time_adjusting(
         mock_caller.call_api()
 
         assert MockCaller._wait_seconds == expected_wait_time
+
+
+@pytest.mark.parametrize(
+    "request_type, response_sequence, expected_timeout",
+    [
+        (
+            "get",
+            [{"status_code": 200, "raise_for_status.side_effect": None}],
+            RateLimits.READ_TIMEOUT_SECONDS,
+        ),
+        (
+            "post",
+            [{"status_code": 200, "raise_for_status.side_effect": None}],
+            RateLimits.WRITE_TIMEOUT_SECONDS,
+        ),
+        (
+            "delete",
+            [{"status_code": 200, "raise_for_status.side_effect": None}],
+            RateLimits.WRITE_TIMEOUT_SECONDS,
+        ),
+        (
+            "get",
+            [{"status_code": 204, "raise_for_status.side_effect": None}],
+            RateLimits.READ_TIMEOUT_SECONDS,
+        ),
+        (
+            "post",
+            [{"status_code": 204, "raise_for_status.side_effect": None}],
+            RateLimits.WRITE_TIMEOUT_SECONDS,
+        ),
+        (
+            "delete",
+            [{"status_code": 204, "raise_for_status.side_effect": None}],
+            RateLimits.WRITE_TIMEOUT_SECONDS,
+        ),
+        (
+            "get",
+            [
+                {
+                    "status_code": 598,
+                    "raise_for_status.side_effect": requests.exceptions.Timeout,
+                },
+                {"status_code": 200, "raise_for_status.side_effect": None},
+            ],
+            RateLimits.READ_TIMEOUT_SECONDS * RateLimits.WAIT_INCREASE_SCALAR,
+        ),
+        (
+            "post",
+            [
+                {
+                    "status_code": 598,
+                    "raise_for_status.side_effect": requests.exceptions.Timeout,
+                },
+                {"status_code": 200, "raise_for_status.side_effect": None},
+            ],
+            RateLimits.WRITE_TIMEOUT_SECONDS * RateLimits.WAIT_INCREASE_SCALAR,
+        ),
+        (
+            "delete",
+            [
+                {
+                    "status_code": 598,
+                    "raise_for_status.side_effect": requests.exceptions.Timeout,
+                },
+                {"status_code": 200, "raise_for_status.side_effect": None},
+            ],
+            RateLimits.WRITE_TIMEOUT_SECONDS * RateLimits.WAIT_INCREASE_SCALAR,
+        ),
+    ],
+)
+@typechecked
+def test_base_caller_timeout_adjusting(
+    request_type: str, response_sequence: list[dict[str, Any]], expected_timeout: float
+) -> None:
+    """Test timeout adjustment on timeout retry."""
+
+    class MockCaller(_CALLER_DICT[request_type]):
+        """Minimal concrete subclass of BaseCaller for testing."""
+
+        def _set_url(self) -> None:
+            """Set a dummy test URL."""
+            self._url = "https://example.com/api/test"
+
+    with patch(f"requests.{_REQUEST_METHOD_DICT[request_type]}") as mock_request:
+        mock_request.side_effect = [Mock(**resp) for resp in response_sequence]
+
+        mock_caller = MockCaller()
+        mock_caller.call_api()
+
+        assert MockCaller._timeout == expected_timeout
