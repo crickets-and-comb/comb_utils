@@ -8,7 +8,13 @@ import pytest
 import requests
 from typeguard import typechecked
 
-from comb_utils import BaseCaller, BaseDeleteCaller, BaseGetCaller, BasePostCaller
+from comb_utils import (
+    BaseCaller,
+    BaseDeleteCaller,
+    BaseGetCaller,
+    BasePagedResponseGetter,
+    BasePostCaller,
+)
 from comb_utils.lib.constants import RateLimits
 
 _CALLER_DICT: Final[dict[str, type[BaseCaller]]] = {
@@ -350,3 +356,26 @@ def test_base_caller_timeout_adjusting(
         mock_caller.call_api()
 
         assert MockCaller._timeout == expected_timeout
+
+
+@pytest.mark.parametrize(
+    "response_sequence",
+    [
+        ([{"status_code": 200, "json.return_value": {"nextPageToken": "abc123"}}]),
+        ([{"status_code": 200, "json.return_value": {"nextPageToken": None}}]),
+        ([{"status_code": 200, "json.return_value": {}}]),
+    ],
+)
+@typechecked
+def test_paged_getter(response_sequence: list[dict[str, Any]]) -> None:
+    """Test PagedResponseGetterBFB."""
+    with patch("requests.get") as mock_request:
+        mock_request.side_effect = [Mock(**resp) for resp in response_sequence]
+
+        page_url = "https://example.com/api/test"
+        caller = BasePagedResponseGetter(page_url=page_url)
+        caller.call_api()
+        assert mock_request.call_args_list[0][1]["url"] == page_url
+        assert caller.next_page_salsa == response_sequence[-1]["json.return_value"].get(
+            "nextPageToken", None
+        )
