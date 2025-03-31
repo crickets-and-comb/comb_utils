@@ -39,7 +39,7 @@ class BaseCaller:
                 def _set_url(self):
                     self._url = "https://example.com/public/v0.2b/"
 
-                def _get_API_key(self) -> str:
+                def _get_API_key(self) -> str | None:
                     # Wrap your own API key retrieval function here.
                     return my_custom_key_retrieval_function()
 
@@ -113,17 +113,6 @@ class BaseCaller:
     @typechecked
     def _set_url(self) -> None:
         """Set the URL for the API call.
-
-        Raises:
-            NotImplementedError: If not implemented in child class.
-        """
-        raise NotImplementedError
-
-    # TODO: bfb_delivery issue 59, comb_utils issue 24: Return "" for no-key API calls?
-    @abstractmethod
-    @typechecked
-    def _get_API_key(self) -> str:
-        """Get the API key.
 
         Raises:
             NotImplementedError: If not implemented in child class.
@@ -206,6 +195,14 @@ class BaseCaller:
             raise ValueError(
                 f"Unexpected response {self._response.status_code}:\n{response_dict}"
             )
+
+    @typechecked
+    def _get_API_key(self) -> str | None:
+        """Get the API key.
+
+        Defaults to None, but can be overridden in child class.
+        """
+        return None
 
     @typechecked
     def _handle_429(self) -> None:
