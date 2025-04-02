@@ -13,6 +13,7 @@ Contents
    :maxdepth: 3
 
    docstring
+   api_callers
    modules
 
 Installation

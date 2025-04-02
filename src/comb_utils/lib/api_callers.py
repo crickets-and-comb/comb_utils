@@ -16,6 +16,10 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 
+# TODO: https://github.com/crickets-and-comb/comb_utils/issues/38:
+# Why are we using _set_url instead of the url property?
+# Why are we using _set_request_call instead of the _request_call property?
+
 class BaseCaller:
     """An abstract class for making API calls.
 
@@ -40,7 +44,7 @@ class BaseCaller:
                     self._url = "https://example.com/public/v0.2b/"
 
                 def _get_API_key(self) -> str | None:
-                    # Wrap your own API key retrieval function here.
+                    # Optionally wrap your own API key retrieval function here.
                     return my_custom_key_retrieval_function()
 
                 def _handle_200(self):
@@ -61,6 +65,10 @@ class BaseCaller:
         this run in the background and will stop it if it runs too long. It will eventually
         at least crash the memory, depending on available memory, mean time to failure, and
         time left in the universe.
+
+    .. note::
+        The `_set_request_call` and `_set_url` methods will be deprecated in favor of setting
+        the request call member at child class definition and passing the URL to `__init__`.
     """
 
     # Set by object:
