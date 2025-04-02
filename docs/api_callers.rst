@@ -18,7 +18,7 @@ The main classes in this module are:
 
 - :py:class:`comb_utils.lib.api_callers.BaseDeleteCaller`: A base class for making DELETE API calls. This class is a subclass of :code:`BaseCaller` and provides a default implementation for making DELETE requests.
 
-The are plans to add additional classes for remaining request calls (i.e., PUT, PATCH, etc.) in the future. For now, you can use :code:`BaseCaller` and override the :code:`BaseCaller._set_request_call` method to implement these calls.
+The are plans to add additional classes for remaining request calls (i.e., PUT, PATCH, etc.) in the future. For now, you can use :code:`BaseCaller` and override the :code:`BaseCaller._set_request_call` method to implement these calls. See https://github.com/crickets-and-comb/comb_utils/issues/40.
 
 Example Usage
 -------------
