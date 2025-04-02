@@ -20,6 +20,7 @@ logger = logging.getLogger(__name__)
 # Why are we using _set_url instead of the url property?
 # Why are we using _set_request_call instead of the _request_call property?
 
+
 class BaseCaller:
     """An abstract class for making API calls.
 
