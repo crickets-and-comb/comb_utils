@@ -2,10 +2,12 @@
 <html class="no-js" lang="en" data-content_root="./">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="#" /><link rel="search" title="Search" href="search.html" />
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="comb_utils" href="modules.html" /><link rel="prev" title="DocString: A Class to Format Docstrings for Sphinx and Click" href="docstring.html" />
 
-    <!-- Generated with Sphinx 8.2.3 and Furo 2024.08.06 --><title>Index - comb_utils 0.2.0 documentation</title>
-<link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <!-- Generated with Sphinx 8.2.3 and Furo 2024.08.06 -->
+        <title>API Callers: Base Classes for Making API Calls - comb_utils 0.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=302659d7" />
     
@@ -176,7 +178,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -196,9 +198,9 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul>
+  <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="docstring.html">DocString: A Class to Format Docstrings for Sphinx and Click</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api_callers.html">API Callers: Base Classes for Making API Calls</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">API Callers: Base Classes for Making API Calls</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="modules.html">comb_utils</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of comb_utils</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="comb_utils.html">comb_utils package</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of comb_utils package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="comb_utils.lib.html">comb_utils.lib package</a></li>
@@ -225,7 +227,13 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          <div class="view-this-page">
+  <a class="muted-link" href="_sources/api_callers.rst.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
@@ -234,235 +242,100 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          
-<section class="genindex-section">
-  <h1 id="index">Index</h1>
-  <div class="genindex-jumpbox"><a href="#A"><strong>A</strong></a> | <a href="#B"><strong>B</strong></a> | <a href="#C"><strong>C</strong></a> | <a href="#D"><strong>D</strong></a> | <a href="#E"><strong>E</strong></a> | <a href="#G"><strong>G</strong></a> | <a href="#M"><strong>M</strong></a> | <a href="#N"><strong>N</strong></a> | <a href="#O"><strong>O</strong></a> | <a href="#R"><strong>R</strong></a> | <a href="#W"><strong>W</strong></a></div>
+          <section id="api-callers-base-classes-for-making-api-calls">
+<h1>API Callers: Base Classes for Making API Calls<a class="headerlink" href="#api-callers-base-classes-for-making-api-calls" title="Link to this heading">¶</a></h1>
+<p>The <a class="reference internal" href="comb_utils.lib.html#module-comb_utils.lib.api_callers" title="comb_utils.lib.api_callers"><code class="xref py py-mod docutils literal notranslate"><span class="pre">comb_utils.lib.api_callers</span></code></a> module provides base classes for making API calls. These classes are designed to be extended for specific APIs, allowing for easy customization and reuse of code.</p>
+<p>The API callers are designed to be used with the <code class="xref py py-class docutils literal notranslate"><span class="pre">requests</span></code> library, which is a popular library for making HTTP requests in Python. The API callers handle the details of making the requests and parsing the responses, whether successful or failed, allowing you to focus on the logic of your application.</p>
+<p>NOTE: The current implementation requires you to extend the bases classes by at least overriding <code class="code docutils literal notranslate"><span class="pre">_set_url</span></code> to set the API URL you are querying. This will soon be deprecated. The plan is to allow you to pass the URL in at <code class="code docutils literal notranslate"><span class="pre">__init__</span></code> time, but this is not yet implemented. See <a class="reference external" href="https://github.com/crickets-and-comb/comb_utils/issues/38">https://github.com/crickets-and-comb/comb_utils/issues/38</a>.</p>
+<p>The main classes in this module are:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="comb_utils.lib.html#comb_utils.lib.api_callers.BaseCaller" title="comb_utils.lib.api_callers.BaseCaller"><code class="xref py py-class docutils literal notranslate"><span class="pre">comb_utils.lib.api_callers.BaseCaller</span></code></a>: A base class for making API calls with customizable headers and parameters. If using this, you will need to extend it and override <code class="xref py py-meth docutils literal notranslate"><span class="pre">comb_utils.lib.api_callers.BaseCaller._set_request_call()</span></code>, but the following classes are recommended.</p></li>
+<li><p><a class="reference internal" href="comb_utils.lib.html#comb_utils.lib.api_callers.BaseGetCaller" title="comb_utils.lib.api_callers.BaseGetCaller"><code class="xref py py-class docutils literal notranslate"><span class="pre">comb_utils.lib.api_callers.BaseGetCaller</span></code></a>: A base class for making GET API calls. This class is a subclass of <code class="code docutils literal notranslate"><span class="pre">BaseCaller</span></code> and provides a default implementation for making GET requests.</p></li>
+<li><p><a class="reference internal" href="comb_utils.lib.html#comb_utils.lib.api_callers.BasePostCaller" title="comb_utils.lib.api_callers.BasePostCaller"><code class="xref py py-class docutils literal notranslate"><span class="pre">comb_utils.lib.api_callers.BasePostCaller</span></code></a>: A base class for making POST API calls. This class is a subclass of <code class="code docutils literal notranslate"><span class="pre">BaseCaller</span></code> and provides a default implementation for making POST requests.</p></li>
+<li><p><a class="reference internal" href="comb_utils.lib.html#comb_utils.lib.api_callers.BaseDeleteCaller" title="comb_utils.lib.api_callers.BaseDeleteCaller"><code class="xref py py-class docutils literal notranslate"><span class="pre">comb_utils.lib.api_callers.BaseDeleteCaller</span></code></a>: A base class for making DELETE API calls. This class is a subclass of <code class="code docutils literal notranslate"><span class="pre">BaseCaller</span></code> and provides a default implementation for making DELETE requests.</p></li>
+</ul>
+<p>The are plans to add additional classes for remaining request calls (i.e., PUT, PATCH, etc.) in the future. For now, you can use <code class="code docutils literal notranslate"><span class="pre">BaseCaller</span></code> and override the <code class="code docutils literal notranslate"><span class="pre">BaseCaller._set_request_call</span></code> method to implement these calls. See <a class="reference external" href="https://github.com/crickets-and-comb/comb_utils/issues/40">https://github.com/crickets-and-comb/comb_utils/issues/40</a>.</p>
+<section id="example-usage">
+<h2>Example Usage<a class="headerlink" href="#example-usage" title="Link to this heading">¶</a></h2>
+<p>To use the API callers, you need to create a subclass of one of the base classes and implement the required methods. Here is an example of how to create a custom API caller for a hypothetical API:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">comb_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseGetCaller</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MyAPICaller</span><span class="p">(</span><span class="n">BaseGetCaller</span><span class="p">):</span>
+
+    <span class="c1"># Optionally create a custom member to store the response value.</span>
+    <span class="c1"># The, override the `_handle_200` method to set this value.</span>
+    <span class="n">target_response_value</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_set_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://api.example.com/data&quot;</span>
+
+    <span class="c1"># Optionally override `_handle_200` to process the response.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_handle_200</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_handle_200</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target_response_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">response_json</span><span class="p">[</span><span class="s2">&quot;target_key&quot;</span><span class="p">]</span>
+
+<span class="n">my_caller</span> <span class="o">=</span> <span class="n">MyCaller</span><span class="p">()</span>
+<span class="n">my_caller</span><span class="o">.</span><span class="n">call_api</span><span class="p">()</span>
+<span class="n">target_response_value</span> <span class="o">=</span> <span class="n">my_caller</span><span class="o">.</span><span class="n">target_response_value</span>
+</pre></div>
+</div>
+<p>Here we call the example.com API. We optionally extract a specific value from the JSON response. The <code class="code docutils literal notranslate"><span class="pre">call_api</span></code> method is inherited from the base class and handles the details of making the request and processing the response.</p>
+<section id="using-a-key-for-authentication">
+<h3>Using a key for authentication<a class="headerlink" href="#using-a-key-for-authentication" title="Link to this heading">¶</a></h3>
+<p>Using a key for authentication is common in APIs. You can override the <code class="code docutils literal notranslate"><span class="pre">_get_API_key</span></code> method to return the key. The base class will then construct the authentication for you. Here is an example of how to do this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">comb_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseGetCaller</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MyAPICaller</span><span class="p">(</span><span class="n">BaseGetCaller</span><span class="p">):</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_set_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://api.example.com/data&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_API_key</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">my_custom_key_retrieval_function</span><span class="p">()</span>
+
+<span class="n">my_caller</span> <span class="o">=</span> <span class="n">MyCaller</span><span class="p">()</span>
+<span class="n">my_caller</span><span class="o">.</span><span class="n">call_api</span><span class="p">()</span>
+</pre></div>
+</div>
 </section>
-<section id="A" class="genindex-section">
-  <h2>A</h2>
-  <table style="width: 100%" class="indextable genindextable"><tr>
-    <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="comb_utils.lib.html#comb_utils.lib.docs.DocString.api_docstring">api_docstring (comb_utils.lib.docs.DocString property)</a>
-</li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="comb_utils.lib.html#comb_utils.lib.docs.DocString.args">args (comb_utils.lib.docs.DocString attribute)</a>
-</li>
-    </ul></td>
-  </tr></table>
 </section>
-
-<section id="B" class="genindex-section">
-  <h2>B</h2>
-  <table style="width: 100%" class="indextable genindextable"><tr>
-    <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="comb_utils.lib.html#comb_utils.lib.api_callers.BaseCaller">BaseCaller (class in comb_utils.lib.api_callers)</a>
-</li>
-        <li><a href="comb_utils.lib.html#comb_utils.lib.api_callers.BaseDeleteCaller">BaseDeleteCaller (class in comb_utils.lib.api_callers)</a>
-</li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="comb_utils.lib.html#comb_utils.lib.api_callers.BaseGetCaller">BaseGetCaller (class in comb_utils.lib.api_callers)</a>
-</li>
-        <li><a href="comb_utils.lib.html#comb_utils.lib.api_callers.BasePagedResponseGetter">BasePagedResponseGetter (class in comb_utils.lib.api_callers)</a>
-</li>
-        <li><a href="comb_utils.lib.html#comb_utils.lib.api_callers.BasePostCaller">BasePostCaller (class in comb_utils.lib.api_callers)</a>
-</li>
-    </ul></td>
-  </tr></table>
+<section id="additional-notes">
+<h2>Additional Notes<a class="headerlink" href="#additional-notes" title="Link to this heading">¶</a></h2>
+<p>You may want to override the request wait and timeout times or other parameters. See the <a class="reference internal" href="comb_utils.lib.html#comb_utils.lib.api_callers.BaseCaller" title="comb_utils.lib.api_callers.BaseCaller"><code class="xref py py-class docutils literal notranslate"><span class="pre">comb_utils.lib.api_callers.BaseCaller</span></code></a> class for details on how to do this.</p>
 </section>
-
-<section id="C" class="genindex-section">
-  <h2>C</h2>
-  <table style="width: 100%" class="indextable genindextable"><tr>
-    <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="comb_utils.lib.html#comb_utils.lib.api_callers.BaseCaller.call_api">call_api() (comb_utils.lib.api_callers.BaseCaller method)</a>
-</li>
-        <li><a href="comb_utils.lib.html#comb_utils.lib.docs.DocString.cli_docstring">cli_docstring (comb_utils.lib.docs.DocString property)</a>
-</li>
-        <li>
-    comb_utils
-
-        <ul>
-          <li><a href="comb_utils.html#module-comb_utils">module</a>
-</li>
-        </ul></li>
-        <li>
-    comb_utils.lib
-
-        <ul>
-          <li><a href="comb_utils.lib.html#module-comb_utils.lib">module</a>
-</li>
-        </ul></li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
-        <li>
-    comb_utils.lib.api_callers
-
-        <ul>
-          <li><a href="comb_utils.lib.html#module-comb_utils.lib.api_callers">module</a>
-</li>
-        </ul></li>
-        <li>
-    comb_utils.lib.constants
-
-        <ul>
-          <li><a href="comb_utils.lib.html#module-comb_utils.lib.constants">module</a>
-</li>
-        </ul></li>
-        <li>
-    comb_utils.lib.docs
-
-        <ul>
-          <li><a href="comb_utils.lib.html#module-comb_utils.lib.docs">module</a>
-</li>
-        </ul></li>
-        <li><a href="comb_utils.lib.html#comb_utils.lib.api_callers.concat_response_pages">concat_response_pages() (in module comb_utils.lib.api_callers)</a>
-</li>
-    </ul></td>
-  </tr></table>
 </section>
-
-<section id="D" class="genindex-section">
-  <h2>D</h2>
-  <table style="width: 100%" class="indextable genindextable"><tr>
-    <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="comb_utils.lib.html#comb_utils.lib.docs.DocString">DocString (class in comb_utils.lib.docs)</a>
-</li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="comb_utils.lib.html#comb_utils.lib.docs.ErrorDocString.docstring">docstring (comb_utils.lib.docs.ErrorDocString attribute)</a>
-</li>
-    </ul></td>
-  </tr></table>
-</section>
-
-<section id="E" class="genindex-section">
-  <h2>E</h2>
-  <table style="width: 100%" class="indextable genindextable"><tr>
-    <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="comb_utils.lib.html#comb_utils.lib.docs.ErrorDocString.error_type">error_type (comb_utils.lib.docs.ErrorDocString attribute)</a>
-</li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="comb_utils.lib.html#comb_utils.lib.docs.ErrorDocString">ErrorDocString (class in comb_utils.lib.docs)</a>
-</li>
-    </ul></td>
-  </tr></table>
-</section>
-
-<section id="G" class="genindex-section">
-  <h2>G</h2>
-  <table style="width: 100%" class="indextable genindextable"><tr>
-    <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="comb_utils.lib.html#comb_utils.lib.api_callers.get_response_dict">get_response_dict() (in module comb_utils.lib.api_callers)</a>
-</li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="comb_utils.lib.html#comb_utils.lib.api_callers.get_responses">get_responses() (in module comb_utils.lib.api_callers)</a>
-</li>
-    </ul></td>
-  </tr></table>
-</section>
-
-<section id="M" class="genindex-section">
-  <h2>M</h2>
-  <table style="width: 100%" class="indextable genindextable"><tr>
-    <td style="width: 33%; vertical-align: top;"><ul>
-        <li>
-    module
-
-        <ul>
-          <li><a href="comb_utils.html#module-comb_utils">comb_utils</a>
-</li>
-          <li><a href="comb_utils.lib.html#module-comb_utils.lib">comb_utils.lib</a>
-</li>
-          <li><a href="comb_utils.lib.html#module-comb_utils.lib.api_callers">comb_utils.lib.api_callers</a>
-</li>
-          <li><a href="comb_utils.lib.html#module-comb_utils.lib.constants">comb_utils.lib.constants</a>
-</li>
-          <li><a href="comb_utils.lib.html#module-comb_utils.lib.docs">comb_utils.lib.docs</a>
-</li>
-        </ul></li>
-    </ul></td>
-  </tr></table>
-</section>
-
-<section id="N" class="genindex-section">
-  <h2>N</h2>
-  <table style="width: 100%" class="indextable genindextable"><tr>
-    <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="comb_utils.lib.html#comb_utils.lib.api_callers.BasePagedResponseGetter.next_page_salsa">next_page_salsa (comb_utils.lib.api_callers.BasePagedResponseGetter attribute)</a>
-</li>
-    </ul></td>
-  </tr></table>
-</section>
-
-<section id="O" class="genindex-section">
-  <h2>O</h2>
-  <table style="width: 100%" class="indextable genindextable"><tr>
-    <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="comb_utils.lib.html#comb_utils.lib.docs.DocString.opening">opening (comb_utils.lib.docs.DocString attribute)</a>
-</li>
-    </ul></td>
-  </tr></table>
-</section>
-
-<section id="R" class="genindex-section">
-  <h2>R</h2>
-  <table style="width: 100%" class="indextable genindextable"><tr>
-    <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="comb_utils.lib.html#comb_utils.lib.docs.DocString.raises">raises (comb_utils.lib.docs.DocString attribute)</a>
-</li>
-        <li><a href="comb_utils.lib.html#comb_utils.lib.constants.RateLimits">RateLimits (class in comb_utils.lib.constants)</a>
-</li>
-        <li><a href="comb_utils.lib.html#comb_utils.lib.constants.RateLimits.READ_SECONDS">READ_SECONDS (comb_utils.lib.constants.RateLimits attribute)</a>
-</li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="comb_utils.lib.html#comb_utils.lib.constants.RateLimits.READ_TIMEOUT_SECONDS">READ_TIMEOUT_SECONDS (comb_utils.lib.constants.RateLimits attribute)</a>
-</li>
-        <li><a href="comb_utils.lib.html#comb_utils.lib.api_callers.BaseCaller.response_json">response_json (comb_utils.lib.api_callers.BaseCaller attribute)</a>
-</li>
-        <li><a href="comb_utils.lib.html#comb_utils.lib.docs.DocString.returns">returns (comb_utils.lib.docs.DocString attribute)</a>
-</li>
-    </ul></td>
-  </tr></table>
-</section>
-
-<section id="W" class="genindex-section">
-  <h2>W</h2>
-  <table style="width: 100%" class="indextable genindextable"><tr>
-    <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="comb_utils.lib.html#comb_utils.lib.constants.RateLimits.WAIT_DECREASE_SECONDS">WAIT_DECREASE_SECONDS (comb_utils.lib.constants.RateLimits attribute)</a>
-</li>
-        <li><a href="comb_utils.lib.html#comb_utils.lib.constants.RateLimits.WAIT_INCREASE_SCALAR">WAIT_INCREASE_SCALAR (comb_utils.lib.constants.RateLimits attribute)</a>
-</li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="comb_utils.lib.html#comb_utils.lib.constants.RateLimits.WRITE_SECONDS">WRITE_SECONDS (comb_utils.lib.constants.RateLimits attribute)</a>
-</li>
-        <li><a href="comb_utils.lib.html#comb_utils.lib.constants.RateLimits.WRITE_TIMEOUT_SECONDS">WRITE_TIMEOUT_SECONDS (comb_utils.lib.constants.RateLimits attribute)</a>
-</li>
-    </ul></td>
-  </tr></table>
-</section>
-
 
         </article>
       </div>
       <footer>
         
         <div class="related-pages">
-          
-          
+          <a class="next-page" href="modules.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">comb_utils</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="docstring.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">DocString: A Class to Format Docstrings for Sphinx and Click</div>
+                
+              </div>
+            </a>
         </div>
         <div class="bottom-of-page">
           <div class="left-details">
@@ -481,8 +354,31 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">API Callers: Base Classes for Making API Calls</a><ul>
+<li><a class="reference internal" href="#example-usage">Example Usage</a><ul>
+<li><a class="reference internal" href="#using-a-key-for-authentication">Using a key for authentication</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#additional-notes">Additional Notes</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>

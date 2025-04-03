@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="prev" title="comb_utils package" href="comb_utils.html" />
 
     <!-- Generated with Sphinx 8.2.3 and Furo 2024.08.06 -->
-        <title>comb_utils.lib package - comb_utils 0.1.15 documentation</title>
+        <title>comb_utils.lib package - comb_utils 0.2.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=302659d7" />
@@ -166,7 +166,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">comb_utils 0.1.15 documentation</div></a>
+      <a href="index.html"><div class="brand">comb_utils 0.2.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -190,7 +190,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
   
-  <span class="sidebar-brand-text">comb_utils 0.1.15 documentation</span>
+  <span class="sidebar-brand-text">comb_utils 0.2.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -200,6 +200,7 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="docstring.html">DocString: A Class to Format Docstrings for Sphinx and Click</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_callers.html">API Callers: Base Classes for Making API Calls</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">comb_utils</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of comb_utils</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2 current has-children"><a class="reference internal" href="comb_utils.html">comb_utils package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of comb_utils package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l3 current current-page"><a class="current reference internal" href="#">comb_utils.lib package</a></li>
@@ -251,6 +252,224 @@
 <h1>comb_utils.lib package<a class="headerlink" href="#comb-utils-lib-package" title="Link to this heading">¶</a></h1>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
+</section>
+<section id="module-comb_utils.lib.api_callers">
+<span id="comb-utils-lib-api-callers-module"></span><h2>comb_utils.lib.api_callers module<a class="headerlink" href="#module-comb_utils.lib.api_callers" title="Link to this heading">¶</a></h2>
+<p>Classes for making API calls.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="comb_utils.lib.api_callers.BaseCaller">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">comb_utils.lib.api_callers.</span></span><span class="sig-name descname"><span class="pre">BaseCaller</span></span><a class="headerlink" href="#comb_utils.lib.api_callers.BaseCaller" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>An abstract class for making API calls.</p>
+<p>See <a class="reference internal" href="api_callers.html"><span class="doc">API Callers: Base Classes for Making API Calls</span></a>.</p>
+<p class="rubric">Example</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MyGetCaller</span><span class="p">(</span><span class="n">BaseCaller</span><span class="p">):</span>
+    <span class="n">target_response_value</span>
+
+    <span class="n">_min_wait_seconds</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span>
+    <span class="c1"># Initialize _wait_seconds and timeout as a class variable.</span>
+    <span class="c1"># Instances will adjust for class.</span>
+    <span class="n">_wait_seconds</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">_min_wait_seconds</span>
+    <span class="n">_timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">10</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_set_request_call</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_request_call</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_set_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_url</span> <span class="o">=</span> <span class="s2">&quot;https://example.com/public/v0.2b/&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_API_key</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Optionally wrap your own API key retrieval function here.</span>
+        <span class="k">return</span> <span class="n">my_custom_key_retrieval_function</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_handle_200</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_handle_200</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target_response_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">response_json</span><span class="p">[</span><span class="s2">&quot;target_key&quot;</span><span class="p">]</span>
+
+<span class="n">my_caller</span> <span class="o">=</span> <span class="n">MyCaller</span><span class="p">()</span>
+<span class="n">my_caller</span><span class="o">.</span><span class="n">call_api</span><span class="p">()</span>
+<span class="n">target_response_value</span> <span class="o">=</span> <span class="n">my_caller</span><span class="o">.</span><span class="n">target_response_value</span>
+</pre></div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>You must initialize _wait_seconds, _timeout, and _min_wait_seconds in child classes.
+This allows child class instances to adjust the wait/timeout time for the child class.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>There is a potential for this to run indefinitely for rate limiting and timeouts.
+It handles them somewhat intelligently, but the assumption is that someone is watching
+this run in the background and will stop it if it runs too long. It will eventually
+at least crash the memory, depending on available memory, mean time to failure, and
+time left in the universe.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <cite>_set_request_call</cite> and <cite>_set_url</cite> methods will be deprecated in favor of setting
+the request call member at child class definition and passing the URL to <cite>__init__</cite>.</p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="comb_utils.lib.api_callers.BaseCaller.call_api">
+<span class="sig-name descname"><span class="pre">call_api</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#comb_utils.lib.api_callers.BaseCaller.call_api" title="Link to this definition">¶</a></dt>
+<dd><p>The main method for making the API call.</p>
+<p>Handle errors, parse response, and decrease class wait time on success.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ValueError</strong> – If the response status code is not expected.</p></li>
+<li><p><strong>requests.exceptions.HTTPError</strong> – For non-rate-limiting errors.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="comb_utils.lib.api_callers.BaseCaller.response_json">
+<span class="sig-name descname"><span class="pre">response_json</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">,</span> <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code><span class="pre">]</span></em><a class="headerlink" href="#comb_utils.lib.api_callers.BaseCaller.response_json" title="Link to this definition">¶</a></dt>
+<dd><p>The JSON from the response.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="comb_utils.lib.api_callers.BaseDeleteCaller">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">comb_utils.lib.api_callers.</span></span><span class="sig-name descname"><span class="pre">BaseDeleteCaller</span></span><a class="headerlink" href="#comb_utils.lib.api_callers.BaseDeleteCaller" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#comb_utils.lib.api_callers.BasePostCaller" title="comb_utils.lib.api_callers.BasePostCaller"><code class="xref py py-class docutils literal notranslate"><span class="pre">BasePostCaller</span></code></a></p>
+<p>A base class for making DELETE API calls.</p>
+<p>Presets the timeout, initial wait time, and requests method.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="comb_utils.lib.api_callers.BaseGetCaller">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">comb_utils.lib.api_callers.</span></span><span class="sig-name descname"><span class="pre">BaseGetCaller</span></span><a class="headerlink" href="#comb_utils.lib.api_callers.BaseGetCaller" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#comb_utils.lib.api_callers.BaseCaller" title="comb_utils.lib.api_callers.BaseCaller"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseCaller</span></code></a></p>
+<p>A base class for making GET API calls.</p>
+<p>Presets the timeout, initial wait time, and requests method.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="comb_utils.lib.api_callers.BasePagedResponseGetter">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">comb_utils.lib.api_callers.</span></span><span class="sig-name descname"><span class="pre">BasePagedResponseGetter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">page_url</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#comb_utils.lib.api_callers.BasePagedResponseGetter" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#comb_utils.lib.api_callers.BaseGetCaller" title="comb_utils.lib.api_callers.BaseGetCaller"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseGetCaller</span></code></a></p>
+<p>Class for getting paged responses.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="comb_utils.lib.api_callers.BasePagedResponseGetter.next_page_salsa">
+<span class="sig-name descname"><span class="pre">next_page_salsa</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> <span class="pre">|</span> <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></em><a class="headerlink" href="#comb_utils.lib.api_callers.BasePagedResponseGetter.next_page_salsa" title="Link to this definition">¶</a></dt>
+<dd><p>The nextPageToken returned, but called salsa to avoid bandit.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="comb_utils.lib.api_callers.BasePostCaller">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">comb_utils.lib.api_callers.</span></span><span class="sig-name descname"><span class="pre">BasePostCaller</span></span><a class="headerlink" href="#comb_utils.lib.api_callers.BasePostCaller" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#comb_utils.lib.api_callers.BaseCaller" title="comb_utils.lib.api_callers.BaseCaller"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseCaller</span></code></a></p>
+<p>A base class for making POST API calls.</p>
+<p>Presets the timeout, initial wait time, and requests method.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="comb_utils.lib.api_callers.concat_response_pages">
+<span class="sig-prename descclassname"><span class="pre">comb_utils.lib.api_callers.</span></span><span class="sig-name descname"><span class="pre">concat_response_pages</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">page_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#comb_utils.lib.api_callers.concat_response_pages" title="Link to this definition">¶</a></dt>
+<dd><p>Extract and concatenate the data lists from response pages.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>page_list</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]</span>) – A list of response page dictionaries.</p></li>
+<li><p><strong>data_key</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The key to extract the data from each page.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of dictionaries containing the data from each page.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="comb_utils.lib.api_callers.get_response_dict">
+<span class="sig-prename descclassname"><span class="pre">comb_utils.lib.api_callers.</span></span><span class="sig-name descname"><span class="pre">get_response_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#comb_utils.lib.api_callers.get_response_dict" title="Link to this definition">¶</a></dt>
+<dd><p>Safely handle a response that may not be JSON.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>response</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Response</span></code></span>) – The response from the API call.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary containing the response data.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="comb_utils.lib.api_callers.get_responses">
+<span class="sig-prename descclassname"><span class="pre">comb_utils.lib.api_callers.</span></span><span class="sig-name descname"><span class="pre">get_responses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paged_response_class</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#comb_utils.lib.api_callers.get_responses" title="Link to this definition">¶</a></dt>
+<dd><p>Get all responses from a paginated API endpoint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>url</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The base URL of the API endpoint.</p></li>
+<li><p><strong>paged_response_class</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">type</span></code>[<a class="reference internal" href="#comb_utils.lib.api_callers.BasePagedResponseGetter" title="comb_utils.lib.api_callers.BasePagedResponseGetter"><code class="xref py py-class docutils literal notranslate"><span class="pre">BasePagedResponseGetter</span></code></a>]</span>) – The class used to get the paginated response.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of dictionaries containing the responses from all pages.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-comb_utils.lib.constants">
+<span id="comb-utils-lib-constants-module"></span><h2>comb_utils.lib.constants module<a class="headerlink" href="#module-comb_utils.lib.constants" title="Link to this heading">¶</a></h2>
+<p>Constants for the comb_utils library.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="comb_utils.lib.constants.RateLimits">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">comb_utils.lib.constants.</span></span><span class="sig-name descname"><span class="pre">RateLimits</span></span><a class="headerlink" href="#comb_utils.lib.constants.RateLimits" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Default rate limits for <a class="reference internal" href="api_callers.html"><span class="doc">API Callers: Base Classes for Making API Calls</span></a>.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="comb_utils.lib.constants.RateLimits.READ_SECONDS">
+<span class="sig-name descname"><span class="pre">READ_SECONDS</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">Final</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code><span class="pre">]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.1</span></em><a class="headerlink" href="#comb_utils.lib.constants.RateLimits.READ_SECONDS" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="comb_utils.lib.constants.RateLimits.READ_TIMEOUT_SECONDS">
+<span class="sig-name descname"><span class="pre">READ_TIMEOUT_SECONDS</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">Final</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code><span class="pre">]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10</span></em><a class="headerlink" href="#comb_utils.lib.constants.RateLimits.READ_TIMEOUT_SECONDS" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="comb_utils.lib.constants.RateLimits.WAIT_DECREASE_SECONDS">
+<span class="sig-name descname"><span class="pre">WAIT_DECREASE_SECONDS</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">Final</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code><span class="pre">]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.6</span></em><a class="headerlink" href="#comb_utils.lib.constants.RateLimits.WAIT_DECREASE_SECONDS" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="comb_utils.lib.constants.RateLimits.WAIT_INCREASE_SCALAR">
+<span class="sig-name descname"><span class="pre">WAIT_INCREASE_SCALAR</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">Final</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code><span class="pre">]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#comb_utils.lib.constants.RateLimits.WAIT_INCREASE_SCALAR" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="comb_utils.lib.constants.RateLimits.WRITE_SECONDS">
+<span class="sig-name descname"><span class="pre">WRITE_SECONDS</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">Final</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code><span class="pre">]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.2</span></em><a class="headerlink" href="#comb_utils.lib.constants.RateLimits.WRITE_SECONDS" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="comb_utils.lib.constants.RateLimits.WRITE_TIMEOUT_SECONDS">
+<span class="sig-name descname"><span class="pre">WRITE_TIMEOUT_SECONDS</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">Final</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code><span class="pre">]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10</span></em><a class="headerlink" href="#comb_utils.lib.constants.RateLimits.WRITE_TIMEOUT_SECONDS" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-comb_utils.lib.docs">
 <span id="comb-utils-lib-docs-module"></span><h2>comb_utils.lib.docs module<a class="headerlink" href="#module-comb_utils.lib.docs" title="Link to this heading">¶</a></h2>
@@ -385,6 +604,36 @@
             <ul>
 <li><a class="reference internal" href="#">comb_utils.lib package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-comb_utils.lib.api_callers">comb_utils.lib.api_callers module</a><ul>
+<li><a class="reference internal" href="#comb_utils.lib.api_callers.BaseCaller"><code class="docutils literal notranslate"><span class="pre">BaseCaller</span></code></a><ul>
+<li><a class="reference internal" href="#comb_utils.lib.api_callers.BaseCaller.call_api"><code class="docutils literal notranslate"><span class="pre">BaseCaller.call_api()</span></code></a></li>
+<li><a class="reference internal" href="#comb_utils.lib.api_callers.BaseCaller.response_json"><code class="docutils literal notranslate"><span class="pre">BaseCaller.response_json</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#comb_utils.lib.api_callers.BaseDeleteCaller"><code class="docutils literal notranslate"><span class="pre">BaseDeleteCaller</span></code></a></li>
+<li><a class="reference internal" href="#comb_utils.lib.api_callers.BaseGetCaller"><code class="docutils literal notranslate"><span class="pre">BaseGetCaller</span></code></a></li>
+<li><a class="reference internal" href="#comb_utils.lib.api_callers.BasePagedResponseGetter"><code class="docutils literal notranslate"><span class="pre">BasePagedResponseGetter</span></code></a><ul>
+<li><a class="reference internal" href="#comb_utils.lib.api_callers.BasePagedResponseGetter.next_page_salsa"><code class="docutils literal notranslate"><span class="pre">BasePagedResponseGetter.next_page_salsa</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#comb_utils.lib.api_callers.BasePostCaller"><code class="docutils literal notranslate"><span class="pre">BasePostCaller</span></code></a></li>
+<li><a class="reference internal" href="#comb_utils.lib.api_callers.concat_response_pages"><code class="docutils literal notranslate"><span class="pre">concat_response_pages()</span></code></a></li>
+<li><a class="reference internal" href="#comb_utils.lib.api_callers.get_response_dict"><code class="docutils literal notranslate"><span class="pre">get_response_dict()</span></code></a></li>
+<li><a class="reference internal" href="#comb_utils.lib.api_callers.get_responses"><code class="docutils literal notranslate"><span class="pre">get_responses()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-comb_utils.lib.constants">comb_utils.lib.constants module</a><ul>
+<li><a class="reference internal" href="#comb_utils.lib.constants.RateLimits"><code class="docutils literal notranslate"><span class="pre">RateLimits</span></code></a><ul>
+<li><a class="reference internal" href="#comb_utils.lib.constants.RateLimits.READ_SECONDS"><code class="docutils literal notranslate"><span class="pre">RateLimits.READ_SECONDS</span></code></a></li>
+<li><a class="reference internal" href="#comb_utils.lib.constants.RateLimits.READ_TIMEOUT_SECONDS"><code class="docutils literal notranslate"><span class="pre">RateLimits.READ_TIMEOUT_SECONDS</span></code></a></li>
+<li><a class="reference internal" href="#comb_utils.lib.constants.RateLimits.WAIT_DECREASE_SECONDS"><code class="docutils literal notranslate"><span class="pre">RateLimits.WAIT_DECREASE_SECONDS</span></code></a></li>
+<li><a class="reference internal" href="#comb_utils.lib.constants.RateLimits.WAIT_INCREASE_SCALAR"><code class="docutils literal notranslate"><span class="pre">RateLimits.WAIT_INCREASE_SCALAR</span></code></a></li>
+<li><a class="reference internal" href="#comb_utils.lib.constants.RateLimits.WRITE_SECONDS"><code class="docutils literal notranslate"><span class="pre">RateLimits.WRITE_SECONDS</span></code></a></li>
+<li><a class="reference internal" href="#comb_utils.lib.constants.RateLimits.WRITE_TIMEOUT_SECONDS"><code class="docutils literal notranslate"><span class="pre">RateLimits.WRITE_TIMEOUT_SECONDS</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-comb_utils.lib.docs">comb_utils.lib.docs module</a><ul>
 <li><a class="reference internal" href="#comb_utils.lib.docs.DocString"><code class="docutils literal notranslate"><span class="pre">DocString</span></code></a><ul>
 <li><a class="reference internal" href="#comb_utils.lib.docs.DocString.api_docstring"><code class="docutils literal notranslate"><span class="pre">DocString.api_docstring</span></code></a></li>
@@ -414,7 +663,7 @@
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=e2f3408e"></script>
+</div><script src="_static/documentation_options.js?v=938c9ccc"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=5fa4622c"></script>

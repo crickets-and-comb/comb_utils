@@ -4,6 +4,22 @@ comb\_utils.lib package
 Submodules
 ----------
 
+comb\_utils.lib.api\_callers module
+-----------------------------------
+
+.. automodule:: comb_utils.lib.api_callers
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+comb\_utils.lib.constants module
+--------------------------------
+
+.. automodule:: comb_utils.lib.constants
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
 comb\_utils.lib.docs module
 ---------------------------
 
