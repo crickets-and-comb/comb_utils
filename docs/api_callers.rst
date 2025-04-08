@@ -10,7 +10,8 @@ The API callers wrap the :py:class:`requests` library, which is a popular librar
     
     The current implementation requires you to extend the bases classes by at least overriding :code:`_set_url` to set the API URL you are querying. This will soon be deprecated. The plan is to allow you to pass the URL in at :code:`__init__` time, but this is not yet implemented. See https://github.com/crickets-and-comb/comb_utils/issues/38.
 
-
+Base classes
+############
 
 The main classes in this module are:
 
@@ -25,7 +26,7 @@ The main classes in this module are:
 The are plans to add additional classes for remaining request calls (i.e., PUT, PATCH, etc.) in the future. For now, you can use :code:`BaseCaller` and override the :code:`BaseCaller._set_request_call` method to implement these calls. See https://github.com/crickets-and-comb/comb_utils/issues/40.
 
 Example Usage
-#############
+*************
 
 To use the API callers, you need to create a subclass of one of the base classes and implement the required methods. Here is an example of how to create a custom API caller for a hypothetical API:
 
