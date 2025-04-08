@@ -1,6 +1,6 @@
 # Comb Utils
 
-Some handy utils for Python projects. Repo is made from the `reference_package` template repo: https://github.com/crickets-and-comb/reference_package. See the docs: https://crickets-and-comb.github.io/shared_utils/.
+Some handy utils for Python projects. Repo is made from the `reference_package` template repo: https://github.com/crickets-and-comb/reference_package. See the docs: https://crickets-and-comb.github.io/comb_utils/.
 
 This is a [Crickets and Comb](https://cricketsandcomb.org) resource.
 
