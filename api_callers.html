@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="comb_utils" href="modules.html" /><link rel="prev" title="DocString: A Class to Format Docstrings for Sphinx and Click" href="docstring.html" />
 
     <!-- Generated with Sphinx 8.2.3 and Furo 2024.08.06 -->
-        <title>API Callers: Base Classes for Making API Calls - comb_utils 0.2.1 documentation</title>
+        <title>API Callers: Base Classes for Making API Calls - comb_utils 0.2.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=302659d7" />
@@ -166,7 +166,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">comb_utils 0.2.1 documentation</div></a>
+      <a href="index.html"><div class="brand">comb_utils 0.2.2 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -190,7 +190,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
   
-  <span class="sidebar-brand-text">comb_utils 0.2.1 documentation</span>
+  <span class="sidebar-brand-text">comb_utils 0.2.2 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -250,19 +250,25 @@
         <article role="main" id="furo-main-content">
           <section id="api-callers-base-classes-for-making-api-calls">
 <h1>API Callers: Base Classes for Making API Calls<a class="headerlink" href="#api-callers-base-classes-for-making-api-calls" title="Link to this heading">¶</a></h1>
-<p>The <a class="reference internal" href="comb_utils.lib.html#module-comb_utils.lib.api_callers" title="comb_utils.lib.api_callers"><code class="xref py py-mod docutils literal notranslate"><span class="pre">comb_utils.lib.api_callers</span></code></a> module provides base classes for making API calls. These classes are designed to be extended for specific APIs, allowing for easy customization and reuse of code.</p>
-<p>The API callers are designed to be used with the <code class="xref py py-class docutils literal notranslate"><span class="pre">requests</span></code> library, which is a popular library for making HTTP requests in Python. The API callers handle the details of making the requests and parsing the responses, whether successful or failed, allowing you to focus on the logic of your application.</p>
-<p>NOTE: The current implementation requires you to extend the bases classes by at least overriding <code class="code docutils literal notranslate"><span class="pre">_set_url</span></code> to set the API URL you are querying. This will soon be deprecated. The plan is to allow you to pass the URL in at <code class="code docutils literal notranslate"><span class="pre">__init__</span></code> time, but this is not yet implemented. See <a class="reference external" href="https://github.com/crickets-and-comb/comb_utils/issues/38">https://github.com/crickets-and-comb/comb_utils/issues/38</a>.</p>
+<p>The <a class="reference internal" href="comb_utils.lib.html#module-comb_utils.lib.api_callers" title="comb_utils.lib.api_callers"><code class="xref py py-mod docutils literal notranslate"><span class="pre">comb_utils.lib.api_callers</span></code></a> module provides base classes for making API calls, along with a few helper functions. These classes are designed to be extended for specific APIs, allowing for easy customization and reuse of code.</p>
+<p>The API callers wrap the <code class="xref py py-class docutils literal notranslate"><span class="pre">requests</span></code> library, which is a popular library for making HTTP requests in Python. The API callers handle the details of making the requests and parsing the responses, whether successful or failed, allowing you to focus on the logic of your application.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>The current implementation requires you to extend the bases classes by at least overriding <code class="code docutils literal notranslate"><span class="pre">_set_url</span></code> to set the API URL you are querying. This will soon be deprecated. The plan is to allow you to pass the URL in at <code class="code docutils literal notranslate"><span class="pre">__init__</span></code> time, but this is not yet implemented. See <a class="reference external" href="https://github.com/crickets-and-comb/comb_utils/issues/38">https://github.com/crickets-and-comb/comb_utils/issues/38</a>.</p>
+</div>
+<section id="base-classes">
+<h2>Base classes<a class="headerlink" href="#base-classes" title="Link to this heading">¶</a></h2>
 <p>The main classes in this module are:</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="comb_utils.lib.html#comb_utils.lib.api_callers.BaseCaller" title="comb_utils.lib.api_callers.BaseCaller"><code class="xref py py-class docutils literal notranslate"><span class="pre">comb_utils.lib.api_callers.BaseCaller</span></code></a>: A base class for making API calls with customizable headers and parameters. If using this, you will need to extend it and override <code class="xref py py-meth docutils literal notranslate"><span class="pre">comb_utils.lib.api_callers.BaseCaller._set_request_call()</span></code>, but the following classes are recommended.</p></li>
 <li><p><a class="reference internal" href="comb_utils.lib.html#comb_utils.lib.api_callers.BaseGetCaller" title="comb_utils.lib.api_callers.BaseGetCaller"><code class="xref py py-class docutils literal notranslate"><span class="pre">comb_utils.lib.api_callers.BaseGetCaller</span></code></a>: A base class for making GET API calls. This class is a subclass of <code class="code docutils literal notranslate"><span class="pre">BaseCaller</span></code> and provides a default implementation for making GET requests.</p></li>
 <li><p><a class="reference internal" href="comb_utils.lib.html#comb_utils.lib.api_callers.BasePostCaller" title="comb_utils.lib.api_callers.BasePostCaller"><code class="xref py py-class docutils literal notranslate"><span class="pre">comb_utils.lib.api_callers.BasePostCaller</span></code></a>: A base class for making POST API calls. This class is a subclass of <code class="code docutils literal notranslate"><span class="pre">BaseCaller</span></code> and provides a default implementation for making POST requests.</p></li>
 <li><p><a class="reference internal" href="comb_utils.lib.html#comb_utils.lib.api_callers.BaseDeleteCaller" title="comb_utils.lib.api_callers.BaseDeleteCaller"><code class="xref py py-class docutils literal notranslate"><span class="pre">comb_utils.lib.api_callers.BaseDeleteCaller</span></code></a>: A base class for making DELETE API calls. This class is a subclass of <code class="code docutils literal notranslate"><span class="pre">BaseCaller</span></code> and provides a default implementation for making DELETE requests.</p></li>
+<li><p><a class="reference internal" href="comb_utils.lib.html#comb_utils.lib.api_callers.BasePagedResponseGetter" title="comb_utils.lib.api_callers.BasePagedResponseGetter"><code class="xref py py-class docutils literal notranslate"><span class="pre">comb_utils.lib.api_callers.BasePagedResponseGetter</span></code></a>: A base class for making paginated GET calls. This class is a subclass of <code class="code docutils literal notranslate"><span class="pre">BaseGetCaller</span></code> and provides a default implementation for making paginated GET requests. It returns the next page token and the response data. This is useful for APIs that return large amounts of data in multiple pages. To get the most out of this class, use in conjunction with <a class="reference internal" href="comb_utils.lib.html#comb_utils.lib.api_callers.get_responses" title="comb_utils.lib.api_callers.get_responses"><code class="xref py py-func docutils literal notranslate"><span class="pre">comb_utils.lib.api_callers.get_responses()</span></code></a> and <a class="reference internal" href="comb_utils.lib.html#comb_utils.lib.api_callers.concat_response_pages" title="comb_utils.lib.api_callers.concat_response_pages"><code class="xref py py-func docutils literal notranslate"><span class="pre">comb_utils.lib.api_callers.concat_response_pages()</span></code></a>, which will handle the pagination for you (see <a class="reference internal" href="#helper-functions"><span class="std std-ref">Helper functions</span></a> below).</p></li>
 </ul>
 <p>The are plans to add additional classes for remaining request calls (i.e., PUT, PATCH, etc.) in the future. For now, you can use <code class="code docutils literal notranslate"><span class="pre">BaseCaller</span></code> and override the <code class="code docutils literal notranslate"><span class="pre">BaseCaller._set_request_call</span></code> method to implement these calls. See <a class="reference external" href="https://github.com/crickets-and-comb/comb_utils/issues/40">https://github.com/crickets-and-comb/comb_utils/issues/40</a>.</p>
 <section id="example-usage">
-<h2>Example Usage<a class="headerlink" href="#example-usage" title="Link to this heading">¶</a></h2>
+<h3>Example usage<a class="headerlink" href="#example-usage" title="Link to this heading">¶</a></h3>
 <p>To use the API callers, you need to create a subclass of one of the base classes and implement the required methods. Here is an example of how to create a custom API caller for a hypothetical API:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">comb_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseGetCaller</span>
 
@@ -286,6 +292,8 @@
 </pre></div>
 </div>
 <p>Here we call the example.com API. We optionally extract a specific value from the JSON response. The <code class="code docutils literal notranslate"><span class="pre">call_api</span></code> method is inherited from the base class and handles the details of making the request and processing the response.</p>
+<p>See <a class="reference internal" href="#helper-functions"><span class="std std-ref">Helper functions</span></a> examples below for more details on how to handle paginated responses.</p>
+</section>
 <section id="using-a-key-for-authentication">
 <h3>Using a key for authentication<a class="headerlink" href="#using-a-key-for-authentication" title="Link to this heading">¶</a></h3>
 <p>Using a key for authentication is common in APIs. You can override the <code class="code docutils literal notranslate"><span class="pre">_get_API_key</span></code> method to return the key. The base class will then construct the authentication for you. Here is an example of how to do this:</p>
@@ -303,6 +311,58 @@
 <span class="n">my_caller</span><span class="o">.</span><span class="n">call_api</span><span class="p">()</span>
 </pre></div>
 </div>
+</section>
+</section>
+<section id="helper-functions">
+<span id="id1"></span><h2>Helper functions<a class="headerlink" href="#helper-functions" title="Link to this heading">¶</a></h2>
+<p>The <a class="reference internal" href="comb_utils.lib.html#module-comb_utils.lib.api_callers" title="comb_utils.lib.api_callers"><code class="xref py py-mod docutils literal notranslate"><span class="pre">comb_utils.lib.api_callers</span></code></a> module provides a few helper functions for working with the base callers. These functions are designed to make it easier to work with the API callers and provide additional functionality.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="comb_utils.lib.html#comb_utils.lib.api_callers.get_response_dict" title="comb_utils.lib.api_callers.get_response_dict"><code class="xref py py-func docutils literal notranslate"><span class="pre">comb_utils.lib.api_callers.get_response_dict()</span></code></a>: This function takes a response object and returns a dictionary containing the status code, headers, and JSON data. This is useful for debugging and logging purposes. You may wish to use it within your own custom API caller class or within a script to generically handle response data. The base callers use this function to handle errors and timeouts.</p></li>
+<li><p><a class="reference internal" href="comb_utils.lib.html#comb_utils.lib.api_callers.get_responses" title="comb_utils.lib.api_callers.get_responses"><code class="xref py py-func docutils literal notranslate"><span class="pre">comb_utils.lib.api_callers.get_responses()</span></code></a>: This function gets all the responses from a paginated API endpoint using the <a class="reference internal" href="comb_utils.lib.html#comb_utils.lib.api_callers.BaseDeleteCaller" title="comb_utils.lib.api_callers.BaseDeleteCaller"><code class="xref py py-class docutils literal notranslate"><span class="pre">comb_utils.lib.api_callers.BaseDeleteCaller</span></code></a> class. Returns a list of all the response pages. use this in conjunction with <a class="reference internal" href="comb_utils.lib.html#comb_utils.lib.api_callers.concat_response_pages" title="comb_utils.lib.api_callers.concat_response_pages"><code class="xref py py-func docutils literal notranslate"><span class="pre">comb_utils.lib.api_callers.concat_response_pages()</span></code></a> to get all the data from a paginated API endpoint.</p></li>
+<li><p><a class="reference internal" href="comb_utils.lib.html#comb_utils.lib.api_callers.concat_response_pages" title="comb_utils.lib.api_callers.concat_response_pages"><code class="xref py py-func docutils literal notranslate"><span class="pre">comb_utils.lib.api_callers.concat_response_pages()</span></code></a>: This function concatenates the response pages from a paginated API endpoint into a single list. This is useful for working with APIs that return large amounts of data in multiple pages. Use this in conjunction with <a class="reference internal" href="comb_utils.lib.html#comb_utils.lib.api_callers.get_responses" title="comb_utils.lib.api_callers.get_responses"><code class="xref py py-func docutils literal notranslate"><span class="pre">comb_utils.lib.api_callers.get_responses()</span></code></a> to get all the data from a paginated API endpoint.</p></li>
+</ul>
+<section id="id2">
+<h3>Example usage<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h3>
+<p>Here are examples of how to use the helper functions.</p>
+<section id="getting-generic-responses-get-response-dict">
+<h4>Getting generic responses: <code class="docutils literal notranslate"><span class="pre">get_response_dict</span></code><a class="headerlink" href="#getting-generic-responses-get-response-dict" title="Link to this heading">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">comb_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_response_dict</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;https://api.example.com/data&quot;</span><span class="p">)</span>
+<span class="n">response_dict</span> <span class="o">=</span> <span class="n">get_response_dict</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">response_dict</span><span class="p">[</span><span class="s2">&quot;status_code&quot;</span><span class="p">])</span>  <span class="c1"># 200</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response_dict</span><span class="p">[</span><span class="s2">&quot;headers&quot;</span><span class="p">])</span>  <span class="c1"># {&#39;Content-Type&#39;: &#39;application/json&#39;, ...}</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response_dict</span><span class="p">[</span><span class="s2">&quot;json&quot;</span><span class="p">])</span>  <span class="c1"># {&#39;key&#39;: &#39;value&#39;, ...}</span>
+</pre></div>
+</div>
+</section>
+<section id="handling-paginated-responses-get-responses-and-concat-response-pages">
+<h4>Handling paginated responses: <code class="docutils literal notranslate"><span class="pre">get_responses</span></code> and <code class="docutils literal notranslate"><span class="pre">concat_response_pages</span></code><a class="headerlink" href="#handling-paginated-responses-get-responses-and-concat-response-pages" title="Link to this heading">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">comb_utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BasePagedResponseGetter</span><span class="p">,</span>
+    <span class="n">concat_response_pages</span><span class="p">,</span>
+    <span class="n">get_responses</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Create a custom API caller for the paginated endpoint</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MyBaseKeyRetriever</span><span class="p">:</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_API_key</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">my_custom_key_retrieval_function</span><span class="p">()</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MyAPICaller</span><span class="p">(</span><span class="n">BaseKeyRetriever</span><span class="p">,</span> <span class="n">BasePagedResponseGetter</span><span class="p">):</span>
+
+<span class="c1"># Get all the responses from a paginated API endpoint.</span>
+<span class="n">all_responses</span> <span class="o">=</span> <span class="n">get_responses</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="s2">&quot;https://api.example.com/data&quot;</span><span class="p">,</span> <span class="n">paged_response_class</span><span class="o">=</span><span class="n">MyAPICaller</span><span class="p">)</span>
+
+<span class="c1"># Put the responses records from all the pages into a single document.</span>
+<span class="n">concatenated_data</span> <span class="o">=</span> <span class="n">concat_response_pages</span><span class="p">(</span><span class="n">page_list</span><span class="o">=</span><span class="n">all_responses</span><span class="p">,</span> <span class="n">data_key</span><span class="o">=</span><span class="s2">&quot;data&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">concatenated_data</span><span class="p">)</span>  <span class="c1"># [{&#39;key&#39;: &#39;value&#39;, ...}, {&#39;key&#39;: &#39;value&#39;, ...}, ...]</span>
+</pre></div>
+</div>
+</section>
 </section>
 </section>
 <section id="additional-notes">
@@ -367,8 +427,17 @@
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">API Callers: Base Classes for Making API Calls</a><ul>
-<li><a class="reference internal" href="#example-usage">Example Usage</a><ul>
+<li><a class="reference internal" href="#base-classes">Base classes</a><ul>
+<li><a class="reference internal" href="#example-usage">Example usage</a></li>
 <li><a class="reference internal" href="#using-a-key-for-authentication">Using a key for authentication</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#helper-functions">Helper functions</a><ul>
+<li><a class="reference internal" href="#id2">Example usage</a><ul>
+<li><a class="reference internal" href="#getting-generic-responses-get-response-dict">Getting generic responses: <code class="docutils literal notranslate"><span class="pre">get_response_dict</span></code></a></li>
+<li><a class="reference internal" href="#handling-paginated-responses-get-responses-and-concat-response-pages">Handling paginated responses: <code class="docutils literal notranslate"><span class="pre">get_responses</span></code> and <code class="docutils literal notranslate"><span class="pre">concat_response_pages</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a class="reference internal" href="#additional-notes">Additional Notes</a></li>
@@ -383,7 +452,7 @@
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=37f418d5"></script>
+</div><script src="_static/documentation_options.js?v=000c92bf"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=5fa4622c"></script>
