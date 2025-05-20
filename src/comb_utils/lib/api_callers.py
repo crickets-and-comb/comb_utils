@@ -388,8 +388,8 @@ def get_response_dict(response: requests.Response) -> dict[str, Any]:
 # TODO: Pass params instead of forming URL first. ("params", not "json")
 # (Would need to then grab params URL for next page, or just add nextpage to params?)
 # https://github.com/crickets-and-comb/bfb_delivery/issues/61
-# TODO: bfb_delivery issue 59, comb_utils issue 24: move above issue to comb_utils.
-# TODO: bfb_delivery issue 59, comb_utils issue 24:
+# TODO: bfb_delivery issue 59
+# TODO: bfb_delivery issue 59
 # Switch to default getter if key retriever can be empty.
 @typechecked
 def get_responses(
