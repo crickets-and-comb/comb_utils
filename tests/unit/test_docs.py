@@ -29,7 +29,9 @@ from comb_utils import DocString, ErrorDocString
             DocString(
                 opening="Test opening",
                 args={},
-                raises=[ErrorDocString(error_type="Error1", docstring="Error1 docstring")],
+                raises=[
+                    ErrorDocString(error_type="Error1", docstring="Error1 docstring")
+                ],
                 returns=["return1", "return2"],
             ),
             (
@@ -55,7 +57,9 @@ from comb_utils import DocString, ErrorDocString
             DocString(
                 opening="Test opening",
                 args={"arg1": "arg1 docstring", "arg2": "arg2 docstring"},
-                raises=[ErrorDocString(error_type="Error1", docstring="Error1 docstring")],
+                raises=[
+                    ErrorDocString(error_type="Error1", docstring="Error1 docstring")
+                ],
                 returns=[],
             ),
             (
@@ -94,7 +98,9 @@ def test_api_docstring(docstring: DocString, expected_docstring: str) -> None:
             DocString(
                 opening="Test opening",
                 args={},
-                raises=[ErrorDocString(error_type="Error1", docstring="Error1 docstring")],
+                raises=[
+                    ErrorDocString(error_type="Error1", docstring="Error1 docstring")
+                ],
                 returns=["return1", "return2"],
             ),
             "Test opening\n\n\n"
@@ -114,7 +120,9 @@ def test_api_docstring(docstring: DocString, expected_docstring: str) -> None:
             DocString(
                 opening="Test opening",
                 args={"arg1": "arg1 docstring", "arg2": "arg2 docstring"},
-                raises=[ErrorDocString(error_type="Error1", docstring="Error1 docstring")],
+                raises=[
+                    ErrorDocString(error_type="Error1", docstring="Error1 docstring")
+                ],
                 returns=[],
             ),
             "Test opening\n\n\nRaises:\n\n\n  Error1: Error1 docstring\n",

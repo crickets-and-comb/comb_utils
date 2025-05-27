@@ -12,7 +12,9 @@ from typeguard import typechecked
 
 from comb_utils.lib.constants import RateLimits
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 
@@ -220,7 +222,9 @@ class BaseCaller:
         Inreases the class wait time and recursively calls the API.
         """
         self._increase_wait_time()
-        logger.warning(f"Rate limited. Waiting {type(self)._wait_seconds} seconds to retry.")
+        logger.warning(
+            f"Rate limited. Waiting {type(self)._wait_seconds} seconds to retry."
+        )
         self._call_api()
 
     @typechecked
@@ -389,6 +393,7 @@ def get_response_dict(response: requests.Response) -> dict[str, Any]:
 # (Would need to then grab params URL for next page, or just add nextpage to params?)
 # https://github.com/crickets-and-comb/bfb_delivery/issues/61
 
+
 @typechecked
 def get_responses(
     url: str, paged_response_class: type[BasePagedResponseGetter]
@@ -408,7 +413,9 @@ def get_responses(
     responses = []
 
     while next_page_salsa is not None:
-        paged_response_getter = paged_response_class(page_url=url + str(next_page_cookie))
+        paged_response_getter = paged_response_class(
+            page_url=url + str(next_page_cookie)
+        )
         paged_response_getter.call_api()
 
         stops = paged_response_getter._response.json()

@@ -251,7 +251,9 @@ def test_base_caller_response_handling(
 )
 @typechecked
 def test_base_caller_wait_time_adjusting(
-    request_type: str, response_sequence: list[dict[str, Any]], expected_wait_time: float
+    request_type: str,
+    response_sequence: list[dict[str, Any]],
+    expected_wait_time: float,
 ) -> None:
     """Test request wait time adjustments on rate-limiting."""
 
@@ -408,7 +410,10 @@ def test_paged_getter(response_sequence: list[dict[str, Any]]) -> None:
                     "status_code": 200,
                 },
             ],
-            [{"data": [1], "nextPageToken": "abc"}, {"data": [2], "nextPageToken": None}],
+            [
+                {"data": [1], "nextPageToken": "abc"},
+                {"data": [2], "nextPageToken": None},
+            ],
             nullcontext(),
         ),
         (
@@ -425,7 +430,10 @@ def test_paged_getter(response_sequence: list[dict[str, Any]]) -> None:
                     "status_code": 200,
                 },
             ],
-            [{"data": [3], "nextPageToken": "asfg"}, {"data": [54], "nextPageToken": None}],
+            [
+                {"data": [3], "nextPageToken": "asfg"},
+                {"data": [54], "nextPageToken": None},
+            ],
             nullcontext(),
         ),
         (
@@ -496,7 +504,9 @@ def test_get_responses_returns(
         mock_get.side_effect = [Mock(**resp) for resp in responses]
 
         with error_context:
-            result = get_responses(url=BASE_URL, paged_response_class=BasePagedResponseGetter)
+            result = get_responses(
+                url=BASE_URL, paged_response_class=BasePagedResponseGetter
+            )
             assert result == expected_result
 
         assert mock_get.call_count == len(responses)
@@ -578,7 +588,9 @@ def test_get_responses_urls(responses: list[dict[str, Any]], params: str) -> Non
 
                 token_prefix = "?" if "?" not in base_url else "&"
                 token = (
-                    f"{token_prefix}pageToken={next_page_token}" if next_page_token else ""
+                    f"{token_prefix}pageToken={next_page_token}"
+                    if next_page_token
+                    else ""
                 )
                 expected_urls.append(f"{base_url}{token}")
 

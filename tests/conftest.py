@@ -5,7 +5,9 @@ import os
 import pytest
 
 
-def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item]) -> None:
+def pytest_collection_modifyitems(
+    config: pytest.Config, items: list[pytest.Item]
+) -> None:
     """Mark test types."""
     unit_tests_dir = os.path.join(config.rootdir, "tests/unit")
     integration_tests_dir = os.path.join(config.rootdir, "tests/integration")
