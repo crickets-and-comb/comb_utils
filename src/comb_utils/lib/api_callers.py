@@ -389,7 +389,6 @@ def get_response_dict(response: requests.Response) -> dict[str, Any]:
 # (Would need to then grab params URL for next page, or just add nextpage to params?)
 # https://github.com/crickets-and-comb/bfb_delivery/issues/61
 
-# Switch to default getter if key retriever can be empty.
 @typechecked
 def get_responses(
     url: str, paged_response_class: type[BasePagedResponseGetter]
