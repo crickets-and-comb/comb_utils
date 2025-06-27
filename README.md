@@ -6,7 +6,7 @@ This is a [Crickets and Comb](https://cricketsandcomb.org) resource.
 
 ## Structure
 
-```bash
+```
     .github/workflows               GitHub Actions CI/CD workflows.
     docs                            RST docs and doc build staging.
     Makefile                        Dev tools and params. (includes shared/Makefile)
@@ -26,9 +26,11 @@ See https://pypi.org/project/comb-utils/.
 
 ## Dev workflow
 
-There are a number of dev tools in the `Makefile`. You can list all the make tools you might want to use:
+There are a number of dev tools in the `Makefile`. Once you set up the shared tools Git submodule (below), you can list all the make tools you might want to use:
 
+```bash
     $ make list-targets
+```
 
 Go check them out in `Makefile`.
 
@@ -42,7 +44,9 @@ When you first clone this repo, you'll need to set up the shared tools Git submo
 
 Once you've set up the shared dev tools submodule, you'll want to periodically update it to get updates to the shared tools:
 
+```bash
   $ make update-shared
+```
 
 Note that, while you'll be able to run with this updated shared submodule, you'll still want to commit that update to your consuming repo to track that update.
 
@@ -58,14 +62,18 @@ You'll want this package's site-package files to be the source files in this rep
 
 First build and activate the env before installing this package:
 
+```bash
     $ make build-env
     $ conda activate comb_utils_py3.12
+  ```
 
 Note, if you don't have Python installed, you need to pass the package name directly when you build the env: `make build-env PACKAGE_NAME=comb_utils`. If you have Python installed (e.g., this conda env already activated), then you don't need to because it uses Python to grab the package name from the `setup.cfg` file.
 
 Then, install this package and its dev dependencies:
 
+```bash
     $ make install
+```
 
 This installs all the dependencies in your conda env site-packages, but the files for this package's installation are now your source files in this repo.
 
@@ -73,22 +81,30 @@ This installs all the dependencies in your conda env site-packages, but the file
 
 Before pushing commits, you'll usually want to rebuild the env and run all the QC and testing:
 
+```bash
     $ make clean format full
+```
 
 When making smaller commits, you might just want to run some of the smaller commands:
 
+```bash
     $ make clean format full-qc full-test
+```
 
 #### Using act
 
 As a final step, it's good practice to test run the workflow before opening a PR or pushing to an open PR. We don't want to waste GitHub runtime on a glitch that we could have caught before. You can use a make target for that:
 
+```bash
   $ make run-act
+```
 
 That will run `.github/workflows/CI_CD.yml`. But, you can also run any workflow you'd like by using `act` directly. See https://nektosact.com.
 
 To use this tool, you'll need to have Docker installed and running on your machine: https://www.docker.com/. You'll also need to install `act` in your terminal:
 
+```bash
   $ brew install act
+```
 
 NOTE: To be more accurate, we've overridden `set-CI-CD-file` to create a local `CI_CD_act.yml` (which we ignore with Git) as a copy of `CI_CD.yml` and replace one of the workflow call URLs with a relative path. We use a relative path because otherwise `act` will not honor the overridden `full-test` make target and will run the shared version. That will fail because the shared `full-test` target includes running integration and e2e tests, which this repo does not include.
