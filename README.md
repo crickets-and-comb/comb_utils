@@ -26,7 +26,7 @@ See https://pypi.org/project/comb-utils/.
 
 ## Dev workflow
 
-There are a number of dev tools in the `Makefile`. You can list all the make tools you might want to use:
+There are a number of dev tools in the `Makefile`. Once you set up the shared tools Git submodule (below), you can list all the make tools you might want to use:
 
 ```bash
     $ make list-targets
