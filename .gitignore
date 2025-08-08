@@ -30,7 +30,7 @@ dist/
 # *.cover
 # *.py,cover
 __pycache__/
-# .pytest_cache/
+.pytest_cache/
 # cover/
 # *_test_report.xml
 
@@ -51,7 +51,7 @@ docs/**/*.pickle
 # *.sif
 
 # pytype
-# .pytype/
+.pytype/
 
 #pycharm
 # .idea/*
