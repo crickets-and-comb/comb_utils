@@ -29,7 +29,7 @@ See https://pypi.org/project/comb-utils/.
 There are a number of dev tools in the `Makefile`. Once you set up the shared tools Git submodule (below), you can list all the make tools you might want to use:
 
 ```bash
-    $ make list-targets
+    $ make list-makes
 ```
 
 Go check them out in `Makefile`.
