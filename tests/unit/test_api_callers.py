@@ -383,6 +383,17 @@ def test_paged_getter(response_sequence: list[dict[str, Any]]) -> None:
             "nextPageToken", None
         )
 
+@typechecked
+def test_paged_getter_params(response_sequence: list[dict[str, Any]]) -> None:
+    """Test query string parameters modify URL."""
+    with patch("requests.get") as mock_request:
+        mock_request.side_effect = [Mock(**resp) for resp in response_sequence]
+
+        page_url = "https://example.com/api/test?foo=bar"
+        caller = BasePagedResponseGetter(page_url=page_url, params={"foo": "baz", "qux": "quux"})
+        caller.call_api()
+        assert_url = "https://example.com/api/test?foo=baz&qux=quux"
+        assert mock_request.call_args_list[0][1]["url"] == assert_url
 
 @pytest.mark.parametrize(
     "responses, expected_result, error_context",
