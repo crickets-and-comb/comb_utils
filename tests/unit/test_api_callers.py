@@ -383,17 +383,50 @@ def test_paged_getter(response_sequence: list[dict[str, Any]]) -> None:
             "nextPageToken", None
         )
 
+
+@pytest.mark.parametrize(
+    "page_url, params, expected_url",
+    [
+        (BASE_URL, {}, BASE_URL),
+        (BASE_URL, {"foo": "bar"}, BASE_URL + "?foo=bar"),
+        (BASE_URL + "?foo=bar", {"foo": "baz"}, BASE_URL + "?foo=baz"),
+        (BASE_URL + "?foo=bar", {"qux": "quux"}, BASE_URL + "?foo=bar&qux=quux"),
+        (
+            BASE_URL + "?foo=bar",
+            {"foo": "baz", "qux": "quux"},
+            BASE_URL + "?foo=baz&qux=quux",
+        ),
+        (BASE_URL, {"foo": "bar baz"}, BASE_URL + "?foo=bar%20baz"),
+        (BASE_URL, {"foo": "bar\nbaz"}, BASE_URL + "?foo=bar%0Abaz"),
+        (BASE_URL, {"foo": "bar\rbaz"}, BASE_URL + "?foo=bar%0Dbaz"),
+        (BASE_URL, {"foo": "bar\tbaz"}, BASE_URL + "?foo=bar%09baz"),
+        (BASE_URL, {"foo": 'bar"baz'}, BASE_URL + "?foo=bar%22baz"),
+        (BASE_URL, {"foo": "bar<baz"}, BASE_URL + "?foo=bar%3Cbaz"),
+        (BASE_URL, {"foo": "bar>baz"}, BASE_URL + "?foo=bar%3Ebaz"),
+        (BASE_URL, {"foo": "bar#baz"}, BASE_URL + "?foo=bar%23baz"),
+        (BASE_URL, {"foo": "bar%baz"}, BASE_URL + "?foo=bar%25baz"),
+        (BASE_URL, {"foo": "bar[baz"}, BASE_URL + "?foo=bar%5Bbaz"),
+        (BASE_URL, {"foo": "bar]baz"}, BASE_URL + "?foo=bar%5Dbaz"),
+        (BASE_URL, {"foo": "bar{baz"}, BASE_URL + "?foo=bar%7Bbaz"),
+        (BASE_URL, {"foo": "bar}baz"}, BASE_URL + "?foo=bar%7Dbaz"),
+        (BASE_URL, {"foo": "bar|baz"}, BASE_URL + "?foo=bar%7Cbaz"),
+        (BASE_URL, {"foo": "bar\\baz"}, BASE_URL + "?foo=bar%5Cbaz"),
+        (BASE_URL, {"foo": "bar^baz"}, BASE_URL + "?foo=bar%5Ebaz"),
+    ],
+)
 @typechecked
-def test_paged_getter_params(response_sequence: list[dict[str, Any]]) -> None:
+def test_paged_getter_params(page_url: str, params: dict, expected_url: str) -> None:
     """Test query string parameters modify URL."""
+    response_sequence: list[dict[str, Any]] = [
+        {"json.return_value": {"data": [1, 2, 3]}, "status_code": 200}
+    ]
     with patch("requests.get") as mock_request:
         mock_request.side_effect = [Mock(**resp) for resp in response_sequence]
 
-        page_url = "https://example.com/api/test?foo=bar"
-        caller = BasePagedResponseGetter(page_url=page_url, params={"foo": "baz", "qux": "quux"})
+        caller = BasePagedResponseGetter(page_url=page_url, params=params)
         caller.call_api()
-        assert_url = "https://example.com/api/test?foo=baz&qux=quux"
-        assert mock_request.call_args_list[0][1]["url"] == assert_url
+        assert mock_request.call_args_list[0][1]["url"] == expected_url
+
 
 @pytest.mark.parametrize(
     "responses, expected_result, error_context",

@@ -5,6 +5,7 @@ from abc import abstractmethod
 from collections.abc import Callable
 from time import sleep
 from typing import Any
+from urllib.parse import quote
 
 import requests
 from requests.auth import HTTPBasicAuth
@@ -338,30 +339,33 @@ class BasePagedResponseGetter(BaseGetCaller):
     #: The URL for the page.
     _page_url: str
 
-    #: The dictionary of query string parameters. 
+    #: The dictionary of query string parameters.
     _params: dict
 
     @typechecked
-    def __init__(self, page_url: str, params: dict = None) -> None:
+    def __init__(self, page_url: str, params: dict | None = None) -> None:
         """Initialize the BasePagedResponseGetter object.
 
         Args:
             page_url: The URL for the page. (Optionally contains nextPageToken.)
-            params: The dictionary of query string parameters. 
+            params: The dictionary of query string parameters.
         """
         self._page_url = page_url
-        self._params = params
+        self._params = params if params is not None else {}
         super().__init__()
 
     @typechecked
     def _set_url(self) -> None:
         """Set the URL for the API call to the `page_url`."""
-        self._update_query()
+        self._add_params_to_URL()
         self._url = self._page_url
 
     @typechecked
-    def _update_query(self) -> None:
-        if self._params != None:
+    def _add_params_to_URL(self) -> None:
+        if self._params != {}:
+            self._params = {
+                quote(str(key)): quote(str(val)) for key, val in self._params.items()
+            }
             if "?" in self._page_url:
                 base_url = self._page_url.split("?")[0]
                 base_query_str = self._page_url.split("?")[1]
@@ -371,10 +375,12 @@ class BasePagedResponseGetter(BaseGetCaller):
                     val = query.split("=")[1]
                     base_params[key] = val
                 base_params.update(self._params)
-                query_str = "&".join([f"{key}={val}" for key, val in base_params.items()]) 
+                query_str = "&".join([f"{key}={val}" for key, val in base_params.items()])
                 self._page_url = base_url + "?" + query_str
             else:
-                params_query_str = "&".join([f"{key}={val}" for key, val in self._params.items()]) 
+                params_query_str = "&".join(
+                    [f"{key}={val}" for key, val in self._params.items()]
+                )
                 self._page_url = self._page_url + "?" + params_query_str
 
     @typechecked
@@ -417,14 +423,14 @@ def get_response_dict(response: requests.Response) -> dict[str, Any]:
 # Switch to default getter if key retriever can be empty.
 @typechecked
 def get_responses(
-        url: str, params: dict = None, paged_response_class: type[BasePagedResponseGetter]
+    url: str, paged_response_class: type[BasePagedResponseGetter], params: dict | None = None
 ) -> list[dict[str, Any]]:
     """Get all responses from a paginated API endpoint.
 
     Args:
         url: The base URL of the API endpoint.
-        params: The dictionary of query string parameters. 
         paged_response_class: The class used to get the paginated response.
+        params: The dictionary of query string parameters.
 
     Returns:
         A list of dictionaries containing the responses from all pages.
@@ -435,7 +441,9 @@ def get_responses(
     responses = []
 
     while next_page_salsa is not None:
-        paged_response_getter = paged_response_class(page_url=url + str(next_page_cookie), params=params)
+        paged_response_getter = paged_response_class(
+            page_url=url + str(next_page_cookie), params=params if params is not None else {}
+        )
         paged_response_getter.call_api()
 
         stops = paged_response_getter._response.json()
