@@ -343,7 +343,7 @@ class BasePagedResponseGetter(BaseGetCaller):
     _params: dict
 
     @typechecked
-    def __init__(self, page_url: str, params: dict | None = None) -> None:
+    def __init__(self, page_url: str, params: dict[str, str] | None = None) -> None:
         """Initialize the BasePagedResponseGetter object.
 
         Args:
@@ -357,8 +357,13 @@ class BasePagedResponseGetter(BaseGetCaller):
     @typechecked
     def _set_url(self) -> None:
         """Set the URL for the API call to the `page_url`."""
+        self._sanitize_URL()
         self._add_params_to_URL()
         self._url = self._page_url
+
+    @typechecked
+    def _sanitize_URL(self) -> None:
+        self._page_url = quote(self._page_url, safe=":/?&=")
 
     @typechecked
     def _add_params_to_URL(self) -> None:
@@ -423,7 +428,9 @@ def get_response_dict(response: requests.Response) -> dict[str, Any]:
 # Switch to default getter if key retriever can be empty.
 @typechecked
 def get_responses(
-    url: str, paged_response_class: type[BasePagedResponseGetter], params: dict | None = None
+    url: str,
+    paged_response_class: type[BasePagedResponseGetter],
+    params: dict[str, str] | None = None,
 ) -> list[dict[str, Any]]:
     """Get all responses from a paginated API endpoint.
 
