@@ -5,12 +5,13 @@ from abc import abstractmethod
 from collections.abc import Callable
 from time import sleep
 from typing import Any
-from urllib.parse import quote
+from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 
 import requests
 from requests.auth import HTTPBasicAuth
 from typeguard import typechecked
 
+from comb_utils.lib import errors
 from comb_utils.lib.constants import RateLimits
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -340,10 +341,10 @@ class BasePagedResponseGetter(BaseGetCaller):
     _page_url: str
 
     #: The dictionary of query string parameters.
-    _params: dict
+    _params: dict[str, str] = {}
 
     @typechecked
-    def __init__(self, page_url: str, params: dict[str, str] | None = None) -> None:
+    def __init__(self, page_url: str, params: dict[str, str] = _params) -> None:
         """Initialize the BasePagedResponseGetter object.
 
         Args:
@@ -351,42 +352,49 @@ class BasePagedResponseGetter(BaseGetCaller):
             params: The dictionary of query string parameters.
         """
         self._page_url = page_url
-        self._params = params if params is not None else {}
+        self._params = params
         super().__init__()
 
     @typechecked
     def _set_url(self) -> None:
         """Set the URL for the API call to the `page_url`."""
-        self._sanitize_URL()
+        self._check_duplicates_in_URL()
         self._add_params_to_URL()
         self._url = self._page_url
 
     @typechecked
-    def _sanitize_URL(self) -> None:
-        self._page_url = quote(self._page_url, safe=":/?&=")
+    def _check_duplicates_in_URL(self) -> None:
+        parsed_url = urlparse(self._page_url)
+        query_str = parsed_url.query
+        query_params = parse_qs(query_str)
+        duplicate_entries = {key: val for key, val in query_params.items() if len(val) > 1}
+        if duplicate_entries:
+            raise errors.DuplicateKeysDetected(
+                f"Duplicate entries found in query string: {duplicate_entries}"
+            )
 
     @typechecked
     def _add_params_to_URL(self) -> None:
         if self._params != {}:
-            self._params = {
-                quote(str(key)): quote(str(val)) for key, val in self._params.items()
+            parsed_url = urlparse(self._page_url)
+            query_str = parsed_url.query
+            query_params = parse_qs(query_str)
+            for key, val in self._params.items():
+                if key in query_params:
+                    query_params[key].append(val)
+                else:
+                    query_params[key] = [val]
+            duplicate_entries = {
+                key: val for key, val in query_params.items() if len(val) > 1
             }
-            if "?" in self._page_url:
-                base_url = self._page_url.split("?")[0]
-                base_query_str = self._page_url.split("?")[1]
-                base_params = {}
-                for query in base_query_str.split("&"):
-                    key = query.split("=")[0]
-                    val = query.split("=")[1]
-                    base_params[key] = val
-                base_params.update(self._params)
-                query_str = "&".join([f"{key}={val}" for key, val in base_params.items()])
-                self._page_url = base_url + "?" + query_str
-            else:
-                params_query_str = "&".join(
-                    [f"{key}={val}" for key, val in self._params.items()]
+            if duplicate_entries:
+                raise errors.DuplicateKeysDetected(
+                    f"Duplicate entries found in query string: {duplicate_entries}"
                 )
-                self._page_url = self._page_url + "?" + params_query_str
+            else:
+                query_params = {key: val[0] for key, val in query_params.items()}
+                updated_query = urlencode(query_params)
+                self._page_url = urlunparse(parsed_url._replace(query=updated_query))
 
     @typechecked
     def _handle_200(self) -> None:
@@ -426,11 +434,14 @@ def get_response_dict(response: requests.Response) -> dict[str, Any]:
 # TODO: bfb_delivery issue 59, comb_utils issue 24: move above issue to comb_utils.
 # TODO: bfb_delivery issue 59, comb_utils issue 24:
 # Switch to default getter if key retriever can be empty.
+_params: dict[str, str] = {}
+
+
 @typechecked
 def get_responses(
     url: str,
     paged_response_class: type[BasePagedResponseGetter],
-    params: dict[str, str] | None = None,
+    params: dict[str, str] = _params,
 ) -> list[dict[str, Any]]:
     """Get all responses from a paginated API endpoint.
 
@@ -449,7 +460,7 @@ def get_responses(
 
     while next_page_salsa is not None:
         paged_response_getter = paged_response_class(
-            page_url=url + str(next_page_cookie), params=params if params is not None else {}
+            page_url=url + str(next_page_cookie), params=params
         )
         paged_response_getter.call_api()
 
