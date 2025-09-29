@@ -364,6 +364,7 @@ class BasePagedResponseGetter(BaseGetCaller):
 
     @typechecked
     def _check_duplicates_in_URL(self) -> None:
+        """Check for duplicate values in query string parameters."""
         parsed_url = urlparse(self._page_url)
         query_str = parsed_url.query
         query_params = parse_qs(query_str)
@@ -375,6 +376,7 @@ class BasePagedResponseGetter(BaseGetCaller):
 
     @typechecked
     def _add_params_to_URL(self) -> None:
+        """Add query string parameters to `page_url`."""
         if self._params != {}:
             parsed_url = urlparse(self._page_url)
             query_str = parsed_url.query

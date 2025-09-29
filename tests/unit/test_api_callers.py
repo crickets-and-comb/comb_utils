@@ -435,7 +435,7 @@ def test_paged_getter(response_sequence: list[dict[str, Any]]) -> None:
 def test_paged_getter_params(
     page_url: str, params: dict, expected_url: str, error_context: AbstractContextManager
 ) -> None:
-    """Test query string parameters modify URL."""
+    """Test addition of query string parameters in `page_url`."""
     response_sequence: list[dict[str, Any]] = [
         {"json.return_value": {"data": [1, 2, 3]}, "status_code": 200}
     ]
