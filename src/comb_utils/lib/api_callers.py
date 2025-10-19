@@ -341,10 +341,10 @@ class BasePagedResponseGetter(BaseGetCaller):
     _page_url: str
 
     #: The dictionary of query string parameters.
-    _params: dict[str, str] = {}
+    _params: dict[str, str] | None = {}
 
     @typechecked
-    def __init__(self, page_url: str, params: dict[str, str] = _params) -> None:
+    def __init__(self, page_url: str, params: dict[str, str] | None = None) -> None:
         """Initialize the BasePagedResponseGetter object.
 
         Args:
@@ -377,7 +377,7 @@ class BasePagedResponseGetter(BaseGetCaller):
     @typechecked
     def _add_params_to_URL(self) -> None:
         """Add query string parameters to `page_url`."""
-        if self._params != {}:
+        if self._params:
             parsed_url = urlparse(self._page_url)
             query_str = parsed_url.query
             query_params = parse_qs(query_str)
