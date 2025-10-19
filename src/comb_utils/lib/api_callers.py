@@ -341,7 +341,7 @@ class BasePagedResponseGetter(BaseGetCaller):
     _page_url: str
 
     #: The dictionary of query string parameters.
-    _params: dict[str, str] | None = {}
+    _params: dict[str, str] | None
 
     @typechecked
     def __init__(self, page_url: str, params: dict[str, str] | None = None) -> None:
@@ -436,7 +436,6 @@ def get_response_dict(response: requests.Response) -> dict[str, Any]:
 # TODO: bfb_delivery issue 59, comb_utils issue 24: move above issue to comb_utils.
 # TODO: bfb_delivery issue 59, comb_utils issue 24:
 # Switch to default getter if key retriever can be empty.
-_params: dict[str, str] = {}
 
 
 @typechecked
