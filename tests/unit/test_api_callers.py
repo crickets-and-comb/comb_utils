@@ -393,7 +393,7 @@ def test_paged_getter(response_sequence: list[dict[str, Any]]) -> None:
         (
             BASE_URL + "?foo=bar",
             {"foo": "baz"},
-            None,
+            "",
             pytest.raises(
                 errors.DuplicateKeysDetected, match="Duplicate entries found in query string"
             ),
@@ -407,13 +407,13 @@ def test_paged_getter(response_sequence: list[dict[str, Any]]) -> None:
         (
             BASE_URL + "?foo=bar",
             {"foo": "baz", "qux": "quux"},
-            None,
+            "",
             pytest.raises(
                 errors.DuplicateKeysDetected,
                 match="Duplicate entries found in query string",
             ),
         ),
-        (BASE_URL, {"foo": "bar baz"}, BASE_URL + "?foo=bar%20baz", nullcontext()),
+        (BASE_URL, {"foo": "bar baz"}, BASE_URL + "?foo=bar+baz", nullcontext()),
         (BASE_URL, {"foo": "bar\nbaz"}, BASE_URL + "?foo=bar%0Abaz", nullcontext()),
         (BASE_URL, {"foo": "bar\rbaz"}, BASE_URL + "?foo=bar%0Dbaz", nullcontext()),
         (BASE_URL, {"foo": "bar\tbaz"}, BASE_URL + "?foo=bar%09baz", nullcontext()),
@@ -439,7 +439,7 @@ def test_paged_getter_params(
     response_sequence: list[dict[str, Any]] = [
         {"json.return_value": {"data": [1, 2, 3]}, "status_code": 200}
     ]
-    with patch("requests.get") as mock_request:
+    with patch("requests.get") as mock_request, error_context:
         mock_request.side_effect = [Mock(**resp) for resp in response_sequence]
 
         caller = BasePagedResponseGetter(page_url=page_url, params=params)
