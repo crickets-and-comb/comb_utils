@@ -443,7 +443,7 @@ _params: dict[str, str] = {}
 def get_responses(
     url: str,
     paged_response_class: type[BasePagedResponseGetter],
-    params: dict[str, str] = _params,
+    params: dict[str, str] | None = None,
 ) -> list[dict[str, Any]]:
     """Get all responses from a paginated API endpoint.
 
