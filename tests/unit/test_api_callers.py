@@ -16,6 +16,7 @@ from comb_utils import (
     BasePostCaller,
     get_responses,
 )
+from comb_utils.lib import errors
 from comb_utils.lib.constants import RateLimits
 
 BASE_URL: Final[str] = "https://example.com/api/test"
@@ -382,6 +383,68 @@ def test_paged_getter(response_sequence: list[dict[str, Any]]) -> None:
         assert caller.next_page_salsa == response_sequence[-1]["json.return_value"].get(
             "nextPageToken", None
         )
+
+
+@pytest.mark.parametrize(
+    "page_url, params, expected_url, error_context",
+    [
+        (BASE_URL, {}, BASE_URL, nullcontext()),
+        (BASE_URL, {"foo": "bar"}, BASE_URL + "?foo=bar", nullcontext()),
+        (
+            BASE_URL + "?foo=bar",
+            {"foo": "baz"},
+            "",
+            pytest.raises(
+                errors.DuplicateKeysDetected, match="Duplicate entries found in query string"
+            ),
+        ),
+        (
+            BASE_URL + "?foo=bar",
+            {"qux": "quux"},
+            BASE_URL + "?foo=bar&qux=quux",
+            nullcontext(),
+        ),
+        (
+            BASE_URL + "?foo=bar",
+            {"foo": "baz", "qux": "quux"},
+            "",
+            pytest.raises(
+                errors.DuplicateKeysDetected,
+                match="Duplicate entries found in query string",
+            ),
+        ),
+        (BASE_URL, {"foo": "bar baz"}, BASE_URL + "?foo=bar+baz", nullcontext()),
+        (BASE_URL, {"foo": "bar\nbaz"}, BASE_URL + "?foo=bar%0Abaz", nullcontext()),
+        (BASE_URL, {"foo": "bar\rbaz"}, BASE_URL + "?foo=bar%0Dbaz", nullcontext()),
+        (BASE_URL, {"foo": "bar\tbaz"}, BASE_URL + "?foo=bar%09baz", nullcontext()),
+        (BASE_URL, {"foo": 'bar"baz'}, BASE_URL + "?foo=bar%22baz", nullcontext()),
+        (BASE_URL, {"foo": "bar<baz"}, BASE_URL + "?foo=bar%3Cbaz", nullcontext()),
+        (BASE_URL, {"foo": "bar>baz"}, BASE_URL + "?foo=bar%3Ebaz", nullcontext()),
+        (BASE_URL, {"foo": "bar#baz"}, BASE_URL + "?foo=bar%23baz", nullcontext()),
+        (BASE_URL, {"foo": "bar%baz"}, BASE_URL + "?foo=bar%25baz", nullcontext()),
+        (BASE_URL, {"foo": "bar[baz"}, BASE_URL + "?foo=bar%5Bbaz", nullcontext()),
+        (BASE_URL, {"foo": "bar]baz"}, BASE_URL + "?foo=bar%5Dbaz", nullcontext()),
+        (BASE_URL, {"foo": "bar{baz"}, BASE_URL + "?foo=bar%7Bbaz", nullcontext()),
+        (BASE_URL, {"foo": "bar}baz"}, BASE_URL + "?foo=bar%7Dbaz", nullcontext()),
+        (BASE_URL, {"foo": "bar|baz"}, BASE_URL + "?foo=bar%7Cbaz", nullcontext()),
+        (BASE_URL, {"foo": "bar\\baz"}, BASE_URL + "?foo=bar%5Cbaz", nullcontext()),
+        (BASE_URL, {"foo": "bar^baz"}, BASE_URL + "?foo=bar%5Ebaz", nullcontext()),
+    ],
+)
+@typechecked
+def test_paged_getter_params(
+    page_url: str, params: dict, expected_url: str, error_context: AbstractContextManager
+) -> None:
+    """Test addition of query string parameters in `page_url`."""
+    response_sequence: list[dict[str, Any]] = [
+        {"json.return_value": {"data": [1, 2, 3]}, "status_code": 200}
+    ]
+    with patch("requests.get") as mock_request, error_context:
+        mock_request.side_effect = [Mock(**resp) for resp in response_sequence]
+
+        caller = BasePagedResponseGetter(page_url=page_url, params=params)
+        caller.call_api()
+        assert mock_request.call_args_list[0][1]["url"] == expected_url
 
 
 @pytest.mark.parametrize(

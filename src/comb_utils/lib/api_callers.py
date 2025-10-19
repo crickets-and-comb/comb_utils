@@ -5,11 +5,13 @@ from abc import abstractmethod
 from collections.abc import Callable
 from time import sleep
 from typing import Any
+from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 
 import requests
 from requests.auth import HTTPBasicAuth
 from typeguard import typechecked
 
+from comb_utils.lib import errors
 from comb_utils.lib.constants import RateLimits
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -338,20 +340,63 @@ class BasePagedResponseGetter(BaseGetCaller):
     #: The URL for the page.
     _page_url: str
 
+    #: The dictionary of query string parameters.
+    _params: dict[str, str] | None
+
     @typechecked
-    def __init__(self, page_url: str) -> None:
+    def __init__(self, page_url: str, params: dict[str, str] | None = None) -> None:
         """Initialize the BasePagedResponseGetter object.
 
         Args:
             page_url: The URL for the page. (Optionally contains nextPageToken.)
+            params: The dictionary of query string parameters.
         """
         self._page_url = page_url
+        self._params = params
         super().__init__()
 
     @typechecked
     def _set_url(self) -> None:
         """Set the URL for the API call to the `page_url`."""
+        self._check_duplicates_in_URL()
+        self._add_params_to_URL()
         self._url = self._page_url
+
+    @typechecked
+    def _check_duplicates_in_URL(self) -> None:
+        """Check for duplicate values in query string parameters."""
+        parsed_url = urlparse(self._page_url)
+        query_str = parsed_url.query
+        query_params = parse_qs(query_str)
+        duplicate_entries = {key: val for key, val in query_params.items() if len(val) > 1}
+        if duplicate_entries:
+            raise errors.DuplicateKeysDetected(
+                f"Duplicate entries found in query string: {duplicate_entries}"
+            )
+
+    @typechecked
+    def _add_params_to_URL(self) -> None:
+        """Add query string parameters to `page_url`."""
+        if self._params:
+            parsed_url = urlparse(self._page_url)
+            query_str = parsed_url.query
+            query_params = parse_qs(query_str)
+            for key, val in self._params.items():
+                if key in query_params:
+                    query_params[key].append(val)
+                else:
+                    query_params[key] = [val]
+            duplicate_entries = {
+                key: val for key, val in query_params.items() if len(val) > 1
+            }
+            if duplicate_entries:
+                raise errors.DuplicateKeysDetected(
+                    f"Duplicate entries found in query string: {duplicate_entries}"
+                )
+
+            query_params = {key: val[0] for key, val in query_params.items()}
+            updated_query = urlencode(query_params)
+            self._page_url = urlunparse(parsed_url._replace(query=updated_query))
 
     @typechecked
     def _handle_200(self) -> None:
@@ -391,15 +436,20 @@ def get_response_dict(response: requests.Response) -> dict[str, Any]:
 # TODO: bfb_delivery issue 59, comb_utils issue 24: move above issue to comb_utils.
 # TODO: bfb_delivery issue 59, comb_utils issue 24:
 # Switch to default getter if key retriever can be empty.
+
+
 @typechecked
 def get_responses(
-    url: str, paged_response_class: type[BasePagedResponseGetter]
+    url: str,
+    paged_response_class: type[BasePagedResponseGetter],
+    params: dict[str, str] | None = None,
 ) -> list[dict[str, Any]]:
     """Get all responses from a paginated API endpoint.
 
     Args:
         url: The base URL of the API endpoint.
         paged_response_class: The class used to get the paginated response.
+        params: The dictionary of query string parameters.
 
     Returns:
         A list of dictionaries containing the responses from all pages.
@@ -410,7 +460,9 @@ def get_responses(
     responses = []
 
     while next_page_salsa is not None:
-        paged_response_getter = paged_response_class(page_url=url + str(next_page_cookie))
+        paged_response_getter = paged_response_class(
+            page_url=url + str(next_page_cookie), params=params
+        )
         paged_response_getter.call_api()
 
         stops = paged_response_getter._response.json()
