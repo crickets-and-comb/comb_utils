@@ -393,10 +393,10 @@ class BasePagedResponseGetter(BaseGetCaller):
                 raise errors.DuplicateKeysDetected(
                     f"Duplicate entries found in query string: {duplicate_entries}"
                 )
-            else:
-                query_params = {key: val[0] for key, val in query_params.items()}
-                updated_query = urlencode(query_params)
-                self._page_url = urlunparse(parsed_url._replace(query=updated_query))
+
+            query_params = {key: val[0] for key, val in query_params.items()}
+            updated_query = urlencode(query_params)
+            self._page_url = urlunparse(parsed_url._replace(query=updated_query))
 
     @typechecked
     def _handle_200(self) -> None:
