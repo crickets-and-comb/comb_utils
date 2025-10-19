@@ -28,6 +28,14 @@ comb\_utils.lib.docs module
    :show-inheritance:
    :undoc-members:
 
+comb\_utils.lib.errors module
+-----------------------------
+
+.. automodule:: comb_utils.lib.errors
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
 Module contents
 ---------------
 
