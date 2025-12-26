@@ -12,7 +12,7 @@ Contents
 .. toctree::
    :maxdepth: 3
 
-   docstring
+   functionmetadataformatter
    api_callers
    modules
 

@@ -1,7 +1,7 @@
-"""Docstring formatting for sphinx API docs and click CLI help."""
+"""New class which combines Docstrings and Defaults."""
 
 from dataclasses import dataclass
-from typing import Final
+from typing import Any, Final
 
 from typeguard import typechecked
 
@@ -27,18 +27,21 @@ class ErrorDocString:
         return
 
 
-class DocString:
-    """Class to format docstrings for public API `sphinx` docs and CLI `click` help.
+class FunctionMetaDataFormatter:
+    """Class to format docstrings and store argument defaults for public API `sphinx` docs \
+        and CLI `click` help.
 
     Args:
             opening: The opening docstring.
             args: Argument names and their docstrings.
+            defaults: The parameter defaults.
             raises: Objects holding error types with their docstrings.
             returns: The returns docstrings.
     """
 
     opening: str = ""
     args: dict[str, str] = {}
+    defaults: dict[str, Any] = {}
     raises: list[ErrorDocString] = []
     returns: list[str] = []
 
@@ -47,12 +50,14 @@ class DocString:
         self,
         opening: str,
         args: dict[str, str],
+        defaults: dict[str, Any],
         raises: list[ErrorDocString],
         returns: list[str],
     ) -> None:
         """Initialize the docstring parts."""
         self.opening = opening
         self.args = args
+        self.defaults = defaults
         self.raises = raises
         self.returns = returns
 

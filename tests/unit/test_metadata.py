@@ -1,17 +1,20 @@
-"""Tests for the docs module."""
+"""Tests for the metadata module."""
+
+from typing import Any
 
 import pytest
 
-from comb_utils import DocString, ErrorDocString
+from comb_utils import ErrorDocString, FunctionMetaDataFormatter
 
 
 @pytest.mark.parametrize(
-    "docstring, expected_docstring",
+    "metadata, expected_docstring",
     [
         (
-            DocString(
+            FunctionMetaDataFormatter(
                 opening="Test opening",
                 args={"arg1": "arg1 docstring", "arg2": "arg2 docstring"},
+                defaults={},
                 raises=[
                     ErrorDocString(error_type="Error1", docstring="Error1 docstring"),
                     ErrorDocString(error_type="Error2", docstring="Error2 docstring"),
@@ -26,9 +29,10 @@ from comb_utils import DocString, ErrorDocString
             ),
         ),
         (
-            DocString(
+            FunctionMetaDataFormatter(
                 opening="Test opening",
                 args={},
+                defaults={},
                 raises=[ErrorDocString(error_type="Error1", docstring="Error1 docstring")],
                 returns=["return1", "return2"],
             ),
@@ -39,9 +43,10 @@ from comb_utils import DocString, ErrorDocString
             ),
         ),
         (
-            DocString(
+            FunctionMetaDataFormatter(
                 opening="Test opening",
                 args={"arg1": "arg1 docstring", "arg2": "arg2 docstring"},
+                defaults={},
                 raises=[],
                 returns=["return1", "return2"],
             ),
@@ -52,9 +57,10 @@ from comb_utils import DocString, ErrorDocString
             ),
         ),
         (
-            DocString(
+            FunctionMetaDataFormatter(
                 opening="Test opening",
                 args={"arg1": "arg1 docstring", "arg2": "arg2 docstring"},
+                defaults={},
                 raises=[ErrorDocString(error_type="Error1", docstring="Error1 docstring")],
                 returns=[],
             ),
@@ -66,18 +72,19 @@ from comb_utils import DocString, ErrorDocString
         ),
     ],
 )
-def test_api_docstring(docstring: DocString, expected_docstring: str) -> None:
-    """Test the DocString class."""
-    assert docstring.api_docstring == expected_docstring
+def test_api_docstring(metadata: FunctionMetaDataFormatter, expected_docstring: str) -> None:
+    """Test the api_docstring method of the FunctionMetaDataFormatter class."""
+    assert metadata.api_docstring == expected_docstring
 
 
 @pytest.mark.parametrize(
-    "docstring, expected_docstring",
+    "metadata, expected_docstring",
     [
         (
-            DocString(
+            FunctionMetaDataFormatter(
                 opening="Test opening",
                 args={"arg1": "arg1 docstring", "arg2": "arg2 docstring"},
+                defaults={},
                 raises=[
                     ErrorDocString(error_type="Error1", docstring="Error1 docstring"),
                     ErrorDocString(error_type="Error2", docstring="Error2 docstring"),
@@ -91,9 +98,10 @@ def test_api_docstring(docstring: DocString, expected_docstring: str) -> None:
             ),
         ),
         (
-            DocString(
+            FunctionMetaDataFormatter(
                 opening="Test opening",
                 args={},
+                defaults={},
                 raises=[ErrorDocString(error_type="Error1", docstring="Error1 docstring")],
                 returns=["return1", "return2"],
             ),
@@ -102,18 +110,20 @@ def test_api_docstring(docstring: DocString, expected_docstring: str) -> None:
             "Returns:\n\n\n  return1\n\n  return2\n",
         ),
         (
-            DocString(
+            FunctionMetaDataFormatter(
                 opening="Test opening",
                 args={"arg1": "arg1 docstring", "arg2": "arg2 docstring"},
+                defaults={},
                 raises=[],
                 returns=["return1", "return2"],
             ),
             "Test opening\n\n\nReturns:\n\n\n  return1\n\n  return2\n",
         ),
         (
-            DocString(
+            FunctionMetaDataFormatter(
                 opening="Test opening",
                 args={"arg1": "arg1 docstring", "arg2": "arg2 docstring"},
+                defaults={},
                 raises=[ErrorDocString(error_type="Error1", docstring="Error1 docstring")],
                 returns=[],
             ),
@@ -121,6 +131,41 @@ def test_api_docstring(docstring: DocString, expected_docstring: str) -> None:
         ),
     ],
 )
-def test_cli_docstring(docstring: DocString, expected_docstring: str) -> None:
-    """Test the DocString class."""
-    assert docstring.cli_docstring == expected_docstring
+def test_cli_docstring(metadata: FunctionMetaDataFormatter, expected_docstring: str) -> None:
+    """Test the cli_docstring method of the FunctionMetaDataFormatter class."""
+    assert metadata.cli_docstring == expected_docstring
+
+
+@pytest.mark.parametrize(
+    "metadata, expected_defaults",
+    [
+        (
+            FunctionMetaDataFormatter(
+                opening="Test opening",
+                args={"arg1": "arg1 docstring", "arg2": "arg2 docstring"},
+                defaults={"arg1": "arg1 default", "arg2": None},
+                raises=[
+                    ErrorDocString(error_type="Error1", docstring="Error1 docstring"),
+                    ErrorDocString(error_type="Error2", docstring="Error2 docstring"),
+                ],
+                returns=["return1", "return2"],
+            ),
+            ({"arg1": "arg1 default", "arg2": None}),
+        ),
+        (
+            FunctionMetaDataFormatter(
+                opening="",
+                args={"arg1": "arg1 docstring"},
+                defaults={"arg1": 0},
+                raises=[],
+                returns=[],
+            ),
+            ({"arg1": 0}),
+        ),
+    ],
+)
+def test_defaults(
+    metadata: FunctionMetaDataFormatter, expected_defaults: dict[str, Any]
+) -> None:
+    """Test the defaults attribute of the FunctionMetaDataFormatter class."""
+    assert metadata.defaults == expected_defaults

@@ -12,7 +12,7 @@ from requests.auth import HTTPBasicAuth
 from typeguard import typechecked
 
 from comb_utils.lib import errors
-from comb_utils.lib.constants import RateLimits
+from comb_utils.lib.constants import FunctionMetaData, RateLimits
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
@@ -410,14 +410,6 @@ class BasePagedResponseGetter(BaseGetCaller):
 
 @typechecked
 def get_response_dict(response: requests.Response) -> dict[str, Any]:
-    """Safely handle a response that may not be JSON.
-
-    Args:
-        response: The response from the API call.
-
-    Returns:
-        A dictionary containing the response data.
-    """
     try:
         response_dict: dict = response.json()
     except Exception as e:
@@ -428,6 +420,9 @@ def get_response_dict(response: requests.Response) -> dict[str, Any]:
         }
 
     return response_dict
+
+
+get_response_dict.__doc__ = FunctionMetaData.GET_RESPONSE_DICT.api_docstring
 
 
 # TODO: Pass params instead of forming URL first. ("params", not "json")
@@ -442,18 +437,8 @@ def get_response_dict(response: requests.Response) -> dict[str, Any]:
 def get_responses(
     url: str,
     paged_response_class: type[BasePagedResponseGetter],
-    params: dict[str, str] | None = None,
+    params: dict[str, str] | None = FunctionMetaData.GET_RESPONSES.defaults["params"],
 ) -> list[dict[str, Any]]:
-    """Get all responses from a paginated API endpoint.
-
-    Args:
-        url: The base URL of the API endpoint.
-        paged_response_class: The class used to get the paginated response.
-        params: The dictionary of query string parameters.
-
-    Returns:
-        A list of dictionaries containing the responses from all pages.
-    """
     # Calling the token salsa to trick bandit into ignoring what looks like a hardcoded token.
     next_page_salsa = ""
     next_page_cookie = ""
@@ -476,6 +461,9 @@ def get_responses(
     return responses
 
 
+get_responses.__doc__ = FunctionMetaData.GET_RESPONSES.api_docstring
+
+
 @typechecked
 def concat_response_pages(
     page_list: list[dict[str, Any]], data_key: str
@@ -494,3 +482,6 @@ def concat_response_pages(
         data_list += page[data_key]
 
     return data_list
+
+
+concat_response_pages.__doc__ = FunctionMetaData.CONCAT_RESPONSE_PAGES.api_docstring

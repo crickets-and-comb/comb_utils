@@ -10,4 +10,4 @@ from comb_utils.lib.api_callers import (
     get_response_dict,
     get_responses,
 )
-from comb_utils.lib.docs import DocString, ErrorDocString
+from comb_utils.lib.metadata import ErrorDocString, FunctionMetaDataFormatter

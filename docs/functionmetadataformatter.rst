@@ -1,14 +1,14 @@
-============================================================
-DocString: A Class to Format Docstrings for Sphinx and Click
-============================================================
+============================================================================
+FunctionMetaDataFormatter: A Class to Format Docstrings for Sphinx and Click
+============================================================================
 
-The :py:class:`comb_utils.lib.docs.DocString` class is used to format docstrings for `Sphinx <https://www.sphinx-doc.org/en/master/>`_ API docs and `Click <https://click.palletsprojects.com/en/stable/>`_ CLI help docs. It's useful when you have multiple functions that should have the same docstring, such as when you have a public API function and a CLI function that call the same underlying code.
+The :py:class:`comb_utils.lib.metadata.FunctionMetaDataFormatter` class is used to format docstrings for `Sphinx <https://www.sphinx-doc.org/en/master/>`_ API docs and `Click <https://click.palletsprojects.com/en/stable/>`_ CLI help docs. It's useful when you have multiple functions that should have the same docstring, such as when you have a public API function and a CLI function that call the same underlying code.
 
-:code:`DocString` takes an opening docstring, an arg dict, a list of returns text, and a list of :py:class:`comb_utils.lib.docs.ErrorDocString` objects. It has three important members that you can use:
+:code:`FunctionMetaDataFormatter` takes an opening docstring, an arg dict, a default dict, a list of returns text, and a list of :py:class:`comb_utils.lib.metadata.ErrorDocString` objects. It has three important members that you can use:
 
 :api_docstring: Docstring formatted for Sphinx API docs.
 :cli_docstring: Docstring formatted for Click.
-:args: Simply the arg dict you pass when you initialize the :code:`DocString` object.
+:args: Simply the arg dict you pass when you initialize the :code:`FunctionMetaDataFormatter` object.
 
 The main difference between :code:`api_docstring` and :code:`cli_docstring` is that :code:`cli_docstring` excludes the args block. CLI args help is picked up by Click in the :code:`click.option` decorators' :code:`help` arguments, to which you can pass the values in :code:`args`.
 
@@ -16,13 +16,17 @@ Example usage:
 
 .. code:: python
 
-    from comb_utils import DocString, ErrorDocString
+    from comb_utils import ErrorDocString, FunctionMetaDataFormatter
 
-    ADD_EM_DOCSTRING = DocString(
+    ADD_EM_DOCSTRING = FunctionMetaDataFormatter(
         opening_docstring="A function to add two numbers.",
         args={
             "a": "The first number. Must be greater than 0.",
             "b": "The second number. Must be less than 100."
+        },
+        defaults={
+            "a": 1,
+            "b": 99
         },
         returns=["The sum of the two numbers."],
         error_docstrings=[
@@ -37,13 +41,13 @@ Example usage:
         ]
     )
 
-Now you can use :code:`docstring.api_docstring` in your functions, and :code:`docstring.cli_docstring` and :code:`args` in your Click commands.
+Now you can use :code:`functionmetadataformatter.api_docstring` in your functions, and :code:`functionmetadataformatter.cli_docstring` and :code:`args` in your Click commands.
 
-Using :code:`docstring.api_docstring` in a function:
+Using :code:`functionmetadataformatter.api_docstring` in a function:
 
 .. code:: python
 
-    def add_em(a: int, b: int) -> int:
+    def add_em(a: int = ADD_EM_DOCSTRING.defaults["a"], b: int = ADD_EM_DOCSTRING.defaults["b"]) -> int:
         if a < 0:
             raise ValueError("a must be greater than 0.")
         if b > 100:
@@ -54,7 +58,7 @@ Using :code:`docstring.api_docstring` in a function:
 
 Now your Sphinx API docs will have the correct docstring for :code:`add_em`.
 
-Using :code:`docstring.cli_docstring` and :code:`args` in a Click command:
+Using :code:`functionmetadataformatter.cli_docstring` and :code:`args` in a Click command:
 
 .. code:: python
 
@@ -102,7 +106,7 @@ Then, when you run :code:`add_em --help`, you'll see the correct help doc:
       --b INTEGER  The second number. Must be less than 100.
       --help       Show this message and exit.
 
-You can even use the sphinx-click extension's click directive to include the Click help doc within the CLI module itself, and it's not a problem that it's a circular reference. This is useful for keeping the Sphinx' CLI docs in sync with the CLI's help doc. It's not really a feauture of :code:`DocString`, but it's worth mentioning here:
+You can even use the sphinx-click extension's click directive to include the Click help doc within the CLI module itself, and it's not a problem that it's a circular reference. This is useful for keeping the Sphinx' CLI docs in sync with the CLI's help doc. It's not really a feauture of :code:`FunctionMetaDataFormatter`, but it's worth mentioning here:
 
 .. code:: python
 
