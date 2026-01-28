@@ -1,17 +1,17 @@
-"""Tests for the metadata module."""
+"""Tests for the docs module."""
 
-from typing import Any
+from typing import Final
 
 import pytest
 
-from comb_utils import ErrorDocString, FunctionMetaDataFormatter
+from comb_utils import DocString, ErrorDocString
 
 
 @pytest.mark.parametrize(
-    "metadata, expected_docstring",
+    "docstring, expected_docstring",
     [
         (
-            FunctionMetaDataFormatter(
+            DocString(
                 opening="Test opening",
                 args={"arg1": "arg1 docstring", "arg2": "arg2 docstring"},
                 defaults={},
@@ -29,7 +29,7 @@ from comb_utils import ErrorDocString, FunctionMetaDataFormatter
             ),
         ),
         (
-            FunctionMetaDataFormatter(
+            DocString(
                 opening="Test opening",
                 args={},
                 defaults={},
@@ -43,7 +43,7 @@ from comb_utils import ErrorDocString, FunctionMetaDataFormatter
             ),
         ),
         (
-            FunctionMetaDataFormatter(
+            DocString(
                 opening="Test opening",
                 args={"arg1": "arg1 docstring", "arg2": "arg2 docstring"},
                 defaults={},
@@ -57,7 +57,7 @@ from comb_utils import ErrorDocString, FunctionMetaDataFormatter
             ),
         ),
         (
-            FunctionMetaDataFormatter(
+            DocString(
                 opening="Test opening",
                 args={"arg1": "arg1 docstring", "arg2": "arg2 docstring"},
                 defaults={},
@@ -72,16 +72,16 @@ from comb_utils import ErrorDocString, FunctionMetaDataFormatter
         ),
     ],
 )
-def test_api_docstring(metadata: FunctionMetaDataFormatter, expected_docstring: str) -> None:
-    """Test the api_docstring method of the FunctionMetaDataFormatter class."""
-    assert metadata.api_docstring == expected_docstring
+def test_api_docstring(docstring: DocString, expected_docstring: str) -> None:
+    """Test the DocString class."""
+    assert docstring.api_docstring == expected_docstring
 
 
 @pytest.mark.parametrize(
-    "metadata, expected_docstring",
+    "docstring, expected_docstring",
     [
         (
-            FunctionMetaDataFormatter(
+            DocString(
                 opening="Test opening",
                 args={"arg1": "arg1 docstring", "arg2": "arg2 docstring"},
                 defaults={},
@@ -98,7 +98,7 @@ def test_api_docstring(metadata: FunctionMetaDataFormatter, expected_docstring: 
             ),
         ),
         (
-            FunctionMetaDataFormatter(
+            DocString(
                 opening="Test opening",
                 args={},
                 defaults={},
@@ -110,7 +110,7 @@ def test_api_docstring(metadata: FunctionMetaDataFormatter, expected_docstring: 
             "Returns:\n\n\n  return1\n\n  return2\n",
         ),
         (
-            FunctionMetaDataFormatter(
+            DocString(
                 opening="Test opening",
                 args={"arg1": "arg1 docstring", "arg2": "arg2 docstring"},
                 defaults={},
@@ -120,7 +120,7 @@ def test_api_docstring(metadata: FunctionMetaDataFormatter, expected_docstring: 
             "Test opening\n\n\nReturns:\n\n\n  return1\n\n  return2\n",
         ),
         (
-            FunctionMetaDataFormatter(
+            DocString(
                 opening="Test opening",
                 args={"arg1": "arg1 docstring", "arg2": "arg2 docstring"},
                 defaults={},
@@ -131,41 +131,37 @@ def test_api_docstring(metadata: FunctionMetaDataFormatter, expected_docstring: 
         ),
     ],
 )
-def test_cli_docstring(metadata: FunctionMetaDataFormatter, expected_docstring: str) -> None:
-    """Test the cli_docstring method of the FunctionMetaDataFormatter class."""
-    assert metadata.cli_docstring == expected_docstring
+def test_cli_docstring(docstring: DocString, expected_docstring: str) -> None:
+    """Test the DocString class."""
+    assert docstring.cli_docstring == expected_docstring
 
 
-@pytest.mark.parametrize(
-    "metadata, expected_defaults",
-    [
-        (
-            FunctionMetaDataFormatter(
-                opening="Test opening",
-                args={"arg1": "arg1 docstring", "arg2": "arg2 docstring"},
-                defaults={"arg1": "arg1 default", "arg2": None},
-                raises=[
-                    ErrorDocString(error_type="Error1", docstring="Error1 docstring"),
-                    ErrorDocString(error_type="Error2", docstring="Error2 docstring"),
-                ],
-                returns=["return1", "return2"],
-            ),
-            ({"arg1": "arg1 default", "arg2": None}),
-        ),
-        (
-            FunctionMetaDataFormatter(
-                opening="",
-                args={"arg1": "arg1 docstring"},
-                defaults={"arg1": 0},
-                raises=[],
-                returns=[],
-            ),
-            ({"arg1": 0}),
-        ),
-    ],
+DUMMY_FUNCTION: Final = DocString(
+    opening="""
+Dummy function which concatenates two input strings and returns the output.
+""",
+    args={
+        "arg1": "The first string.",
+        "arg2": "The second string.",
+    },
+    defaults={
+        "arg1": "Test ",
+        "arg2": "Passed!",
+    },
+    raises=[],
+    returns=["The concatenated string."],
 )
-def test_defaults(
-    metadata: FunctionMetaDataFormatter, expected_defaults: dict[str, Any]
-) -> None:
-    """Test the defaults attribute of the FunctionMetaDataFormatter class."""
-    assert metadata.defaults == expected_defaults
+
+
+def dummy_function(
+    arg1: str = DUMMY_FUNCTION.defaults["arg1"], arg2: str = DUMMY_FUNCTION.defaults["arg2"]
+) -> str:
+    """Dummy function which concatenates two input strings and returns the output."""
+    result = arg1 + arg2
+
+    return result
+
+
+def test_defaults() -> None:
+    """Test the defaults attribute of the DocString class."""
+    assert dummy_function() == "Test Passed!"

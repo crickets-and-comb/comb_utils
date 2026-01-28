@@ -1,4 +1,4 @@
-"""New class which combines Docstrings and Defaults."""
+"""Docstring formatting for sphinx API docs and click CLI help."""
 
 from dataclasses import dataclass
 from typing import Any, Final
@@ -27,7 +27,7 @@ class ErrorDocString:
         return
 
 
-class FunctionMetaDataFormatter:
+class DocString:
     """Class to format docstrings and store argument defaults for public API `sphinx` docs \
         and CLI `click` help.
 
