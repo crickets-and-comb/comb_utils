@@ -43,7 +43,7 @@ class DocString:
     args: dict[str, str] = {}
     raises: list[ErrorDocString] = []
     returns: list[str] = []
-    defaults: dict[str, Any] | None = None
+    defaults: dict[str, Any] = {}
 
     @typechecked
     def __init__(
@@ -59,7 +59,7 @@ class DocString:
         self.args = args
         self.raises = raises
         self.returns = returns
-        self.defaults = defaults
+        self.defaults = defaults if defaults is not None else {}
 
         return
 
