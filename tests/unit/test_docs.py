@@ -14,7 +14,6 @@ from comb_utils import DocString, ErrorDocString
             DocString(
                 opening="Test opening",
                 args={"arg1": "arg1 docstring", "arg2": "arg2 docstring"},
-                defaults={},
                 raises=[
                     ErrorDocString(error_type="Error1", docstring="Error1 docstring"),
                     ErrorDocString(error_type="Error2", docstring="Error2 docstring"),
@@ -32,7 +31,6 @@ from comb_utils import DocString, ErrorDocString
             DocString(
                 opening="Test opening",
                 args={},
-                defaults={},
                 raises=[ErrorDocString(error_type="Error1", docstring="Error1 docstring")],
                 returns=["return1", "return2"],
             ),
@@ -46,7 +44,6 @@ from comb_utils import DocString, ErrorDocString
             DocString(
                 opening="Test opening",
                 args={"arg1": "arg1 docstring", "arg2": "arg2 docstring"},
-                defaults={},
                 raises=[],
                 returns=["return1", "return2"],
             ),
@@ -60,7 +57,6 @@ from comb_utils import DocString, ErrorDocString
             DocString(
                 opening="Test opening",
                 args={"arg1": "arg1 docstring", "arg2": "arg2 docstring"},
-                defaults={},
                 raises=[ErrorDocString(error_type="Error1", docstring="Error1 docstring")],
                 returns=[],
             ),
@@ -84,7 +80,6 @@ def test_api_docstring(docstring: DocString, expected_docstring: str) -> None:
             DocString(
                 opening="Test opening",
                 args={"arg1": "arg1 docstring", "arg2": "arg2 docstring"},
-                defaults={},
                 raises=[
                     ErrorDocString(error_type="Error1", docstring="Error1 docstring"),
                     ErrorDocString(error_type="Error2", docstring="Error2 docstring"),
@@ -101,7 +96,6 @@ def test_api_docstring(docstring: DocString, expected_docstring: str) -> None:
             DocString(
                 opening="Test opening",
                 args={},
-                defaults={},
                 raises=[ErrorDocString(error_type="Error1", docstring="Error1 docstring")],
                 returns=["return1", "return2"],
             ),
@@ -113,7 +107,6 @@ def test_api_docstring(docstring: DocString, expected_docstring: str) -> None:
             DocString(
                 opening="Test opening",
                 args={"arg1": "arg1 docstring", "arg2": "arg2 docstring"},
-                defaults={},
                 raises=[],
                 returns=["return1", "return2"],
             ),
@@ -123,7 +116,6 @@ def test_api_docstring(docstring: DocString, expected_docstring: str) -> None:
             DocString(
                 opening="Test opening",
                 args={"arg1": "arg1 docstring", "arg2": "arg2 docstring"},
-                defaults={},
                 raises=[ErrorDocString(error_type="Error1", docstring="Error1 docstring")],
                 returns=[],
             ),
@@ -144,12 +136,12 @@ Dummy function which concatenates two input strings and returns the output.
         "arg1": "The first string.",
         "arg2": "The second string.",
     },
+    raises=[],
+    returns=["The concatenated string."],
     defaults={
         "arg1": "Test ",
         "arg2": "Passed!",
     },
-    raises=[],
-    returns=["The concatenated string."],
 )
 
 

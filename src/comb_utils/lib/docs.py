@@ -41,25 +41,25 @@ class DocString:
 
     opening: str = ""
     args: dict[str, str] = {}
-    defaults: dict[str, Any] = {}
     raises: list[ErrorDocString] = []
     returns: list[str] = []
+    defaults: dict[str, Any] | None = None
 
     @typechecked
     def __init__(
         self,
         opening: str,
         args: dict[str, str],
-        defaults: dict[str, Any],
         raises: list[ErrorDocString],
         returns: list[str],
+        defaults: dict[str, Any] | None = None,
     ) -> None:
         """Initialize the docstring parts."""
         self.opening = opening
         self.args = args
-        self.defaults = defaults
         self.raises = raises
         self.returns = returns
+        self.defaults = defaults
 
         return
 
