@@ -24,10 +24,6 @@ Example usage:
             "a": "The first number. Must be greater than 0.",
             "b": "The second number. Must be less than 100."
         },
-        defaults={
-            "a": 1,
-            "b": 99
-        },
         returns=["The sum of the two numbers."],
         error_docstrings=[
             ErrorDocString(
@@ -39,6 +35,10 @@ Example usage:
                 docstring="If `b` is greater than 100."
             )
         ]
+        defaults={
+            "a": 1,
+            "b": 99
+        },
     )
 
 Now you can use :code:`docstring.api_docstring` in your functions, and :code:`docstring.cli_docstring` and :code:`args` in your Click commands.
