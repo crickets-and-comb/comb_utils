@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="prev" title="comb_utils package" href="comb_utils.html">
 
     <!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
-        <title>comb_utils.lib package - comb_utils 0.3.1 documentation</title>
+        <title>comb_utils.lib package - comb_utils 0.5.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -161,7 +161,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">comb_utils 0.3.1 documentation</div></a>
+      <a href="index.html"><div class="brand">comb_utils 0.5.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -182,7 +182,7 @@
       
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
-  <span class="sidebar-brand-text">comb_utils 0.3.1 documentation</span>
+  <span class="sidebar-brand-text">comb_utils 0.5.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -467,14 +467,15 @@ the request call member at child class definition and passing the URL to <cite>_
 <p>Docstring formatting for sphinx API docs and click CLI help.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="comb_utils.lib.docs.DocString">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">comb_utils.lib.docs.</span></span><span class="sig-name descname"><span class="pre">DocString</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opening</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raises</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">returns</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#comb_utils.lib.docs.DocString" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">comb_utils.lib.docs.</span></span><span class="sig-name descname"><span class="pre">DocString</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opening</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defaults</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raises</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">returns</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#comb_utils.lib.docs.DocString" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Class to format docstrings for public API <cite>sphinx</cite> docs and CLI <cite>click</cite> help.</p>
+<p>Class to format docstrings and store argument defaults for public API <cite>sphinx</cite> docs         and CLI <cite>click</cite> help.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>opening</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The opening docstring.</p></li>
 <li><p><strong>args</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Argument names and their docstrings.</p></li>
+<li><p><strong>defaults</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span>) – The parameter defaults.</p></li>
 <li><p><strong>raises</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<a class="reference internal" href="#comb_utils.lib.docs.ErrorDocString" title="comb_utils.lib.docs.ErrorDocString"><code class="xref py py-class docutils literal notranslate"><span class="pre">ErrorDocString</span></code></a>]</span>) – Objects holding error types with their docstrings.</p></li>
 <li><p><strong>returns</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – The returns docstrings.</p></li>
 </ul>
@@ -496,6 +497,11 @@ the request call member at child class definition and passing the URL to <cite>_
 <span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">cli_docstring</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#comb_utils.lib.docs.DocString.cli_docstring" title="Link to this definition">¶</a></dt>
 <dd><p>Docstring formatted for Click CLI help.</p>
 </dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="comb_utils.lib.docs.DocString.defaults">
+<span class="sig-name descname"><span class="pre">defaults</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></span><a class="headerlink" href="#comb_utils.lib.docs.DocString.defaults" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="comb_utils.lib.docs.DocString.opening">
@@ -648,6 +654,7 @@ the request call member at child class definition and passing the URL to <cite>_
 <li><a class="reference internal" href="#comb_utils.lib.docs.DocString.api_docstring"><code class="docutils literal notranslate"><span class="pre">DocString.api_docstring</span></code></a></li>
 <li><a class="reference internal" href="#comb_utils.lib.docs.DocString.args"><code class="docutils literal notranslate"><span class="pre">DocString.args</span></code></a></li>
 <li><a class="reference internal" href="#comb_utils.lib.docs.DocString.cli_docstring"><code class="docutils literal notranslate"><span class="pre">DocString.cli_docstring</span></code></a></li>
+<li><a class="reference internal" href="#comb_utils.lib.docs.DocString.defaults"><code class="docutils literal notranslate"><span class="pre">DocString.defaults</span></code></a></li>
 <li><a class="reference internal" href="#comb_utils.lib.docs.DocString.opening"><code class="docutils literal notranslate"><span class="pre">DocString.opening</span></code></a></li>
 <li><a class="reference internal" href="#comb_utils.lib.docs.DocString.raises"><code class="docutils literal notranslate"><span class="pre">DocString.raises</span></code></a></li>
 <li><a class="reference internal" href="#comb_utils.lib.docs.DocString.returns"><code class="docutils literal notranslate"><span class="pre">DocString.returns</span></code></a></li>
@@ -677,7 +684,7 @@ the request call member at child class definition and passing the URL to <cite>_
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=4621528c"></script>
+</div><script src="_static/documentation_options.js?v=1dd76d02"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/scripts/furo.js?v=46bd48cc"></script>

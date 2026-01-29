@@ -4,7 +4,7 @@ DocString: A Class to Format Docstrings for Sphinx and Click
 
 The :py:class:`comb_utils.lib.docs.DocString` class is used to format docstrings for `Sphinx <https://www.sphinx-doc.org/en/master/>`_ API docs and `Click <https://click.palletsprojects.com/en/stable/>`_ CLI help docs. It's useful when you have multiple functions that should have the same docstring, such as when you have a public API function and a CLI function that call the same underlying code.
 
-:code:`DocString` takes an opening docstring, an arg dict, a list of returns text, and a list of :py:class:`comb_utils.lib.docs.ErrorDocString` objects. It has three important members that you can use:
+:code:`DocString` takes an opening docstring, an arg dict, a default dict, a list of returns text, and a list of :py:class:`comb_utils.lib.docs.ErrorDocString` objects. It has three important members that you can use:
 
 :api_docstring: Docstring formatted for Sphinx API docs.
 :cli_docstring: Docstring formatted for Click.
@@ -23,6 +23,10 @@ Example usage:
         args={
             "a": "The first number. Must be greater than 0.",
             "b": "The second number. Must be less than 100."
+        },
+        defaults={
+            "a": 1,
+            "b": 99
         },
         returns=["The sum of the two numbers."],
         error_docstrings=[
@@ -43,7 +47,7 @@ Using :code:`docstring.api_docstring` in a function:
 
 .. code:: python
 
-    def add_em(a: int, b: int) -> int:
+    def add_em(a: int = ADD_EM_DOCSTRING.defaults["a"], b: int = ADD_EM_DOCSTRING.defaults["b"]) -> int:
         if a < 0:
             raise ValueError("a must be greater than 0.")
         if b > 100:
