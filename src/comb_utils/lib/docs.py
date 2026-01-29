@@ -34,9 +34,9 @@ class DocString:
     Args:
             opening: The opening docstring.
             args: Argument names and their docstrings.
-            defaults: The parameter defaults.
             raises: Objects holding error types with their docstrings.
             returns: The returns docstrings.
+            defaults: The parameter defaults. ``None`` casts to empty ``dict``.
     """
 
     opening: str = ""
