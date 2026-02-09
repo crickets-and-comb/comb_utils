@@ -2,12 +2,5 @@
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
-[tool.mypy]
-python_version = "3.12"
-# Disable errors for dynamic base classes in tests
-[[tool.mypy.overrides]]
-module = "tests.*"
-disable_error_code = ["type-abstract", "valid-type", "misc"]
-
 [tool.basedpyright]
 typeCheckingMode = "basic"
