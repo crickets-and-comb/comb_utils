@@ -91,6 +91,22 @@ When making smaller commits, you might just want to run some of the smaller comm
     $ make clean format full-qc full-test
 ```
 
+#### Type checking
+
+This project uses multiple typecheckers for comprehensive type coverage:
+- **mypy** - Fast, widely-adopted typechecker
+- **pyright** - Microsoft's strict typechecker with excellent IDE integration
+- **basedpyright** - Community-enhanced fork of pyright
+- **pytype** - Google's typechecker (Python 3.12 only, will be phased out)
+
+Run all typecheckers with:
+
+```bash
+    $ make typecheck
+```
+
+See [docs/typecheck_comparison.md](docs/typecheck_comparison.md) for a detailed comparison and recommendations.
+
 #### Using act
 
 As a final step, it's good practice to test run the workflow before opening a PR or pushing to an open PR. We don't want to waste GitHub runtime on a glitch that we could have caught before. You can use a make target for that:

@@ -11,8 +11,8 @@ import requests
 from requests.auth import HTTPBasicAuth
 from typeguard import typechecked
 
-from comb_utils.lib.errors import DuplicateKeysDetected
 from comb_utils.lib.constants import RateLimits
+from comb_utils.lib.errors import DuplicateKeysDetected
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
@@ -396,7 +396,9 @@ class BasePagedResponseGetter(BaseGetCaller):
                     f"Duplicate entries found in query string: {duplicate_entries}"
                 )
 
-            query_params_flat: dict[str, str] = {key: val[0] for key, val in query_params.items()}
+            query_params_flat: dict[str, str] = {
+                key: val[0] for key, val in query_params.items()
+            }
             updated_query = urlencode(query_params_flat)
             self._page_url = urlunparse(parsed_url._replace(query=updated_query))
 
