@@ -6,6 +6,10 @@ REPO_ROOT := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 RUN_MYPY := 1
 RUN_PYRIGHT := 1
 RUN_BASEDPYRIGHT := 1
+# ty disabled: Cannot resolve installed packages in current environment
+RUN_TY := 0
+# pyrefly disabled: False positive on urlunparse return type
+RUN_PYREFLY := 0
 
 export
 include shared/Makefile
