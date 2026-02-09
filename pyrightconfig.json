@@ -1,0 +1,12 @@
+{
+  "include": [
+    "src",
+    "tests"
+  ],
+  "pythonVersion": "3.12",
+  "typeCheckingMode": "basic",
+  "reportMissingTypeStubs": false,
+  "reportImportCycles": "error",
+  "reportPrivateLocalImportUsage": "warning",
+  "reportUnusedImport": "warning"
+}
