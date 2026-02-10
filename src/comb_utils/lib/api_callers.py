@@ -11,8 +11,8 @@ import requests
 from requests.auth import HTTPBasicAuth
 from typeguard import typechecked
 
-from comb_utils.lib import errors
 from comb_utils.lib.constants import RateLimits
+from comb_utils.lib.errors import DuplicateKeysDetected
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
@@ -158,9 +158,11 @@ class BaseCaller:
     @typechecked
     def _make_call(self) -> None:
         """Make the API call."""
+        api_key = self._get_API_key()
+        auth = HTTPBasicAuth(api_key, "") if api_key else None
         self._response = self._request_call(
             url=self._url,
-            auth=HTTPBasicAuth(self._get_API_key(), ""),
+            auth=auth,
             timeout=self._timeout,
             **self._call_kwargs,
         )
@@ -370,7 +372,7 @@ class BasePagedResponseGetter(BaseGetCaller):
         query_params = parse_qs(query_str)
         duplicate_entries = {key: val for key, val in query_params.items() if len(val) > 1}
         if duplicate_entries:
-            raise errors.DuplicateKeysDetected(
+            raise DuplicateKeysDetected(
                 f"Duplicate entries found in query string: {duplicate_entries}"
             )
 
@@ -390,12 +392,14 @@ class BasePagedResponseGetter(BaseGetCaller):
                 key: val for key, val in query_params.items() if len(val) > 1
             }
             if duplicate_entries:
-                raise errors.DuplicateKeysDetected(
+                raise DuplicateKeysDetected(
                     f"Duplicate entries found in query string: {duplicate_entries}"
                 )
 
-            query_params = {key: val[0] for key, val in query_params.items()}
-            updated_query = urlencode(query_params)
+            query_params_flat: dict[str, str] = {
+                key: val[0] for key, val in query_params.items()
+            }
+            updated_query = urlencode(query_params_flat)
             self._page_url = urlunparse(parsed_url._replace(query=updated_query))
 
     @typechecked
@@ -455,7 +459,7 @@ def get_responses(
         A list of dictionaries containing the responses from all pages.
     """
     # Calling the token salsa to trick bandit into ignoring what looks like a hardcoded token.
-    next_page_salsa = ""
+    next_page_salsa: str | None = ""
     next_page_cookie = ""
     responses = []
 
