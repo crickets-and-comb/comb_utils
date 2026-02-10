@@ -93,19 +93,11 @@ When making smaller commits, you might just want to run some of the smaller comm
 
 #### Type checking
 
-This project uses multiple typecheckers for comprehensive type coverage:
-- **mypy** - Fast, widely-adopted typechecker
-- **pyright** - Microsoft's strict typechecker with excellent IDE integration
-- **basedpyright** - Community-enhanced fork of pyright
-- **pytype** - Google's typechecker (Python 3.12 only, will be phased out)
-
-Run all typecheckers with:
+This project uses [mypy](https://mypy-lang.org) for typechecking. Run it with:
 
 ```bash
     $ make typecheck
 ```
-
-See [docs/typecheck_comparison.md](docs/typecheck_comparison.md) for a detailed comparison and recommendations.
 
 #### Using act
 
