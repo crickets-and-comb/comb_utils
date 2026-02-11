@@ -93,7 +93,7 @@ When making smaller commits, you might just want to run some of the smaller comm
 
 #### Type checking
 
-This project uses [mypy](https://mypy-lang.org) for typechecking. Run it with:
+This project uses [mypy](https://mypy-lang.org) for type checking. Run it with:
 
 ```bash
     $ make typecheck
