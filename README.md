@@ -91,6 +91,14 @@ When making smaller commits, you might just want to run some of the smaller comm
     $ make clean format full-qc full-test
 ```
 
+#### Type checking
+
+This project uses [mypy](https://mypy-lang.org) for type checking. Run it with:
+
+```bash
+    $ make typecheck
+```
+
 #### Using act
 
 As a final step, it's good practice to test run the workflow before opening a PR or pushing to an open PR. We don't want to waste GitHub runtime on a glitch that we could have caught before. You can use a make target for that:

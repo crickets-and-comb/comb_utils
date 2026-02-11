@@ -22,9 +22,9 @@ from comb_utils.lib.constants import RateLimits
 BASE_URL: Final[str] = "https://example.com/api/test"
 
 _CALLER_DICT: Final[dict[str, type[BaseCaller]]] = {
-    "get": BaseGetCaller,
-    "post": BasePostCaller,
-    "delete": BaseDeleteCaller,
+    "get": BaseGetCaller,  # type: ignore[type-abstract]
+    "post": BasePostCaller,  # type: ignore[type-abstract]
+    "delete": BaseDeleteCaller,  # type: ignore[type-abstract]
 }
 _REQUEST_METHOD_DICT: Final[dict[str, str]] = {
     "get": "get",
@@ -38,7 +38,7 @@ _REQUEST_METHOD_DICT: Final[dict[str, str]] = {
 def test_key_call(request_type: str) -> None:
     """Test `call_api` calls `_get_API_key`."""
 
-    class MockCaller(_CALLER_DICT[request_type]):
+    class MockCaller(_CALLER_DICT[request_type]):  # type: ignore[misc, valid-type]
         """Minimal concrete subclass of BaseCaller for testing."""
 
         def _set_url(self) -> None:
@@ -145,7 +145,7 @@ def test_base_caller_response_handling(
 ) -> None:
     """Test `call_api` handling of different HTTP responses, including retries."""
 
-    class MockCaller(_CALLER_DICT[request_type]):
+    class MockCaller(_CALLER_DICT[request_type]):  # type: ignore[misc, valid-type]
         """Minimal concrete subclass of BaseCaller for testing."""
 
         def _set_url(self) -> None:
@@ -256,7 +256,7 @@ def test_base_caller_wait_time_adjusting(
 ) -> None:
     """Test request wait time adjustments on rate-limiting."""
 
-    class MockCaller(_CALLER_DICT[request_type]):
+    class MockCaller(_CALLER_DICT[request_type]):  # type: ignore[misc, valid-type]
         """Minimal concrete subclass of BaseCaller for testing."""
 
         def _set_url(self) -> None:
@@ -346,7 +346,7 @@ def test_base_caller_timeout_adjusting(
 ) -> None:
     """Test timeout adjustment on timeout retry."""
 
-    class MockCaller(_CALLER_DICT[request_type]):
+    class MockCaller(_CALLER_DICT[request_type]):  # type: ignore[misc, valid-type]
         """Minimal concrete subclass of BaseCaller for testing."""
 
         def _set_url(self) -> None:

@@ -16,6 +16,4 @@ docs/**/*.pickle
 
 .env
 
-.pytype/
-
 .github/workflows/CI_CD_act.yml
