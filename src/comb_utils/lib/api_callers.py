@@ -158,11 +158,9 @@ class BaseCaller:
     @typechecked
     def _make_call(self) -> None:
         """Make the API call."""
-        api_key = self._get_API_key()
-        auth = HTTPBasicAuth(api_key, "") if api_key else None
         self._response = self._request_call(
             url=self._url,
-            auth=auth,
+            auth=HTTPBasicAuth(self._get_API_key(), ""),
             timeout=self._timeout,
             **self._call_kwargs,
         )
@@ -210,12 +208,12 @@ class BaseCaller:
             )
 
     @typechecked
-    def _get_API_key(self) -> str | None:
+    def _get_API_key(self) -> str:
         """Get the API key.
 
         Defaults to None, but can be overridden in child class.
         """
-        return None
+        return ""
 
     @typechecked
     def _handle_429(self) -> None:
