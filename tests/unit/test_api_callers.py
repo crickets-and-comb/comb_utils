@@ -1,7 +1,7 @@
 """A test suite for the API callers module."""
 
 from contextlib import AbstractContextManager, nullcontext
-from typing import Any, Final, Literal
+from typing import Any, Final, Literal, get_args
 from unittest.mock import Mock, patch
 
 import pytest
@@ -23,6 +23,7 @@ BASE_URL: Final[str] = "https://example.com/api/test"
 
 
 RequestType = Literal["get", "post", "delete"]
+REQUEST_TYPES: Final = get_args(RequestType)
 
 
 @typechecked
@@ -59,7 +60,7 @@ def _caller_factory(request_type: RequestType) -> BaseCaller:
 
 @pytest.mark.parametrize(
     "request_type",
-    RequestType.__args__,
+    REQUEST_TYPES,
 )
 @typechecked
 def test_key_call(request_type: RequestType) -> None:
@@ -81,7 +82,7 @@ def test_key_call(request_type: RequestType) -> None:
 
 @pytest.mark.parametrize(
     "request_type",
-    RequestType.__args__,
+    REQUEST_TYPES,
 )
 @pytest.mark.parametrize(
     "response_sequence, expected_result, error_context",
