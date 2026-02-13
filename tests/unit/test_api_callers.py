@@ -1,7 +1,7 @@
 """A test suite for the API callers module."""
 
 from contextlib import AbstractContextManager, nullcontext
-from typing import Any, Final
+from typing import Any, Final, Literal, get_args
 from unittest.mock import Mock, patch
 
 import pytest
@@ -21,37 +21,57 @@ from comb_utils.lib.constants import RateLimits
 
 BASE_URL: Final[str] = "https://example.com/api/test"
 
-_CALLER_DICT: Final[dict[str, type[BaseCaller]]] = {
-    "get": BaseGetCaller,  # type: ignore[type-abstract]
-    "post": BasePostCaller,  # type: ignore[type-abstract]
-    "delete": BaseDeleteCaller,  # type: ignore[type-abstract]
-}
-_REQUEST_METHOD_DICT: Final[dict[str, str]] = {
-    "get": "get",
-    "post": "post",
-    "delete": "delete",
-}
+
+RequestType = Literal["get", "post", "delete"]
+REQUEST_TYPES: Final = get_args(RequestType)
 
 
-@pytest.mark.parametrize("request_type", ["get", "post", "delete"])
 @typechecked
-def test_key_call(request_type: str) -> None:
+def _caller_factory(request_type: RequestType) -> BaseCaller:
+    mock_caller: BaseCaller
+
+    # Repeated class definition to avoid mypy errors about abstract classes.
+    if request_type == "get":
+
+        class GetCaller(BaseGetCaller):
+            def _set_url(self) -> None:
+                self._url = BASE_URL
+
+        mock_caller = GetCaller()
+
+    elif request_type == "post":
+
+        class PostCaller(BasePostCaller):
+            def _set_url(self) -> None:
+                self._url = BASE_URL
+
+        mock_caller = PostCaller()
+
+    elif request_type == "delete":
+
+        class DeleteCaller(BaseDeleteCaller):
+            def _set_url(self) -> None:
+                self._url = BASE_URL
+
+        mock_caller = DeleteCaller()
+
+    return mock_caller
+
+
+@pytest.mark.parametrize(
+    "request_type",
+    REQUEST_TYPES,
+)
+@typechecked
+def test_key_call(request_type: RequestType) -> None:
     """Test `call_api` calls `_get_API_key`."""
-
-    class MockCaller(_CALLER_DICT[request_type]):  # type: ignore[misc, valid-type]
-        """Minimal concrete subclass of BaseCaller for testing."""
-
-        def _set_url(self) -> None:
-            """Set a dummy test URL."""
-            self._url = BASE_URL
-
     response_sequence: list[dict[str, Any]] = [
         {"json.return_value": {"data": [1, 2, 3]}, "status_code": 200}
     ]
 
     with patch(f"requests.{request_type}") as mock_request:
         mock_request.side_effect = [Mock(**resp) for resp in response_sequence]
-        mock_caller = MockCaller()
+        mock_caller = _caller_factory(request_type)
 
         with patch.object(
             mock_caller, "_get_API_key", wraps=mock_caller._get_API_key
@@ -60,7 +80,10 @@ def test_key_call(request_type: str) -> None:
             spy_handle_get_API_key.assert_called_once()
 
 
-@pytest.mark.parametrize("request_type", ["get", "post", "delete"])
+@pytest.mark.parametrize(
+    "request_type",
+    REQUEST_TYPES,
+)
 @pytest.mark.parametrize(
     "response_sequence, expected_result, error_context",
     [
@@ -138,23 +161,15 @@ def test_key_call(request_type: str) -> None:
 )
 @typechecked
 def test_base_caller_response_handling(
-    request_type: str,
+    request_type: RequestType,
     response_sequence: list[dict[str, Any]],
     expected_result: dict[str, Any] | None,
     error_context: AbstractContextManager,
 ) -> None:
     """Test `call_api` handling of different HTTP responses, including retries."""
-
-    class MockCaller(_CALLER_DICT[request_type]):  # type: ignore[misc, valid-type]
-        """Minimal concrete subclass of BaseCaller for testing."""
-
-        def _set_url(self) -> None:
-            """Set a dummy test URL."""
-            self._url = BASE_URL
-
     with patch(f"requests.{request_type}") as mock_request:
         mock_request.side_effect = [Mock(**resp) for resp in response_sequence]
-        mock_caller = MockCaller()
+        mock_caller = _caller_factory(request_type)
 
         with patch.object(
             mock_caller, "_handle_429", wraps=mock_caller._handle_429
@@ -252,24 +267,18 @@ def test_base_caller_response_handling(
 )
 @typechecked
 def test_base_caller_wait_time_adjusting(
-    request_type: str, response_sequence: list[dict[str, Any]], expected_wait_time: float
+    request_type: RequestType,
+    response_sequence: list[dict[str, Any]],
+    expected_wait_time: float,
 ) -> None:
     """Test request wait time adjustments on rate-limiting."""
-
-    class MockCaller(_CALLER_DICT[request_type]):  # type: ignore[misc, valid-type]
-        """Minimal concrete subclass of BaseCaller for testing."""
-
-        def _set_url(self) -> None:
-            """Set a dummy test URL."""
-            self._url = BASE_URL
-
-    with patch(f"requests.{_REQUEST_METHOD_DICT[request_type]}") as mock_request:
+    with patch(f"requests.{request_type}") as mock_request:
         mock_request.side_effect = [Mock(**resp) for resp in response_sequence]
 
-        mock_caller = MockCaller()
+        mock_caller = _caller_factory(request_type)
         mock_caller.call_api()
 
-        assert MockCaller._wait_seconds == expected_wait_time
+        assert mock_caller.__class__._wait_seconds == expected_wait_time
 
 
 @pytest.mark.parametrize(
@@ -342,24 +351,18 @@ def test_base_caller_wait_time_adjusting(
 )
 @typechecked
 def test_base_caller_timeout_adjusting(
-    request_type: str, response_sequence: list[dict[str, Any]], expected_timeout: float
+    request_type: RequestType,
+    response_sequence: list[dict[str, Any]],
+    expected_timeout: float,
 ) -> None:
     """Test timeout adjustment on timeout retry."""
-
-    class MockCaller(_CALLER_DICT[request_type]):  # type: ignore[misc, valid-type]
-        """Minimal concrete subclass of BaseCaller for testing."""
-
-        def _set_url(self) -> None:
-            """Set a dummy test URL."""
-            self._url = BASE_URL
-
-    with patch(f"requests.{_REQUEST_METHOD_DICT[request_type]}") as mock_request:
+    with patch(f"requests.{request_type}") as mock_request:
         mock_request.side_effect = [Mock(**resp) for resp in response_sequence]
 
-        mock_caller = MockCaller()
+        mock_caller = _caller_factory(request_type)
         mock_caller.call_api()
 
-        assert MockCaller._timeout == expected_timeout
+        assert mock_caller.__class__._timeout == expected_timeout
 
 
 @pytest.mark.parametrize(
