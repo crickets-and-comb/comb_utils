@@ -1,7 +1,7 @@
 """Classes for making API calls."""
 
 import logging
-from abc import abstractmethod, ABC
+from abc import ABC, abstractmethod
 from collections.abc import Callable
 from time import sleep
 from typing import Any
