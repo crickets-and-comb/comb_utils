@@ -21,24 +21,19 @@ from comb_utils.lib.constants import RateLimits
 
 BASE_URL: Final[str] = "https://example.com/api/test"
 
-_CALLER_DICT: Final[dict[str, type[BaseCaller]]] = {
-    "get": BaseGetCaller,  # type: ignore[type-abstract]
-    "post": BasePostCaller,  # type: ignore[type-abstract]
-    "delete": BaseDeleteCaller,  # type: ignore[type-abstract]
-}
-_REQUEST_METHOD_DICT: Final[dict[str, str]] = {
-    "get": "get",
-    "post": "post",
-    "delete": "delete",
+_REQUEST_METHOD_DICT: Final[dict[type[BaseCaller], str]] = {
+    BaseGetCaller: "get",
+    BasePostCaller: "post",
+    BaseDeleteCaller: "delete",
 }
 
 
-@pytest.mark.parametrize("request_type", ["get", "post", "delete"])
+@pytest.mark.parametrize("request_type", [BaseGetCaller, BasePostCaller, BaseDeleteCaller])
 @typechecked
-def test_key_call(request_type: str) -> None:
+def test_key_call(request_type: type[BaseCaller]) -> None:
     """Test `call_api` calls `_get_API_key`."""
 
-    class MockCaller(_CALLER_DICT[request_type]):  # type: ignore[misc, valid-type]
+    class MockCaller(request_type):
         """Minimal concrete subclass of BaseCaller for testing."""
 
         def _set_url(self) -> None:
@@ -49,7 +44,7 @@ def test_key_call(request_type: str) -> None:
         {"json.return_value": {"data": [1, 2, 3]}, "status_code": 200}
     ]
 
-    with patch(f"requests.{request_type}") as mock_request:
+    with patch(f"requests.{_REQUEST_METHOD_DICT[request_type]}") as mock_request:
         mock_request.side_effect = [Mock(**resp) for resp in response_sequence]
         mock_caller = MockCaller()
 
@@ -60,7 +55,7 @@ def test_key_call(request_type: str) -> None:
             spy_handle_get_API_key.assert_called_once()
 
 
-@pytest.mark.parametrize("request_type", ["get", "post", "delete"])
+@pytest.mark.parametrize("request_type", [BaseGetCaller, BasePostCaller, BaseDeleteCaller])
 @pytest.mark.parametrize(
     "response_sequence, expected_result, error_context",
     [
@@ -138,21 +133,21 @@ def test_key_call(request_type: str) -> None:
 )
 @typechecked
 def test_base_caller_response_handling(
-    request_type: str,
+    request_type: type[BaseCaller],
     response_sequence: list[dict[str, Any]],
     expected_result: dict[str, Any] | None,
     error_context: AbstractContextManager,
 ) -> None:
     """Test `call_api` handling of different HTTP responses, including retries."""
 
-    class MockCaller(_CALLER_DICT[request_type]):  # type: ignore[misc, valid-type]
+    class MockCaller(request_type):
         """Minimal concrete subclass of BaseCaller for testing."""
 
         def _set_url(self) -> None:
             """Set a dummy test URL."""
             self._url = BASE_URL
 
-    with patch(f"requests.{request_type}") as mock_request:
+    with patch(f"requests.{_REQUEST_METHOD_DICT[request_type]}") as mock_request:
         mock_request.side_effect = [Mock(**resp) for resp in response_sequence]
         mock_caller = MockCaller()
 
@@ -180,37 +175,37 @@ def test_base_caller_response_handling(
     "request_type, response_sequence, expected_wait_time",
     [
         (
-            "get",
+            BaseGetCaller,
             [{"status_code": 200, "raise_for_status.side_effect": None}],
             RateLimits.READ_SECONDS,
         ),
         (
-            "post",
+            BasePostCaller,
             [{"status_code": 200, "raise_for_status.side_effect": None}],
             RateLimits.WRITE_SECONDS,
         ),
         (
-            "delete",
+            BaseDeleteCaller,
             [{"status_code": 200, "raise_for_status.side_effect": None}],
             RateLimits.WRITE_SECONDS,
         ),
         (
-            "get",
+            BaseGetCaller,
             [{"status_code": 204, "raise_for_status.side_effect": None}],
             RateLimits.READ_SECONDS,
         ),
         (
-            "post",
+            BasePostCaller,
             [{"status_code": 204, "raise_for_status.side_effect": None}],
             RateLimits.WRITE_SECONDS,
         ),
         (
-            "delete",
+            BaseDeleteCaller,
             [{"status_code": 204, "raise_for_status.side_effect": None}],
             RateLimits.WRITE_SECONDS,
         ),
         (
-            "get",
+            BaseGetCaller,
             [
                 {
                     "status_code": 429,
@@ -223,7 +218,7 @@ def test_base_caller_response_handling(
             * RateLimits.WAIT_DECREASE_SECONDS,
         ),
         (
-            "post",
+            BasePostCaller,
             [
                 {
                     "status_code": 429,
@@ -236,7 +231,7 @@ def test_base_caller_response_handling(
             * RateLimits.WAIT_DECREASE_SECONDS,
         ),
         (
-            "delete",
+            BaseDeleteCaller,
             [
                 {
                     "status_code": 429,
@@ -252,11 +247,13 @@ def test_base_caller_response_handling(
 )
 @typechecked
 def test_base_caller_wait_time_adjusting(
-    request_type: str, response_sequence: list[dict[str, Any]], expected_wait_time: float
+    request_type: type[BaseCaller],
+    response_sequence: list[dict[str, Any]],
+    expected_wait_time: float,
 ) -> None:
     """Test request wait time adjustments on rate-limiting."""
 
-    class MockCaller(_CALLER_DICT[request_type]):  # type: ignore[misc, valid-type]
+    class MockCaller(request_type):
         """Minimal concrete subclass of BaseCaller for testing."""
 
         def _set_url(self) -> None:
@@ -276,37 +273,37 @@ def test_base_caller_wait_time_adjusting(
     "request_type, response_sequence, expected_timeout",
     [
         (
-            "get",
+            BaseGetCaller,
             [{"status_code": 200, "raise_for_status.side_effect": None}],
             RateLimits.READ_TIMEOUT_SECONDS,
         ),
         (
-            "post",
+            BasePostCaller,
             [{"status_code": 200, "raise_for_status.side_effect": None}],
             RateLimits.WRITE_TIMEOUT_SECONDS,
         ),
         (
-            "delete",
+            BaseDeleteCaller,
             [{"status_code": 200, "raise_for_status.side_effect": None}],
             RateLimits.WRITE_TIMEOUT_SECONDS,
         ),
         (
-            "get",
+            BaseGetCaller,
             [{"status_code": 204, "raise_for_status.side_effect": None}],
             RateLimits.READ_TIMEOUT_SECONDS,
         ),
         (
-            "post",
+            BasePostCaller,
             [{"status_code": 204, "raise_for_status.side_effect": None}],
             RateLimits.WRITE_TIMEOUT_SECONDS,
         ),
         (
-            "delete",
+            BaseDeleteCaller,
             [{"status_code": 204, "raise_for_status.side_effect": None}],
             RateLimits.WRITE_TIMEOUT_SECONDS,
         ),
         (
-            "get",
+            BaseGetCaller,
             [
                 {
                     "status_code": 598,
@@ -317,7 +314,7 @@ def test_base_caller_wait_time_adjusting(
             RateLimits.READ_TIMEOUT_SECONDS * RateLimits.WAIT_INCREASE_SCALAR,
         ),
         (
-            "post",
+            BasePostCaller,
             [
                 {
                     "status_code": 598,
@@ -328,7 +325,7 @@ def test_base_caller_wait_time_adjusting(
             RateLimits.WRITE_TIMEOUT_SECONDS * RateLimits.WAIT_INCREASE_SCALAR,
         ),
         (
-            "delete",
+            BaseDeleteCaller,
             [
                 {
                     "status_code": 598,
@@ -342,11 +339,13 @@ def test_base_caller_wait_time_adjusting(
 )
 @typechecked
 def test_base_caller_timeout_adjusting(
-    request_type: str, response_sequence: list[dict[str, Any]], expected_timeout: float
+    request_type: type[BaseCaller],
+    response_sequence: list[dict[str, Any]],
+    expected_timeout: float,
 ) -> None:
     """Test timeout adjustment on timeout retry."""
 
-    class MockCaller(_CALLER_DICT[request_type]):  # type: ignore[misc, valid-type]
+    class MockCaller(request_type):
         """Minimal concrete subclass of BaseCaller for testing."""
 
         def _set_url(self) -> None:
