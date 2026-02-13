@@ -1,7 +1,7 @@
 import abc
 import requests
 from _typeshed import Incomplete
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 from collections.abc import Callable as Callable
 from comb_utils.lib import errors as errors
 from comb_utils.lib.constants import RateLimits as RateLimits
@@ -10,7 +10,7 @@ from typing import Any
 
 logger: Incomplete
 
-class BaseCaller(metaclass=abc.ABCMeta):
+class BaseCaller(ABC, metaclass=abc.ABCMeta):
     '''An abstract class for making API calls.
 
     See :doc:`api_callers`.

@@ -1,7 +1,7 @@
 """Classes for making API calls."""
 
 import logging
-from abc import abstractmethod
+from abc import abstractmethod, ABC
 from collections.abc import Callable
 from time import sleep
 from typing import Any
@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 # Why are we using _set_request_call instead of the _request_call property?
 
 
-class BaseCaller:
+class BaseCaller(ABC):
     """An abstract class for making API calls.
 
     See :doc:`api_callers`.
