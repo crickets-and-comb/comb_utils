@@ -2,7 +2,7 @@
 
 import logging
 from abc import ABC, abstractmethod
-from collections.abc import Callable
+from collections.abc import Callable as _Callable
 from time import sleep
 from typing import Any
 from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
@@ -82,7 +82,7 @@ class BaseCaller(ABC):
 
     # Must set in child class with _set*:
     #: The requests call method. (get, post, etc.)
-    _request_call: Callable
+    _request_call: _Callable[..., requests.Response]
     #: The URL for the API call.
     _url: str
 

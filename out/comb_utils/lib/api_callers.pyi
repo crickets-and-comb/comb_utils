@@ -2,7 +2,7 @@ import abc
 import requests
 from _typeshed import Incomplete
 from abc import ABC, abstractmethod
-from collections.abc import Callable as Callable
+from collections.abc import Callable as _Callable
 from comb_utils.lib import errors as errors
 from comb_utils.lib.constants import RateLimits as RateLimits
 from typeguard import typechecked
@@ -62,7 +62,7 @@ class BaseCaller(ABC, metaclass=abc.ABCMeta):
     '''
     response_json: dict[str, Any]
     _response: requests.Response
-    _request_call: Callable
+    _request_call: _Callable[..., requests.Response]
     _url: str
     _timeout: float
     _min_wait_seconds: float
