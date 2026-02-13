@@ -10,7 +10,7 @@ from typing import Any
 
 logger: Incomplete
 
-class BaseCaller(metaclass=abc.ABCMeta):
+class BaseCaller(ABC, metaclass=abc.ABCMeta):
     '''An abstract class for making API calls.
 
     See :doc:`api_callers`.
