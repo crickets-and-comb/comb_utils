@@ -1,7 +1,7 @@
 """A test suite for the API callers module."""
 
 from contextlib import AbstractContextManager, nullcontext
-from typing import Any, Final
+from typing import Any, Final, Literal
 from unittest.mock import Mock, patch
 
 import pytest
@@ -22,33 +22,47 @@ from comb_utils.lib.constants import RateLimits
 BASE_URL: Final[str] = "https://example.com/api/test"
 
 
+RequestType = Literal["get", "post", "delete"]
+
+
 @typechecked
-def _caller_factory(request_type: str) -> BaseCaller:
-    """Factory function to create a minimal concrete subclass of BaseCaller for testing."""
-    base_class: type[BaseCaller]
+def _caller_factory(request_type: RequestType) -> BaseCaller:
+    mock_caller: BaseCaller
+
+    # Repeated class definition to avoid mypy errors about abstract classes.
     if request_type == "get":
-        base_class = BaseGetCaller
+
+        class GetCaller(BaseGetCaller):
+            def _set_url(self) -> None:
+                self._url = BASE_URL
+
+        mock_caller = GetCaller()
+
     elif request_type == "post":
-        base_class = BasePostCaller
+
+        class PostCaller(BasePostCaller):
+            def _set_url(self) -> None:
+                self._url = BASE_URL
+
+        mock_caller = PostCaller()
+
     elif request_type == "delete":
-        base_class = BaseDeleteCaller
 
-    class MockCaller(base_class):
-        """Minimal concrete subclass of BaseCaller for testing."""
+        class DeleteCaller(BaseDeleteCaller):
+            def _set_url(self) -> None:
+                self._url = BASE_URL
 
-        def _set_url(self) -> None:
-            """Set a dummy test URL."""
-            self._url = BASE_URL
+        mock_caller = DeleteCaller()
 
-    return MockCaller()
+    return mock_caller
 
 
 @pytest.mark.parametrize(
     "request_type",
-    ["get", "post", "delete"],
+    RequestType.__args__,
 )
 @typechecked
-def test_key_call(request_type: str) -> None:
+def test_key_call(request_type: RequestType) -> None:
     """Test `call_api` calls `_get_API_key`."""
     response_sequence: list[dict[str, Any]] = [
         {"json.return_value": {"data": [1, 2, 3]}, "status_code": 200}
@@ -67,7 +81,7 @@ def test_key_call(request_type: str) -> None:
 
 @pytest.mark.parametrize(
     "request_type",
-    ["get", "post", "delete"],
+    RequestType.__args__,
 )
 @pytest.mark.parametrize(
     "response_sequence, expected_result, error_context",
@@ -146,7 +160,7 @@ def test_key_call(request_type: str) -> None:
 )
 @typechecked
 def test_base_caller_response_handling(
-    request_type: str,
+    request_type: RequestType,
     response_sequence: list[dict[str, Any]],
     expected_result: dict[str, Any] | None,
     error_context: AbstractContextManager,
@@ -252,7 +266,7 @@ def test_base_caller_response_handling(
 )
 @typechecked
 def test_base_caller_wait_time_adjusting(
-    request_type: str,
+    request_type: RequestType,
     response_sequence: list[dict[str, Any]],
     expected_wait_time: float,
 ) -> None:
@@ -336,7 +350,7 @@ def test_base_caller_wait_time_adjusting(
 )
 @typechecked
 def test_base_caller_timeout_adjusting(
-    request_type: str,
+    request_type: RequestType,
     response_sequence: list[dict[str, Any]],
     expected_timeout: float,
 ) -> None:
