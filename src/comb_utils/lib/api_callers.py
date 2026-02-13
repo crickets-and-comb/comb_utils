@@ -1,8 +1,8 @@
 """Classes for making API calls."""
 
 import logging
-from abc import abstractmethod
-from collections.abc import Callable
+from abc import ABC, abstractmethod
+from collections.abc import Callable as _Callable
 from time import sleep
 from typing import Any
 from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 # Why are we using _set_request_call instead of the _request_call property?
 
 
-class BaseCaller:
+class BaseCaller(ABC):
     """An abstract class for making API calls.
 
     See :doc:`api_callers`.
@@ -82,7 +82,7 @@ class BaseCaller:
 
     # Must set in child class with _set*:
     #: The requests call method. (get, post, etc.)
-    _request_call: Callable
+    _request_call: _Callable[..., requests.Response]
     #: The URL for the API call.
     _url: str
 
