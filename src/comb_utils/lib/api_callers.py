@@ -18,11 +18,6 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 
-# TODO: https://github.com/crickets-and-comb/comb_utils/issues/38:
-# Why are we using _set_url instead of the url property?
-# Why are we using _set_request_call instead of the _request_call property?
-
-
 class BaseCaller(ABC):
     """An abstract class for making API calls.
 
@@ -40,21 +35,15 @@ class BaseCaller(ABC):
                 _wait_seconds: float = _min_wait_seconds
                 _timeout: float = 10
 
-                def _set_request_call(self):
-                    self._request_call = requests.get
-
-                def _set_url(self):
-                    self._url = "https://example.com/public/v0.2b/"
-
                 def _get_API_key(self) -> str | None:
-                    # Optionally wrap your own API key retrieval function here.
-                    return my_custom_key_retrieval_function()
+                # Optionally wrap your own API key retrieval function here.
+                return my_custom_key_retrieval_function()
 
                 def _handle_200(self):
                     super()._handle_200()
                     self.target_response_value = self.response_json["target_key"]
 
-            my_caller = MyCaller()
+            my_caller = MyGetCaller(url="https://api.example.com/data")
             my_caller.call_api()
             target_response_value = my_caller.target_response_value
 
@@ -68,10 +57,6 @@ class BaseCaller(ABC):
         this run in the background and will stop it if it runs too long. It will eventually
         at least crash the memory, depending on available memory, mean time to failure, and
         time left in the universe.
-
-    .. note::
-        The `_set_request_call` and `_set_url` methods will be deprecated in favor of setting
-        the request call member at child class definition and passing the URL to `__init__`.
     """
 
     # Set by object:
@@ -80,9 +65,12 @@ class BaseCaller(ABC):
     #: The response from the API call.
     _response: requests.Response
 
-    # Must set in child class with _set*:
-    #: The requests call method. (get, post, etc.)
-    _request_call: _Callable[..., requests.Response]
+    # Must set in child class:
+    @property
+    @abstractmethod
+    def _request_call(self) -> _Callable[..., requests.Response]:
+        """The requests call method (get, post, etc.)."""
+
     #: The URL for the API call.
     _url: str
 
@@ -103,32 +91,13 @@ class BaseCaller(ABC):
     _wait_decrease_scalar: float = RateLimits.WAIT_DECREASE_SECONDS
 
     @typechecked
-    def __init__(self) -> None:  # noqa: ANN401
-        """Initialize the BaseCaller object."""
-        self._set_request_call()
-        self._set_url()
+    def __init__(self, url: str) -> None:  # noqa: ANN401
+        """Initialize the BaseCaller object.
 
-    @abstractmethod
-    @typechecked
-    def _set_request_call(self) -> None:
-        """Set the requests call method.
-
-        requests.get, requests.post, etc.
-
-        Raises:
-            NotImplementedError: If not implemented in child class.
+        Args:
+            url: The URL for the page. (Optionally contains nextPageToken.)
         """
-        raise NotImplementedError
-
-    @abstractmethod
-    @typechecked
-    def _set_url(self) -> None:
-        """Set the URL for the API call.
-
-        Raises:
-            NotImplementedError: If not implemented in child class.
-        """
-        raise NotImplementedError
+        self._url = url
 
     @typechecked
     def call_api(self) -> None:
@@ -287,51 +256,51 @@ class BaseCaller(ABC):
         cls._timeout = cls._timeout * self._wait_increase_scalar
 
 
-class BaseGetCaller(BaseCaller):
+class GetCaller(BaseCaller):
     """A base class for making GET API calls.
 
     Presets the timeout, initial wait time, and requests method.
     """
 
+    @property
+    def _request_call(self) -> _Callable[..., requests.Response]:
+        """The requests call method."""
+        return requests.get
+
     _timeout: float = RateLimits.READ_TIMEOUT_SECONDS
     _min_wait_seconds: float = RateLimits.READ_SECONDS
     _wait_seconds: float = _min_wait_seconds
 
-    @typechecked
-    def _set_request_call(self) -> None:
-        """Set the requests call method to `requests.get`."""
-        self._request_call = requests.get
 
-
-class BasePostCaller(BaseCaller):
+class PostCaller(BaseCaller):
     """A base class for making POST API calls.
 
     Presets the timeout, initial wait time, and requests method.
     """
 
+    @property
+    def _request_call(self) -> _Callable[..., requests.Response]:
+        """The requests call method."""
+        return requests.post
+
     _timeout: float = RateLimits.WRITE_TIMEOUT_SECONDS
     _min_wait_seconds: float = RateLimits.WRITE_SECONDS
     _wait_seconds: float = _min_wait_seconds
 
-    @typechecked
-    def _set_request_call(self) -> None:
-        """Set the requests call method to `requests.post`."""
-        self._request_call = requests.post
 
-
-class BaseDeleteCaller(BasePostCaller):
+class DeleteCaller(PostCaller):
     """A base class for making DELETE API calls.
 
     Presets the timeout, initial wait time, and requests method.
     """
 
-    @typechecked
-    def _set_request_call(self) -> None:
-        """Set the requests call method to `requests.delete`."""
-        self._request_call = requests.delete
+    @property
+    def _request_call(self) -> _Callable[..., requests.Response]:
+        """The requests call method."""
+        return requests.delete
 
 
-class BasePagedResponseGetter(BaseGetCaller):
+class PagedResponseGetter(GetCaller):
     """Class for getting paged responses."""
 
     #: The nextPageToken returned, but called salsa to avoid bandit.
@@ -345,7 +314,7 @@ class BasePagedResponseGetter(BaseGetCaller):
 
     @typechecked
     def __init__(self, page_url: str, params: dict[str, str] | None = None) -> None:
-        """Initialize the BasePagedResponseGetter object.
+        """Initialize the PagedResponseGetter object.
 
         Args:
             page_url: The URL for the page. (Optionally contains nextPageToken.)
@@ -353,14 +322,9 @@ class BasePagedResponseGetter(BaseGetCaller):
         """
         self._page_url = page_url
         self._params = params
-        super().__init__()
-
-    @typechecked
-    def _set_url(self) -> None:
-        """Set the URL for the API call to the `page_url`."""
         self._check_duplicates_in_URL()
         self._add_params_to_URL()
-        self._url = self._page_url
+        super().__init__(self._page_url)
 
     @typechecked
     def _check_duplicates_in_URL(self) -> None:
@@ -376,7 +340,7 @@ class BasePagedResponseGetter(BaseGetCaller):
 
     @typechecked
     def _add_params_to_URL(self) -> None:
-        """Add query string parameters to `page_url`."""
+        """Add query string parameters to url."""
         if self._params:
             parsed_url = urlparse(self._page_url)
             query_str = parsed_url.query
@@ -443,7 +407,7 @@ def get_response_dict(response: requests.Response) -> dict[str, Any]:
 @typechecked
 def get_responses(
     url: str,
-    paged_response_class: type[BasePagedResponseGetter],
+    paged_response_class: type[PagedResponseGetter],
     params: dict[str, str] | None = None,
 ) -> list[dict[str, Any]]:
     """Get all responses from a paginated API endpoint.
