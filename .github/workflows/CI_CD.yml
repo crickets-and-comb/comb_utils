@@ -77,7 +77,7 @@ jobs:
   CI:
     name: QC and Tests
     needs: validate-and-set-inputs
-    uses: crickets-and-comb/shared/.github/workflows/CI.yml@main
+    uses: crickets-and-comb/shared/.github/workflows/CI.yml@debug/KalebCoberly/get-passing
     secrets:
       CHECKOUT_SHARED: ${{ secrets.CHECKOUT_SHARED }}
       SAFETY_API_KEY: ${{ secrets.SAFETY_API_KEY }}
@@ -85,7 +85,7 @@ jobs:
   build-dist:
     name: Build Dist
     needs: [CI, validate-and-set-inputs]
-    uses: crickets-and-comb/shared/.github/workflows/build_dist.yml@main
+    uses: crickets-and-comb/shared/.github/workflows/build_dist.yml@debug/KalebCoberly/get-passing
     with:
       DIST_DIR: "dist"
       PYTHON_BUILD_VERSION: ${{ needs.validate-and-set-inputs.outputs.PYTHON_BUILD_VERSION }}
@@ -147,7 +147,7 @@ jobs:
   github-release:
     name: Sign Distribution with Sigstore and Upload to GitHub Release
     needs: [publish-to-pypi, validate-and-set-inputs]
-    uses: crickets-and-comb/shared/.github/workflows/release_to_github.yml@main
+    uses: crickets-and-comb/shared/.github/workflows/release_to_github.yml@debug/KalebCoberly/get-passing
     permissions:
       contents: write
       id-token: write
@@ -177,7 +177,7 @@ jobs:
   test-install-test:
     name: Test Test Install
     needs: wait-to-test-test
-    uses: crickets-and-comb/shared/.github/workflows/test_install.yml@main
+    uses: crickets-and-comb/shared/.github/workflows/test_install.yml@debug/KalebCoberly/get-passing
     with:
       TEST_OR_PROD: 'test'
     secrets:
@@ -186,7 +186,7 @@ jobs:
   test-install-prod:
     name: Test Prod Install
     needs: wait-to-test-prod
-    uses: crickets-and-comb/shared/.github/workflows/test_install.yml@main
+    uses: crickets-and-comb/shared/.github/workflows/test_install.yml@debug/KalebCoberly/get-passing
     with:
       TEST_OR_PROD: 'prod'
     secrets:
@@ -195,7 +195,7 @@ jobs:
   deploy-docs:
     name: Deploy Docs
     needs: [publish-to-pypi, validate-and-set-inputs]
-    uses: crickets-and-comb/shared/.github/workflows/deploy_docs.yml@main
+    uses: crickets-and-comb/shared/.github/workflows/deploy_docs.yml@debug/KalebCoberly/get-passing
     with:
       PYTHON_BUILD_VERSION: ${{ needs.validate-and-set-inputs.outputs.PYTHON_BUILD_VERSION }}
     permissions:
