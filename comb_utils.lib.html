@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="prev" title="comb_utils package" href="comb_utils.html">
 
     <!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
-        <title>comb_utils.lib package - comb_utils 0.6.5 documentation</title>
+        <title>comb_utils.lib package - comb_utils 0.6.7 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -161,7 +161,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">comb_utils 0.6.5 documentation</div></a>
+      <a href="index.html"><div class="brand">comb_utils 0.6.7 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -182,7 +182,7 @@
       
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
-  <span class="sidebar-brand-text">comb_utils 0.6.5 documentation</span>
+  <span class="sidebar-brand-text">comb_utils 0.6.7 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -266,7 +266,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_request_call</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_set_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_url</span> <span class="o">=</span> <span class="s2">&quot;https://example.com/public/v0.2b/&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_url</span> <span class="o">=</span> <span class="s2">"https://example.com/public/v0.2b/"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_API_key</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># Optionally wrap your own API key retrieval function here.</span>
@@ -274,7 +274,7 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_handle_200</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_handle_200</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">target_response_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">response_json</span><span class="p">[</span><span class="s2">&quot;target_key&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target_response_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">response_json</span><span class="p">[</span><span class="s2">"target_key"</span><span class="p">]</span>
 
 <span class="n">my_caller</span> <span class="o">=</span> <span class="n">MyCaller</span><span class="p">()</span>
 <span class="n">my_caller</span><span class="o">.</span><span class="n">call_api</span><span class="p">()</span>
@@ -684,7 +684,7 @@ the request call member at child class definition and passing the URL to <cite>_
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=d7a12d57"></script>
+</div><script src="_static/documentation_options.js?v=44212324"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/scripts/furo.js?v=46bd48cc"></script>
