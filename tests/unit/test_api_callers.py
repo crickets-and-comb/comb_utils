@@ -26,31 +26,34 @@ RequestType = Literal["get", "post", "delete"]
 REQUEST_TYPES: Final = get_args(RequestType)
 
 
-@pytest.fixture(autouse=True)
-@typechecked
-def reset_rate_limits() -> None:
-    """Reset the class-level rate limit attributes to their defaults."""
-    GetCaller._wait_seconds = RateLimits.READ_SECONDS
-    GetCaller._timeout = RateLimits.READ_TIMEOUT_SECONDS
-    PostCaller._wait_seconds = RateLimits.WRITE_SECONDS
-    PostCaller._timeout = RateLimits.WRITE_TIMEOUT_SECONDS
-    DeleteCaller._wait_seconds = RateLimits.WRITE_SECONDS
-    DeleteCaller._timeout = RateLimits.WRITE_TIMEOUT_SECONDS
-
-
 @typechecked
 def _caller_factory(request_type: RequestType) -> BaseCaller:
     mock_caller: BaseCaller
 
     # Repeated class definition to avoid mypy errors about abstract classes.
     if request_type == "get":
-        mock_caller = GetCaller(url=BASE_URL)
+
+        class MockGetCaller(GetCaller):
+            def _set_url(self) -> None:
+                self._url = BASE_URL
+
+        mock_caller = MockGetCaller(url=BASE_URL)
 
     elif request_type == "post":
-        mock_caller = PostCaller(url=BASE_URL)
+
+        class MockPostCaller(PostCaller):
+            def _set_url(self) -> None:
+                self._url = BASE_URL
+
+        mock_caller = MockPostCaller(url=BASE_URL)
 
     elif request_type == "delete":
-        mock_caller = DeleteCaller(url=BASE_URL)
+
+        class MockDeleteCaller(DeleteCaller):
+            def _set_url(self) -> None:
+                self._url = BASE_URL
+
+        mock_caller = MockDeleteCaller(url=BASE_URL)
 
     return mock_caller
 
