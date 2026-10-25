@@ -324,7 +324,7 @@ class PagedResponseGetter(GetCaller):
         self._params = params
         self._check_duplicates_in_URL()
         self._add_params_to_URL()
-        super().__init__(self._page_url)
+        super().__init__(url=self._page_url)
 
     @typechecked
     def _check_duplicates_in_URL(self) -> None:
@@ -340,7 +340,7 @@ class PagedResponseGetter(GetCaller):
 
     @typechecked
     def _add_params_to_URL(self) -> None:
-        """Add query string parameters to url."""
+        """Add query string parameters to `page_url`."""
         if self._params:
             parsed_url = urlparse(self._page_url)
             query_str = parsed_url.query
