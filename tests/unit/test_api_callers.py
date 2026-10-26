@@ -10,10 +10,10 @@ from typeguard import typechecked
 
 from comb_utils import (
     BaseCaller,
-    BaseDeleteCaller,
-    BaseGetCaller,
-    BasePagedResponseGetter,
-    BasePostCaller,
+    DeleteCaller,
+    GetCaller,
+    PagedResponseGetter,
+    PostCaller,
     get_responses,
 )
 from comb_utils.lib import errors
@@ -33,27 +33,27 @@ def _caller_factory(request_type: RequestType) -> BaseCaller:
     # Repeated class definition to avoid mypy errors about abstract classes.
     if request_type == "get":
 
-        class GetCaller(BaseGetCaller):
+        class MockGetCaller(GetCaller):
             def _set_url(self) -> None:
                 self._url = BASE_URL
 
-        mock_caller = GetCaller()
+        mock_caller = MockGetCaller(url=BASE_URL)
 
     elif request_type == "post":
 
-        class PostCaller(BasePostCaller):
+        class MockPostCaller(PostCaller):
             def _set_url(self) -> None:
                 self._url = BASE_URL
 
-        mock_caller = PostCaller()
+        mock_caller = MockPostCaller(url=BASE_URL)
 
     elif request_type == "delete":
 
-        class DeleteCaller(BaseDeleteCaller):
+        class MockDeleteCaller(DeleteCaller):
             def _set_url(self) -> None:
                 self._url = BASE_URL
 
-        mock_caller = DeleteCaller()
+        mock_caller = MockDeleteCaller(url=BASE_URL)
 
     return mock_caller
 
@@ -379,17 +379,17 @@ def test_paged_getter(response_sequence: list[dict[str, Any]]) -> None:
     with patch("requests.get") as mock_request:
         mock_request.side_effect = [Mock(**resp) for resp in response_sequence]
 
-        page_url = "https://example.com/api/test"
-        caller = BasePagedResponseGetter(page_url=page_url)
+        url = "https://example.com/api/test"
+        caller = PagedResponseGetter(page_url=url)
         caller.call_api()
-        assert mock_request.call_args_list[0][1]["url"] == page_url
+        assert mock_request.call_args_list[0][1]["url"] == url
         assert caller.next_page_salsa == response_sequence[-1]["json.return_value"].get(
             "nextPageToken", None
         )
 
 
 @pytest.mark.parametrize(
-    "page_url, params, expected_url, error_context",
+    "url, params, expected_url, error_context",
     [
         (BASE_URL, {}, BASE_URL, nullcontext()),
         (BASE_URL, {"foo": "bar"}, BASE_URL + "?foo=bar", nullcontext()),
@@ -436,16 +436,16 @@ def test_paged_getter(response_sequence: list[dict[str, Any]]) -> None:
 )
 @typechecked
 def test_paged_getter_params(
-    page_url: str, params: dict, expected_url: str, error_context: AbstractContextManager
+    url: str, params: dict, expected_url: str, error_context: AbstractContextManager
 ) -> None:
-    """Test addition of query string parameters in `page_url`."""
+    """Test addition of query string parameters in url."""
     response_sequence: list[dict[str, Any]] = [
         {"json.return_value": {"data": [1, 2, 3]}, "status_code": 200}
     ]
     with patch("requests.get") as mock_request, error_context:
         mock_request.side_effect = [Mock(**resp) for resp in response_sequence]
 
-        caller = BasePagedResponseGetter(page_url=page_url, params=params)
+        caller = PagedResponseGetter(page_url=url, params=params)
         caller.call_api()
         assert mock_request.call_args_list[0][1]["url"] == expected_url
 
@@ -562,7 +562,7 @@ def test_get_responses_returns(
         mock_get.side_effect = [Mock(**resp) for resp in responses]
 
         with error_context:
-            result = get_responses(url=BASE_URL, paged_response_class=BasePagedResponseGetter)
+            result = get_responses(url=BASE_URL, paged_response_class=PagedResponseGetter)
             assert result == expected_result
 
         assert mock_get.call_count == len(responses)
@@ -631,7 +631,7 @@ def test_get_responses_urls(responses: list[dict[str, Any]], params: str) -> Non
     with patch("requests.get") as mock_get:
         mock_get.side_effect = [Mock(**resp) for resp in responses]
 
-        _ = get_responses(url=base_url, paged_response_class=BasePagedResponseGetter)
+        _ = get_responses(url=base_url, paged_response_class=PagedResponseGetter)
 
         expected_urls = [base_url]
         last_next_page_token = None
