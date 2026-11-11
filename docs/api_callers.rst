@@ -75,7 +75,7 @@ Helper functions
 
 The :py:mod:`comb_utils.lib.api_callers` module provides a few helper functions for working with the base callers. These functions are designed to make it easier to work with the API callers and provide additional functionality.
 
-- :py:func:`comb_utils.lib.api_callers.get_response_dict`: This function takes a response object and returns a dictionary containing the status code, headers, and JSON data. This is useful for debugging and logging purposes. You may wish to use it within your own custom API caller class or within a script to generically handle response data. The base callers use this function to handle errors and timeouts.
+- :py:func:`comb_utils.lib.api_callers.get_response_dict`: This function takes a response object and returns a dictionary containing the status code, headers, and JSON data. This is useful for debugging and logging purposes. You may wish to use it within your own custom API caller class or within a script to generically handle response data. The base callers use this function to handle errors.
 
 - :py:func:`comb_utils.lib.api_callers.get_responses`: This function gets all the responses from a paginated API endpoint using the :py:class:`comb_utils.lib.api_callers.DeleteCaller` class. Returns a list of all the response pages. use this in conjunction with :py:func:`comb_utils.lib.api_callers.concat_response_pages` to get all the data from a paginated API endpoint.
 

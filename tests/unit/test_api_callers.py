@@ -1,5 +1,6 @@
 """A test suite for the API callers module."""
 
+from collections.abc import Sequence
 from contextlib import AbstractContextManager, nullcontext
 from typing import Any, Final, Literal, get_args
 from unittest.mock import Mock, patch
@@ -58,6 +59,17 @@ def _caller_factory(request_type: RequestType) -> BaseCaller:
     return mock_caller
 
 
+ResponseSpec = dict[str, Any] | type[Exception]
+
+
+@typechecked
+def _side_effects(
+    response_sequence: Sequence[ResponseSpec],
+) -> list[Mock | type[Exception]]:
+    """Mock responses from specs, passing exceptions through to be raised by the call."""
+    return [resp if isinstance(resp, type) else Mock(**resp) for resp in response_sequence]
+
+
 @pytest.mark.parametrize(
     "request_type",
     REQUEST_TYPES,
@@ -70,7 +82,7 @@ def test_key_call(request_type: RequestType) -> None:
     ]
 
     with patch(f"requests.{request_type}") as mock_request:
-        mock_request.side_effect = [Mock(**resp) for resp in response_sequence]
+        mock_request.side_effect = _side_effects(response_sequence)
         mock_caller = _caller_factory(request_type)
 
         with patch.object(
@@ -107,14 +119,23 @@ def test_key_call(request_type: RequestType) -> None:
         ),
         (
             [
+                requests.exceptions.Timeout,
+                {"json.return_value": {"data": [7, 8]}, "status_code": 200},
+            ],
+            {"data": [7, 8]},
+            nullcontext(),
+        ),
+        (
+            # Legacy: Timeout from raise_for_status is still handled.
+            [
                 {
                     "json.return_value": {},
                     "status_code": 598,
                     "raise_for_status.side_effect": requests.exceptions.Timeout,
                 },
-                {"json.return_value": {"data": [7, 8]}, "status_code": 200},
+                {"json.return_value": {"data": [9]}, "status_code": 200},
             ],
-            {"data": [7, 8]},
+            {"data": [9]},
             nullcontext(),
         ),
         (
@@ -144,11 +165,7 @@ def test_key_call(request_type: RequestType) -> None:
         ),
         (
             [
-                {
-                    "json.return_value": {},
-                    "status_code": 598,
-                    "raise_for_status.side_effect": requests.exceptions.Timeout,
-                },
+                requests.exceptions.Timeout,
                 {
                     "status_code": 400,
                     "raise_for_status.side_effect": requests.exceptions.HTTPError,
@@ -162,13 +179,13 @@ def test_key_call(request_type: RequestType) -> None:
 @typechecked
 def test_base_caller_response_handling(
     request_type: RequestType,
-    response_sequence: list[dict[str, Any]],
+    response_sequence: list[ResponseSpec],
     expected_result: dict[str, Any] | None,
     error_context: AbstractContextManager,
 ) -> None:
     """Test `call_api` handling of different HTTP responses, including retries."""
     with patch(f"requests.{request_type}") as mock_request:
-        mock_request.side_effect = [Mock(**resp) for resp in response_sequence]
+        mock_request.side_effect = _side_effects(response_sequence)
         mock_caller = _caller_factory(request_type)
 
         with patch.object(
@@ -182,10 +199,16 @@ def test_base_caller_response_handling(
 
                 assert mock_caller.response_json == expected_result
 
-                if any(resp["status_code"] == 429 for resp in response_sequence):
+                if any(
+                    isinstance(resp, dict) and resp["status_code"] == 429
+                    for resp in response_sequence
+                ):
                     spy_handle_429.assert_called_once()
 
-                if any(resp["status_code"] == 598 for resp in response_sequence):
+                if requests.exceptions.Timeout in response_sequence or any(
+                    isinstance(resp, dict) and resp["status_code"] == 598
+                    for resp in response_sequence
+                ):
                     spy_handle_timeout.assert_called_once()
 
                 assert mock_request.call_count == len(response_sequence)
@@ -273,7 +296,7 @@ def test_base_caller_wait_time_adjusting(
 ) -> None:
     """Test request wait time adjustments on rate-limiting."""
     with patch(f"requests.{request_type}") as mock_request:
-        mock_request.side_effect = [Mock(**resp) for resp in response_sequence]
+        mock_request.side_effect = _side_effects(response_sequence)
 
         mock_caller = _caller_factory(request_type)
         mock_caller.call_api()
@@ -317,10 +340,7 @@ def test_base_caller_wait_time_adjusting(
         (
             "get",
             [
-                {
-                    "status_code": 598,
-                    "raise_for_status.side_effect": requests.exceptions.Timeout,
-                },
+                requests.exceptions.Timeout,
                 {"status_code": 200, "raise_for_status.side_effect": None},
             ],
             RateLimits.READ_TIMEOUT_SECONDS * RateLimits.WAIT_INCREASE_SCALAR,
@@ -328,10 +348,7 @@ def test_base_caller_wait_time_adjusting(
         (
             "post",
             [
-                {
-                    "status_code": 598,
-                    "raise_for_status.side_effect": requests.exceptions.Timeout,
-                },
+                requests.exceptions.Timeout,
                 {"status_code": 200, "raise_for_status.side_effect": None},
             ],
             RateLimits.WRITE_TIMEOUT_SECONDS * RateLimits.WAIT_INCREASE_SCALAR,
@@ -339,10 +356,7 @@ def test_base_caller_wait_time_adjusting(
         (
             "delete",
             [
-                {
-                    "status_code": 598,
-                    "raise_for_status.side_effect": requests.exceptions.Timeout,
-                },
+                requests.exceptions.Timeout,
                 {"status_code": 200, "raise_for_status.side_effect": None},
             ],
             RateLimits.WRITE_TIMEOUT_SECONDS * RateLimits.WAIT_INCREASE_SCALAR,
@@ -352,12 +366,12 @@ def test_base_caller_wait_time_adjusting(
 @typechecked
 def test_base_caller_timeout_adjusting(
     request_type: RequestType,
-    response_sequence: list[dict[str, Any]],
+    response_sequence: list[ResponseSpec],
     expected_timeout: float,
 ) -> None:
     """Test timeout adjustment on timeout retry."""
     with patch(f"requests.{request_type}") as mock_request:
-        mock_request.side_effect = [Mock(**resp) for resp in response_sequence]
+        mock_request.side_effect = _side_effects(response_sequence)
 
         mock_caller = _caller_factory(request_type)
         mock_caller.call_api()
@@ -377,7 +391,7 @@ def test_base_caller_timeout_adjusting(
 def test_paged_getter(response_sequence: list[dict[str, Any]]) -> None:
     """Test PagedResponseGetterBFB."""
     with patch("requests.get") as mock_request:
-        mock_request.side_effect = [Mock(**resp) for resp in response_sequence]
+        mock_request.side_effect = _side_effects(response_sequence)
 
         url = "https://example.com/api/test"
         caller = PagedResponseGetter(page_url=url)
@@ -398,7 +412,8 @@ def test_paged_getter(response_sequence: list[dict[str, Any]]) -> None:
             {"foo": "baz"},
             "",
             pytest.raises(
-                errors.DuplicateKeysDetected, match="Duplicate entries found in query string"
+                errors.DuplicateKeysDetected,
+                match="Duplicate entries found in query string",
             ),
         ),
         (
@@ -443,7 +458,7 @@ def test_paged_getter_params(
         {"json.return_value": {"data": [1, 2, 3]}, "status_code": 200}
     ]
     with patch("requests.get") as mock_request, error_context:
-        mock_request.side_effect = [Mock(**resp) for resp in response_sequence]
+        mock_request.side_effect = _side_effects(response_sequence)
 
         caller = PagedResponseGetter(page_url=url, params=params)
         caller.call_api()
@@ -474,7 +489,10 @@ def test_paged_getter_params(
                     "status_code": 200,
                 },
             ],
-            [{"data": [1], "nextPageToken": "abc"}, {"data": [2], "nextPageToken": None}],
+            [
+                {"data": [1], "nextPageToken": "abc"},
+                {"data": [2], "nextPageToken": None},
+            ],
             nullcontext(),
         ),
         (
@@ -491,7 +509,10 @@ def test_paged_getter_params(
                     "status_code": 200,
                 },
             ],
-            [{"data": [3], "nextPageToken": "asfg"}, {"data": [54], "nextPageToken": None}],
+            [
+                {"data": [3], "nextPageToken": "asfg"},
+                {"data": [54], "nextPageToken": None},
+            ],
             nullcontext(),
         ),
         (
