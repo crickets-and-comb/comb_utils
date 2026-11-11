@@ -120,7 +120,12 @@ class BaseCaller(ABC):
         Wrapped separately to allow for recursive calls on rate limiting and timeout.
         """
         sleep(type(self)._wait_seconds)
-        self._make_call()
+        try:
+            self._make_call()
+        except requests.exceptions.Timeout:
+            # Timeouts are raised by the request itself, before there is a response.
+            self._handle_timeout()
+            return
         self._raise_for_status()
         self._parse_response()
 
@@ -139,11 +144,11 @@ class BaseCaller(ABC):
         """Handle error responses.
 
         For 429 (rate limiting), increases wait time and recursively calls the API.
-        For timeout, increases timeout and recursively calls the API.
+        For timeout, increases timeout and recursively calls the API. (Kept for backward
+        compatibility; real request timeouts are raised and handled in `_call_api`.)
 
         Raises:
             requests.exceptions.HTTPError: For non-rate-limiting errors.
-            requests.exceptions.Timeout: For timeouts.
         """
         try:
             self._response.raise_for_status()
@@ -201,10 +206,9 @@ class BaseCaller(ABC):
         Increases the class timeout and recursively calls the API.
         """
         self._increase_timeout()
-        response_dict = get_response_dict(response=self._response)
         logger.warning(
-            f"Request timed out.\n{response_dict}"
-            f"\nTrying again with longer timeout: {type(self)._timeout} seconds."
+            "Request timed out. Trying again with longer timeout: "
+            f"{type(self)._timeout} seconds."
         )
         self._call_api()
 
